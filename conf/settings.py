@@ -10,7 +10,7 @@ PROJECT_NAME = "🐼 BEARBLOG 🐼"
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv('SECRET')
+SECRET_KEY = os.getenv('SECRET') or os.getenv('SECRET_KEY')
 LEMONSQUEEZY_SIGNATURE = os.getenv('LEMONSQUEEZY_SIGNATURE')
 
 DEBUG = (os.getenv('DEBUG') == 'True')
@@ -38,7 +38,7 @@ if not DEBUG:
 
 # Host & proxy settings
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['https://*.bearblog.dev', 'https://bearblog.dev']
+CSRF_TRUSTED_ORIGINS = ['https://*.bearblog.dev', 'https://bearblog.dev', 'http://lh.co', 'http://*.lh.co']
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
 

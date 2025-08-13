@@ -2,13 +2,13 @@
 
 dev:
 	echo http://lh.co
-	python manage.py runserver 0:80
+	python3 manage.py runserver 0:80
 
 migrate:
-	python manage.py migrate
+	python3 manage.py migrate
 
 makemigrations:
-	python manage.py makemigrations
+	python3 manage.py makemigrations
 
 shell:
 	sudo heroku run python manage.py shell --app bear-blog

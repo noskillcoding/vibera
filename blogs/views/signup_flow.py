@@ -107,7 +107,12 @@ def honeypot_check(request):
 
 
 def spam_check(title, content, email, user_ip, user_agent):
-    akismet_api = Akismet(os.getenv('AKISMET_KEY'), 'https://bearblog.dev')
+    # Skip Akismet check if no API key (local development)
+    akismet_key = os.getenv('AKISMET_KEY')
+    if not akismet_key:
+        return False
+        
+    akismet_api = Akismet(akismet_key, 'https://bearblog.dev')
 
     is_spam = akismet_api.check(
         user_ip=user_ip,
