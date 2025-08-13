@@ -17,9 +17,7 @@
     <a href="{% url 'styles' id=blog.subdomain %}">Themes</a>
     <a href="{% url 'email_list' id=blog.subdomain %}">Emails</a>
     {% endif %}
-    {% if not blog.user.settings.upgraded %}
-    <a href="{% url 'upgrade' %}" style="color:salmon;" class="upgrade">Upgrade <span class="bear flex"></span></a>
-    {% endif %}
+    {% comment %} Upgrade link hidden - all users have premium features {% endcomment %}
 </span>
 
 <span>
@@ -35,12 +33,7 @@
     <small>
     🐼 Your blog is currently hidden from search engines and the
     <a href="https://bearblog.dev/discover/" target="_blank">discover feed</a>.
-
-    {% if blog.is_after_cutoff %}
-        Upgrade to get discovered.
-    {% else %}
-        <a href="{% url 'opt_in_review' id=blog.subdomain %}">Submit your blog for review</a>.
-    {% endif %}
+    <a href="{% url 'opt_in_review' id=blog.subdomain %}">Submit your blog for review</a>.
     </small>
 </p>
 {% endif %}
