@@ -136,7 +136,7 @@ def upload_files(blog, file_list):
         file_name = new_file_name
         
         filepath = f'{blog.subdomain}/{file_name}.{extension}'
-        url = f'https://{bucket_name}.sfo2.cdn.digitaloceanspaces.com/{filepath}'
+        url = f'https://{bucket_name}.sfo3.cdn.digitaloceanspaces.com/{filepath}'
         file_links.append(url)
 
         # Create Media object first
@@ -160,8 +160,8 @@ def upload_to_s3(filepath, file_data, content_type):
     session = boto3.session.Session()
     client = session.client(
         's3',
-        endpoint_url='https://sfo2.digitaloceanspaces.com',
-        region_name='sfo2',
+        endpoint_url='https://sfo3.digitaloceanspaces.com',
+        region_name='sfo3',
         aws_access_key_id=os.getenv('SPACES_ACCESS_KEY_ID'),
         aws_secret_access_key=os.getenv('SPACES_SECRET'))
 
@@ -252,8 +252,8 @@ def get_uploaded_images(blog):
     session = boto3.session.Session()
     client = session.client(
         's3',
-        endpoint_url='https://sfo2.digitaloceanspaces.com',
-        region_name='sfo2',
+        endpoint_url='https://sfo3.digitaloceanspaces.com',
+        region_name='sfo3',
         aws_access_key_id=os.getenv('SPACES_ACCESS_KEY_ID'),
         aws_secret_access_key=os.getenv('SPACES_SECRET'))
 
@@ -264,7 +264,7 @@ def get_uploaded_images(blog):
         return []
 
     image_urls = [
-        f'https://{bucket_name}.sfo2.cdn.digitaloceanspaces.com/{item["Key"]}'
+        f'https://{bucket_name}.sfo3.cdn.digitaloceanspaces.com/{item["Key"]}'
         for item in response['Contents']
         if item['Key'].split('.')[-1].lower() in file_types
     ]
@@ -285,8 +285,8 @@ def delete_selected_media(request, id):
         session = boto3.session.Session()
         client = session.client(
             's3',
-            endpoint_url='https://sfo2.digitaloceanspaces.com',
-            region_name='sfo2',
+            endpoint_url='https://sfo3.digitaloceanspaces.com',
+            region_name='sfo3',
             aws_access_key_id=os.getenv('SPACES_ACCESS_KEY_ID'),
             aws_secret_access_key=os.getenv('SPACES_SECRET')
         )
@@ -294,7 +294,7 @@ def delete_selected_media(request, id):
         for url in selected_media:
             print(url)
             if Media.objects.filter(blog=blog, url=url).exists():
-                key = url.replace(f'https://{bucket_name}.sfo2.cdn.digitaloceanspaces.com/', '')
+                key = url.replace(f'https://{bucket_name}.sfo3.cdn.digitaloceanspaces.com/', '')
                 print(f"Deleting key: {key}")
                 response = client.delete_object(Bucket=bucket_name, Key=key)
                 # print("S3 Response:", response)
@@ -309,7 +309,7 @@ def delete_selected_media(request, id):
 
 def image_proxy(request, img):
     # Construct the DigitalOcean Spaces URL
-    remote_url = f'https://{bucket_name}.sfo2.cdn.digitaloceanspaces.com/{img}'
+    remote_url = f'https://{bucket_name}.sfo3.cdn.digitaloceanspaces.com/{img}'
     
     # Stream the content from the remote URL
     response = requests.get(remote_url, stream=True, timeout=10)
