@@ -123,17 +123,33 @@ Vibera (formerly Bear Blog) is a multi-tenant blogging platform where each blog 
 - Check request metrics and database query times
 - Use rate limiting bypass for testing if needed
 
-## Vibera Transformation Todo List
+## Vibera Transformation Status
 
-### 🚧 Pending Tasks (Bearblog → Vibera)
-8. **Disable paywall** - make all pro features free
-9. **Add Tags section** to posts (user tags + existing tags sorted by usage)
-10. **Add Tools section** to posts (same logic as Tags)
-11. **Add GitHub link section** to posts
-12. **Enable comments by default** on posts
+### ✅ Completed Tasks
+8. **Disable paywall** - ✅ All pro features are free (users upgraded by default)
+9. **Add Tags section** - ✅ UI form field with popular suggestions based on usage
+10. **Add Tools section** - ✅ UI form field with popular suggestions based on usage  
+11. **Add GitHub link section** - ✅ Dedicated URL input field for repository links
+12. **Enable comments by default** - ✅ Comments enabled by default with toggle option
+14. **Enable media/image uploads** - ✅ Enhanced media system with visual previews
+
+### 🔧 Enhanced Features Implemented
+- **Project-focused post creation** - Smaller content textarea for project descriptions
+- **Visual media management** - Image/video preview thumbnails with click-to-insert
+- **Comprehensive file support** - Images (png, jpg, jpeg, tiff, bmp, gif, svg, webp, avif, ico, heic) + Videos (mp4, webm, mkv)
+- **Per-post media limits** - Up to 15 files per post with 10MB per file limit
+- **Popular suggestions system** - Shows top tags/tools based on platform usage
+- **Persistent draft saving** - All form data (tags, tools, media, etc.) preserved when saving drafts
+- **Clean UI/UX** - Removed confusing attributes section, proper form validation
+
+### 🚧 Remaining Tasks
 13. **Add downvote/report functionality** with explanation
-14. **Enable media/image uploads** for all users (move from paywall)
-15. **Upgrade search** with Tags and Tools filter sections
+15. **Upgrade search** with Tags and Tools filter sections  
 16. **Update branding** from Bearblog to Vibera
 
-**Priority order**: Start with #8 (disable paywall), then #9-11 (post enhancements), then #15 (search), finally #16 (branding).
+### 🗄️ Database Schema Updates
+- `Post.all_tools` (JSONField) - Stores tools used in project
+- `Post.github_url` (CharField) - Repository URL
+- `Post.comments_enabled` (BooleanField) - Comment toggle (default: True)
+- `Post.media_urls` (JSONField) - Tracks uploaded media per post
+- `Blog.all_tools` (JSONField) - Aggregated tools across blog posts
