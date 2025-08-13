@@ -26,7 +26,7 @@ def get_base_query(user=None):
     ).annotate(
         content_length=Length('content')
     ).filter(
-        content_length__gte=100
+        content_length__gte=10
     )
 
     if user and user.is_authenticated:

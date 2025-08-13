@@ -35,8 +35,7 @@ class UserSettings(models.Model):
 @receiver(post_save, sender=User)
 def create_user_settings(sender, instance, **kwargs):
     user_settings, created = UserSettings.objects.get_or_create(user=instance)
-    if user_settings.upgraded:
-        user_settings.user.blogs.update(reviewed=True)
+    # Auto-review disabled - manual review required
 
 
 class Blog(models.Model):
@@ -211,9 +210,7 @@ class Blog(models.Model):
         # Handle all tags
         self.update_all_tags()
 
-        # Upgraded blogs are auto-reviewed
-        if self.user.settings.upgraded:
-            self.reviewed = True
+        # Auto-review disabled - manual review required
         
         # Determine how dodgy the blog is if it's not reviewed
         if not self.reviewed:
