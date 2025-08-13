@@ -49,7 +49,7 @@ def media_center(request, id):
 
     # Upload media
     if request.method == "POST" and request.FILES.getlist('file') and blog.user.settings.upgraded is True:
-        file_links = upload_files(blog, request.FILES.getlist('file'))
+        file_links = upload_files(blog, request.FILES.getlist('file'), None)
         for link in file_links:
             if 'Error' in link:
                 error_messages.append(link)
@@ -90,15 +90,34 @@ def upload_image(request, id):
         blog = get_object_or_404(Blog, user=request.user, subdomain=id)
 
     if request.method == "POST" and blog.user.settings.upgraded is True:
-        file_links = upload_files(blog, request.FILES.getlist('file'))
+        post_uid = request.POST.get('post_uid')
+        post = None
+        if post_uid:
+            from .models import Post
+            try:
+                post = Post.objects.get(blog=blog, uid=post_uid)
+            except Post.DoesNotExist:
+                pass
+        
+        file_links = upload_files(blog, request.FILES.getlist('file'), post)
 
         return HttpResponse(json.dumps(sorted(file_links)), 200)
 
 
-def upload_files(blog, file_list):
+def upload_files(blog, file_list, post=None):
     file_links = []
 
+    # Check per-post limit if post is provided
+    if post and len(post.media_urls) >= 15:
+        file_links.append('Error: Maximum 15 files per post limit reached.')
+        return sorted(file_links)
+
     for file in file_list:
+        # Check per-post limit for each file if post is provided
+        if post and len(post.media_urls) + len(file_links) >= 15:
+            file_links.append('Error: Upload would exceed 15 files per post limit.')
+            break
+            
         # Fair use limit
         if blog.media.count() > 20000:
             file_links.append('Error: Fair usage limit exceeded. Contact site admin.')
@@ -109,8 +128,8 @@ def upload_files(blog, file_list):
             file_links.append(f'Error: File {file.name} exceeds 10MB limit')
             break
         
-        # Only allowed file types but also explicitly excluding heic since Safari auto-converts it otherwise
-        if not file.name.lower().endswith(tuple(file_types)) or file.name.lower().endswith('heic'):
+        # Only allowed file types
+        if not file.name.lower().endswith(tuple(file_types)):
             file_links.append(f'Error: File type not supported: {file.name}')
             break
         
@@ -138,6 +157,11 @@ def upload_files(blog, file_list):
         filepath = f'{blog.subdomain}/{file_name}.{extension}'
         url = f'https://{bucket_name}.sfo3.cdn.digitaloceanspaces.com/{filepath}'
         file_links.append(url)
+
+        # Add to post's media_urls if post is provided
+        if post:
+            post.media_urls.append(url)
+            post.save()
 
         # Create Media object first
         Media.objects.create(blog=blog, url=url)

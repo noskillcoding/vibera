@@ -58,6 +58,7 @@ class Blog(models.Model):
     header_directive = models.TextField(blank=True)
     footer_directive = models.TextField(blank=True)
     all_tags = models.TextField(default='[]')
+    all_tools = models.TextField(default='[]')
 
     custom_styles = models.TextField(blank=True)
     overwrite_styles = models.BooleanField(
@@ -140,6 +141,10 @@ class Blog(models.Model):
     def tags(self):
         return sorted(json.loads(self.all_tags))
     
+    @property
+    def tools(self):
+        return sorted(json.loads(self.all_tools))
+    
     def generate_auth_token(self):
         allowed_chars = string.ascii_letters.replace('O', '').replace('l', '')
         self.auth_token = ''.join(random.choice(allowed_chars) for _ in range(30))
@@ -166,11 +171,15 @@ class Blog(models.Model):
 
     def update_all_tags(self):
         all_tags = []
+        all_tools = []
         if self.pk:
             for post in Post.objects.filter(blog=self, publish=True, is_page=False, published_date__lt=timezone.now()):
                 all_tags.extend(json.loads(post.all_tags))
+                all_tools.extend(json.loads(post.all_tools))
                 all_tags = list(set(all_tags))
+                all_tools = list(set(all_tools))
         self.all_tags = json.dumps(all_tags)
+        self.all_tools = json.dumps(all_tools)
 
     def invalidate_cloudflare_cache(self):
         if os.getenv('ENVIRONMENT') == 'dev':
@@ -251,6 +260,10 @@ class Post(models.Model):
     published_date = models.DateTimeField(blank=True, db_index=True)
     last_modified = models.DateTimeField(auto_now_add=True, blank=True)
     all_tags = models.TextField(default='[]')
+    all_tools = models.TextField(default='[]')
+    github_url = models.CharField(max_length=500, blank=True)
+    comments_enabled = models.BooleanField(default=True)
+    media_urls = models.JSONField(default=list, blank=True)
     publish = models.BooleanField(default=True, db_index=True)
     make_discoverable = models.BooleanField(default=True, db_index=True)
     is_page = models.BooleanField(default=False, db_index=True)
@@ -274,6 +287,10 @@ class Post(models.Model):
     @property
     def tags(self):
         return sorted(json.loads(self.all_tags))
+    
+    @property
+    def tools(self):
+        return sorted(json.loads(self.all_tools))
     
     @property
     def token(self):
@@ -305,6 +322,8 @@ class Post(models.Model):
         self.slug = self.slug.lower()
         if not self.all_tags:
             self.all_tags = '[]'
+        if not self.all_tools:
+            self.all_tools = '[]'
         
         # Create unique random identifier
         if not self.uid:

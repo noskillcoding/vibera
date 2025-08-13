@@ -18,7 +18,28 @@ from blogs.backup import backup_in_thread
 from blogs.forms import AdvancedSettingsForm, BlogForm, DashboardCustomisationForm, PostTemplateForm
 from blogs.helpers import check_connection, is_protected, salt_and_hash
 from blogs.models import Blog, Post, Upvote
+from collections import Counter
 from blogs.subscriptions import get_subscriptions
+
+
+def get_popular_tags_and_tools(limit=10):
+    """Get the most popular tags and tools from published posts"""
+    # Get all published posts
+    posts = Post.objects.filter(publish=True, is_page=False)
+    
+    # Count tags
+    all_tags = []
+    all_tools = []
+    
+    for post in posts:
+        all_tags.extend(json.loads(post.all_tags))
+        all_tools.extend(json.loads(post.all_tools))
+    
+    # Get top counts
+    popular_tags = Counter(all_tags).most_common(limit)
+    popular_tools = Counter(all_tools).most_common(limit)
+    
+    return popular_tags, popular_tools
 
 
 @login_required
@@ -198,6 +219,10 @@ def post(request, id, uid=None):
             post.make_discoverable = True
             post.lang = ''
             post.all_tags = '[]'
+            post.all_tools = '[]'
+            post.github_url = ''
+            post.comments_enabled = True
+            post.media_urls = []
 
             # Parse and populate header data
             for item in raw_header:
@@ -248,6 +273,26 @@ def post(request, id, uid=None):
                         if stripped_tag and stripped_tag not in tags:
                             tags.append(stripped_tag)
                     post.all_tags = json.dumps(tags)
+                elif name == 'tools':
+                    tools = []
+                    for tool in value.split(','):
+                        stripped_tool = tool.strip()
+                        if stripped_tool and stripped_tool not in tools:
+                            tools.append(stripped_tool)
+                    post.all_tools = json.dumps(tools)
+                elif name == 'github_url':
+                    post.github_url = value
+                elif name == 'comments_enabled':
+                    if type(value) is bool:
+                        post.comments_enabled = value
+                    else:
+                        error_messages.append('comments_enabled needs to be "true" or "false"')
+                elif name == 'media_urls':
+                    try:
+                        media_urls = json.loads(value) if value else []
+                        post.media_urls = media_urls
+                    except json.JSONDecodeError:
+                        error_messages.append('Invalid media_urls format')
                 elif name == 'make_discoverable':
                     if type(value) is bool:
                         post.make_discoverable = value
@@ -262,8 +307,6 @@ def post(request, id, uid=None):
                     post.class_name = slugify(value)
                 elif name == 'canonical_url':
                     post.canonical_url = value
-                elif name == 'lang':
-                    post.lang = value
                 elif name == 'meta_description':
                     post.meta_description = value
                 elif name == 'meta_image':
@@ -311,13 +354,18 @@ def post(request, id, uid=None):
         if len(template_parts) == 2:
             template_header, template_body = template_parts
 
+    # Get popular tags and tools for suggestions
+    popular_tags, popular_tools = get_popular_tags_and_tools(10)
+    
     return render(request, 'studio/post_edit.html', {
         'blog': blog,
         'post': post,
         'error_messages': error_messages,
         'template_header': template_header,
         'template_body': template_body,
-        'is_page': is_page
+        'is_page': is_page,
+        'popular_tags': popular_tags,
+        'popular_tools': popular_tools
     })
 
 
@@ -375,6 +423,10 @@ def preview(request, id):
             post.is_page = False
             post.make_discoverable = True
             post.lang = ''
+            post.all_tools = '[]'
+            post.github_url = ''
+            post.comments_enabled = True
+            post.media_urls = []
 
             # Parse and populate header data
             for item in raw_header:
@@ -403,8 +455,6 @@ def preview(request, id):
                     post.class_name = slugify(value)
                 elif name == 'canonical_url':
                     post.canonical_url = value
-                elif name == 'lang':
-                    post.lang = value
                 elif name == 'meta_description':
                     post.meta_description = value
                 elif name == 'meta_image':

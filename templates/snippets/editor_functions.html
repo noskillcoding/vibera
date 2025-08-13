@@ -1,4 +1,4 @@
-<input type="file" id="file" hidden multiple accept="image/*, .mp4, .mp3, .pdf">
+<input type="file" id="file" hidden multiple accept="image/*,video/*,.mp4,.webm,.mkv,.heic,.tiff,.bmp,.svg,.webp,.avif,.ico">
 
 <script>
 	const $publishedDate = document.getElementById('published-date');
@@ -11,6 +11,7 @@
 	
 	// Submitting form with header content
 	const addHeaderContentToFormAndSubmit = () => {
+		syncFormFieldsToHeader();
 		$hiddenHeaderContent.value = $headerContent.innerText;
 		$form.submit();
 	}
@@ -114,6 +115,209 @@
 		}
 	}
 
+	// Media preview functions (available to all users)
+	window.addImageToPreview = function(imageUrl, fileName) {
+		console.log('Adding image to preview:', imageUrl, fileName);
+		const mediaPreview = document.getElementById('media-preview');
+		const mediaContainer = document.getElementById('media-container');
+		
+		if (!mediaPreview || !mediaContainer) {
+			console.error('Media preview elements not found');
+			return;
+		}
+		
+		// Show the preview area
+		mediaPreview.style.display = 'block';
+		
+		// Create media item
+		const mediaItem = document.createElement('div');
+		mediaItem.className = 'media-item';
+		mediaItem.setAttribute('data-url', imageUrl);
+		mediaItem.style.position = 'relative';
+		
+		// Check if it's a video file
+		const isVideo = imageUrl.toLowerCase().match(/\.(mp4|webm|mkv)$/);
+		
+		if (isVideo) {
+			const video = document.createElement('video');
+			video.src = imageUrl;
+			video.style.cssText = 'width: 80px; height: 80px; object-fit: cover; border-radius: 3px; cursor: pointer;';
+			video.onclick = () => insertMediaToTextarea(imageUrl, fileName);
+			mediaItem.appendChild(video);
+		} else {
+			const img = document.createElement('img');
+			img.src = imageUrl;
+			img.style.cssText = 'width: 80px; height: 80px; object-fit: cover; border-radius: 3px; cursor: pointer;';
+			img.loading = 'lazy';
+			img.onclick = () => insertMediaToTextarea(imageUrl, fileName);
+			
+			// Add error handling for broken images
+			img.onerror = function() {
+				console.error('Failed to load image:', imageUrl);
+				
+				// Try the original filename without webp conversion
+				if (imageUrl.includes('.webp') && fileName) {
+					const originalUrl = imageUrl.replace('.webp', '.' + fileName.split('.').pop().toLowerCase());
+					console.log('Trying original format:', originalUrl);
+					this.src = originalUrl;
+					return;
+				}
+				
+				// Show placeholder
+				this.style.backgroundColor = '#f0f0f0';
+				this.style.display = 'flex';
+				this.style.alignItems = 'center';
+				this.style.justifyContent = 'center';
+				this.textContent = '🖼️';
+				this.style.fontSize = '24px';
+			};
+			
+			img.onload = function() {
+				console.log('Image loaded successfully:', imageUrl);
+			};
+			
+			mediaItem.appendChild(img);
+		}
+		
+		// Add remove button
+		const removeBtn = document.createElement('button');
+		removeBtn.textContent = '×';
+		removeBtn.style.cssText = 'position: absolute; top: -5px; right: -5px; background: red; color: white; border: none; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; cursor: pointer;';
+		removeBtn.onclick = () => removeMedia(imageUrl);
+		mediaItem.appendChild(removeBtn);
+		
+		mediaContainer.appendChild(mediaItem);
+	}
+
+	window.insertMediaToTextarea = function(mediaUrl, fileName) {
+		const position = $textarea.selectionStart || $textarea.value.length;
+		const isVideo = mediaUrl.toLowerCase().match(/\.(mp4|webm|mkv)$/);
+		const name = fileName || mediaUrl.split('/').pop().split('.')[0];
+		
+		let markdown;
+		if (isVideo) {
+			markdown = `<video src="${mediaUrl}" controls style="max-width: 100%;"></video>\n\n`;
+		} else {
+			markdown = `![${name}](${mediaUrl})\n\n`;
+		}
+		
+		$textarea.value = $textarea.value.substring(0, position) + markdown + $textarea.value.substring(position);
+		$textarea.selectionStart = $textarea.selectionEnd = position + markdown.length;
+		$textarea.focus();
+	}
+
+	window.removeMedia = function(mediaUrl) {
+		if (!confirm('Remove this media item?')) return;
+		
+		// Remove from preview
+		const mediaItem = document.querySelector(`[data-url="${mediaUrl}"]`);
+		if (mediaItem) {
+			mediaItem.remove();
+		}
+		
+		// Hide preview area if no more media
+		const mediaContainer = document.getElementById('media-container');
+		if (mediaContainer.children.length === 0) {
+			document.getElementById('media-preview').style.display = 'none';
+		}
+		
+		// TODO: Remove from post.media_urls (would need backend call)
+		// For now, user can manually remove from content
+	}
+
+	// Helper functions for adding tags/tools - make them global
+	window.addTag = function(tag) {
+		console.log('Adding tag:', tag);
+		const tagsInput = document.getElementById('tags-input');
+		const currentTags = tagsInput.value.split(',').map(t => t.trim()).filter(t => t);
+		if (!currentTags.includes(tag)) {
+			currentTags.push(tag);
+			tagsInput.value = currentTags.join(', ');
+		}
+	}
+
+	window.addTool = function(tool) {
+		console.log('Adding tool:', tool);
+		const toolsInput = document.getElementById('tools-input');
+		const currentTools = toolsInput.value.split(',').map(t => t.trim()).filter(t => t);
+		if (!currentTools.includes(tool)) {
+			currentTools.push(tool);
+			toolsInput.value = currentTools.join(', ');
+		}
+	}
+
+	// Sync form fields to header content
+	function syncFormFieldsToHeader() {
+		const tagsInput = document.getElementById('tags-input');
+		const toolsInput = document.getElementById('tools-input');
+		const githubInput = document.getElementById('github-input');
+		const commentsCheckbox = document.getElementById('comments-checkbox');
+		
+		// Build header content from scratch to avoid corruption
+		let headerParts = [];
+		
+		// Always include title (get from existing header or default)
+		let title = 'New post';
+		const existingTitle = $headerContent.innerHTML.match(/<b>title:<\/b>\s*([^<]*)/);
+		if (existingTitle) {
+			title = existingTitle[1].trim();
+		}
+		headerParts.push(`<b>title:</b> ${title}`);
+		
+		// Add tags if present
+		if (tagsInput && tagsInput.value.trim()) {
+			headerParts.push(`<b>tags:</b> ${tagsInput.value.trim()}`);
+		}
+		
+		// Add tools if present
+		if (toolsInput && toolsInput.value.trim()) {
+			headerParts.push(`<b>tools:</b> ${toolsInput.value.trim()}`);
+		}
+		
+		// Add github_url if present
+		if (githubInput && githubInput.value.trim()) {
+			headerParts.push(`<b>github_url:</b> ${githubInput.value.trim()}`);
+		}
+		
+		// Add comments_enabled if disabled
+		if (commentsCheckbox && !commentsCheckbox.checked) {
+			headerParts.push(`<b>comments_enabled:</b> false`);
+		}
+		
+		// Add media URLs from preview area
+		const mediaItems = document.querySelectorAll('.media-item');
+		const mediaUrls = Array.from(mediaItems).map(item => item.getAttribute('data-url'));
+		if (mediaUrls.length > 0) {
+			headerParts.push(`<b>media_urls:</b> ${JSON.stringify(mediaUrls)}`);
+		}
+		
+		// Set the complete header content
+		$headerContent.innerHTML = headerParts.join('<br>');
+		console.log('Synced header content:', $headerContent.innerHTML);
+	}
+
+	function updateHeaderField(headerText, fieldName, value) {
+		const regex = new RegExp(`<b>${fieldName}:</b>\\s*[^<]*(?:<br>|$)`, 'i');
+		const newField = `<b>${fieldName}:</b> ${value}<br>`;
+		
+		if (regex.test(headerText)) {
+			return headerText.replace(regex, newField);
+		} else {
+			// Add new field before the last line (usually make_discoverable)
+			const lastBrIndex = headerText.lastIndexOf('<br>');
+			if (lastBrIndex !== -1) {
+				return headerText.substring(0, lastBrIndex) + '<br>' + newField + headerText.substring(lastBrIndex);
+			} else {
+				return headerText + '<br>' + newField;
+			}
+		}
+	}
+
+	function removeHeaderField(headerText, fieldName) {
+		const regex = new RegExp(`<b>${fieldName}:</b>\\s*[^<]*<br>`, 'i');
+		return headerText.replace(regex, '');
+	}
+
 	// Upgraded features
 	{% if request.user.settings.upgraded %}
 	// Upload images
@@ -147,7 +351,10 @@
 	}
 
 	function uploadNextFile(index, files) {
+		if (index >= files.length) return; // No more files to upload
+		
 		const file = files[index];
+		if (!file) return; // Safety check
 
 		if (file.size > 10000000) {
 			alert(`File over the 10mb limit. Consider resizing it or uploading it elsewhere.`);
@@ -156,6 +363,7 @@
 
 		const formData = new FormData();
 		formData.append("file", file);
+		{% if post %}formData.append("post_uid", "{{ post.uid }}");{% endif %}
 
 		const target = "{% url 'upload_image' id=blog.subdomain %}";
 		const position = $textarea.selectionStart || 0;
@@ -173,19 +381,38 @@
 		xhr.onload = function() {
 			if (this.status === 200) {
 				const response = JSON.parse(this.responseText);
-				const imageName = file.name.split('.')[0];
+				console.log('Upload response:', response);
 
-				response.forEach(image => {
-					const toInsert = `![${imageName}](${image})\n`;
-					const currentText = $textarea.value;
-					const start = currentText.indexOf(placeholder);
-
-					if (start !== -1) {
-						$textarea.value = currentText.substring(0, start) + toInsert + currentText.substring(start + placeholder.length);
-						$textarea.selectionStart = $textarea.selectionEnd = start + toInsert.length;
+				response.forEach(imageUrl => {
+					if (!imageUrl.startsWith('Error:')) {
+						// Remove placeholder
+						const currentText = $textarea.value;
+						const start = currentText.indexOf(placeholder);
+						if (start !== -1) {
+							$textarea.value = currentText.substring(0, start) + currentText.substring(start + placeholder.length);
+						}
+						
+						// Add image to preview area (with slight delay for upload to complete)
+						setTimeout(() => {
+							try {
+								addImageToPreview(imageUrl, file.name);
+							} catch (err) {
+							console.error('Error adding image to preview:', err);
+							// Fallback: add markdown to textarea
+								const imageName = file.name.split('.')[0];
+								const markdown = `![${imageName}](${imageUrl})\n`;
+								$textarea.value = $textarea.value + markdown;
+							}
+						}, 1500); // Wait 1.5 seconds for upload to complete
 					} else {
-						$textarea.value += toInsert;
-						$textarea.selectionStart = $textarea.selectionEnd = $textarea.value.length;
+						// Handle error in response
+						console.error('Upload error:', imageUrl);
+						alert('Upload error: ' + imageUrl);
+						const currentText = $textarea.value;
+						const start = currentText.indexOf(placeholder);
+						if (start !== -1) {
+							$textarea.value = currentText.substring(0, start) + `![Upload failed: ${imageUrl}]\n` + currentText.substring(start + placeholder.length);
+						}
 					}
 				});
 
@@ -210,5 +437,6 @@
 	    	window.open('/dashboard/upgrade/')
 		}
 	}
+
 	{% endif %}
 </script>
