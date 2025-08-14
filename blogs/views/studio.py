@@ -215,6 +215,7 @@ def post(request, id, uid=None):
             post.canonical_url = ''
             post.meta_description = ''
             post.meta_image = ''
+            post.short_description = ''
             post.is_page = False
             post.make_discoverable = True
             post.lang = ''
@@ -242,6 +243,8 @@ def post(request, id, uid=None):
 
                 if name == 'title':
                     post.title = value
+                elif name == 'short_description':
+                    post.short_description = value[:100]  # Enforce 100 char limit
                 elif name == 'link':
                     slug = value
                 elif name == 'alias':
@@ -340,7 +343,11 @@ def post(request, id, uid=None):
                     upvote = Upvote(post=post, hash_id=salt_and_hash(request, 'year'))
                     upvote.save()
 
-                    # Redirect to the new post detail view
+                # If publishing, redirect to posts page for better UX
+                if post.publish:
+                    return redirect('posts_edit', id=blog.subdomain)
+                else:
+                    # If saving as draft, redirect to the edit page
                     return redirect('post_edit', id=blog.subdomain, uid=post.uid)
 
         except Exception as error:
@@ -420,6 +427,7 @@ def preview(request, id):
             post.canonical_url = ''
             post.meta_description = ''
             post.meta_image = ''
+            post.short_description = ''
             post.is_page = False
             post.make_discoverable = True
             post.lang = ''
@@ -440,6 +448,8 @@ def preview(request, id):
 
                 if name == 'title':
                     post.title = value
+                elif name == 'short_description':
+                    post.short_description = value[:100]  # Enforce 100 char limit
                 elif name == 'alias':
                     post.alias = value
                 elif name == 'published_date':

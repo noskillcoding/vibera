@@ -248,21 +248,32 @@
 
 	// Sync form fields to header content
 	function syncFormFieldsToHeader() {
+		const titleInput = document.getElementById('title-input');
 		const tagsInput = document.getElementById('tags-input');
 		const toolsInput = document.getElementById('tools-input');
 		const githubInput = document.getElementById('github-input');
 		const commentsCheckbox = document.getElementById('comments-checkbox');
+		const shortDescInput = document.getElementById('short-description-input');
 		
 		// Build header content from scratch to avoid corruption
 		let headerParts = [];
 		
-		// Always include title (get from existing header or default)
+		// Include title from input field or default
 		let title = 'New post';
-		const existingTitle = $headerContent.innerHTML.match(/<b>title:<\/b>\s*([^<]*)/);
-		if (existingTitle) {
-			title = existingTitle[1].trim();
+		if (titleInput && titleInput.value.trim()) {
+			title = titleInput.value.trim();
+		} else {
+			const existingTitle = $headerContent.innerHTML.match(/<b>title:<\/b>\s*([^<]*)/);
+			if (existingTitle) {
+				title = existingTitle[1].trim();
+			}
 		}
 		headerParts.push(`<b>title:</b> ${title}`);
+		
+		// Add short description if present
+		if (shortDescInput && shortDescInput.value.trim()) {
+			headerParts.push(`<b>short_description:</b> ${shortDescInput.value.trim()}`);
+		}
 		
 		// Add tags if present
 		if (tagsInput && tagsInput.value.trim()) {
@@ -439,4 +450,24 @@
 	}
 
 	{% endif %}
+	
+	// Character counter for short description
+	const shortDescInput = document.getElementById('short-description-input');
+	const charCountElement = document.getElementById('char-count');
+	
+	if (shortDescInput && charCountElement) {
+		shortDescInput.addEventListener('input', function() {
+			const currentLength = this.value.length;
+			charCountElement.textContent = currentLength;
+			
+			// Change color when approaching limit
+			if (currentLength > 90) {
+				charCountElement.style.color = '#ff6b6b';
+			} else if (currentLength > 75) {
+				charCountElement.style.color = '#ffa726';
+			} else {
+				charCountElement.style.color = '#666';
+			}
+		});
+	}
 </script>
