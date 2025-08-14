@@ -99,94 +99,119 @@ New post | Bear Blog
         <a href="{% url 'media_center' id=blog.subdomain %}" target="_blank" style="font-size: 14px;">Media Center</a>
     </p>
     
-    <!-- Media Preview Section -->
-    <div id="media-preview" style="margin-bottom: 15px; {% if not post.media_urls or post.media_urls|length == 0 %}display: none;{% endif %}">
-        <div id="media-container" style="display: flex; flex-wrap: wrap; gap: 10px; max-height: 120px; overflow-y: auto; padding: 10px; border: 1px solid #ddd; border-radius: 3px; background: #f9f9f9;">
-            {% if post.media_urls %}
-                {% for media_url in post.media_urls %}
-                    <div class="media-item" data-url="{{ media_url }}" style="position: relative;">
-                        {% if media_url|slice:"-4:" == ".mp4" or media_url|slice:"-5:" == ".webm" or media_url|slice:"-4:" == ".mkv" %}
-                            <video src="{{ media_url }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 3px; cursor: pointer;" onclick="insertMediaToTextarea('{{ media_url }}', '{{ media_url|slice:"-20:" }}')"></video>
-                        {% else %}
-                            <img src="{{ media_url }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 3px; cursor: pointer;" onclick="insertMediaToTextarea('{{ media_url }}')" loading="lazy">
-                        {% endif %}
-                        <button onclick="removeMedia('{{ media_url }}')" style="position: absolute; top: -5px; right: -5px; background: red; color: white; border: none; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; cursor: pointer;">×</button>
-                    </div>
-                {% endfor %}
-            {% endif %}
+    {% if post.is_page or is_page %}
+        <!-- Page Description -->
+        <div class="page-description" style="margin-bottom: 20px; padding: 15px; background: #f0f8ff; border: 1px solid #b0d4f1; border-radius: 5px; font-size: 14px;">
+            <strong>Pages</strong> are static content for your site like "About", "Contact", or other standalone content. Unlike projects, pages don't appear in discovery feeds and are accessed via navigation menus.
         </div>
-    </div>
 
-    <!-- Project Title Section -->
-    <div style="margin-bottom: 15px;">
-        <label style="display: block; font-weight: bold; margin-bottom: 5px;">Project Title</label>
-        <input type="text" id="title-input" 
-               placeholder="Enter your project title..."
-               style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; font-size: 16px;"
-               value="{% if post.title %}{{ post.title }}{% endif %}">
-    </div>
-
-    <!-- Short Description Section -->
-    <div style="margin-bottom: 15px;">
-        <label style="display: block; font-weight: bold; margin-bottom: 5px;">Short Description (for discovery feed)</label>
-        <input type="text" id="short-description-input" maxlength="100" 
-               placeholder="A brief description of your project (max 100 characters)..."
-               style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px;"
-               value="{% if post.short_description %}{{ post.short_description }}{% endif %}">
-        <div id="char-counter" style="font-size: 12px; color: #666; text-align: right; margin-top: 2px;">
-            <span id="char-count">{% if post.short_description %}{{ post.short_description|length }}{% else %}0{% endif %}</span>/100 characters
-        </div>
-    </div>
-
-    <textarea
-        name="body_content"
-        id="body_content"
-        style="min-height: 200px;border-top: 1px solid lightgrey;"
-        placeholder="Describe your project..."
-    >{% if post %}{{ post.content }}{% else %}{{ template_body }}{% endif %}</textarea>
-
-    <!-- Project Details Sections -->
-    <div style="margin-top: 20px;">
-        <!-- Tags Section -->
+        <!-- Page Title Section -->
         <div style="margin-bottom: 15px;">
-            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Tags</label>
-            <input type="text" id="tags-input" placeholder="mobile, crypto, dev tools" 
-                   style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px;"
-                   value="{% if post.tags %}{{ post.tags|join:", " }}{% endif %}">
-            <div id="suggested-tags" style="margin-top: 5px; font-size: 12px; color: #666;">
-                Popular: <span style="cursor: pointer; color: #0066cc;" onclick="addTag('mobile')">mobile</span>, <span style="cursor: pointer; color: #0066cc;" onclick="addTag('crypto')">crypto</span>, <span style="cursor: pointer; color: #0066cc;" onclick="addTag('dev tools')">dev tools</span>{% if popular_tags %}{% for tag, count in popular_tags|slice:":10" %}{% if tag not in 'mobile,crypto,dev tools' %}, <span style="cursor: pointer; color: #0066cc;" onclick="addTag('{{ tag }}')">{{ tag }}</span>{% endif %}{% endfor %}{% endif %}
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Page Title</label>
+            <input type="text" id="title-input" 
+                   placeholder="Enter page title..."
+                   style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; font-size: 16px; box-sizing: border-box;"
+                   value="{% if post.title %}{{ post.title }}{% endif %}">
+        </div>
+
+        <textarea
+            name="body_content"
+            id="body_content"
+            style="width: 100%; min-height: 400px; padding: 8px; border: 1px solid #ddd; border-radius: 3px; resize: vertical; box-sizing: border-box; font-family: inherit;"
+            placeholder="Enter your page content..."
+        >{% if post %}{{ post.content }}{% else %}{{ template_body }}{% endif %}</textarea>
+    {% else %}
+        <!-- Media Preview Section -->
+        <div id="media-preview" style="margin-bottom: 15px; {% if not post.media_urls or post.media_urls|length == 0 %}display: none;{% endif %}">
+            <div id="media-container" style="display: flex; flex-wrap: wrap; gap: 10px; max-height: 120px; overflow-y: auto; padding: 10px; border: 1px solid #ddd; border-radius: 3px; background: #f9f9f9;">
+                {% if post.media_urls %}
+                    {% for media_url in post.media_urls %}
+                        <div class="media-item" data-url="{{ media_url }}" style="position: relative;">
+                            {% if media_url|slice:"-4:" == ".mp4" or media_url|slice:"-5:" == ".webm" or media_url|slice:"-4:" == ".mkv" %}
+                                <video src="{{ media_url }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 3px; cursor: pointer;" onclick="insertMediaToTextarea('{{ media_url }}', '{{ media_url|slice:"-20:" }}')"></video>
+                            {% else %}
+                                <img src="{{ media_url }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 3px; cursor: pointer;" onclick="insertMediaToTextarea('{{ media_url }}')" loading="lazy">
+                            {% endif %}
+                            <button onclick="removeMedia('{{ media_url }}')" style="position: absolute; top: -5px; right: -5px; background: red; color: white; border: none; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; cursor: pointer;">×</button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
             </div>
         </div>
 
-        <!-- Tools Section -->
+        <!-- Project Title Section -->
         <div style="margin-bottom: 15px;">
-            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Tools Used</label>
-            <input type="text" id="tools-input" placeholder="cursor, claude code, GPT5" 
-                   style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px;"
-                   value="{% if post.tools %}{{ post.tools|join:", " }}{% endif %}">
-            <div id="suggested-tools" style="margin-top: 5px; font-size: 12px; color: #666;">
-                Popular: <span style="cursor: pointer; color: #0066cc;" onclick="addTool('cursor')">cursor</span>, <span style="cursor: pointer; color: #0066cc;" onclick="addTool('claude code')">claude code</span>, <span style="cursor: pointer; color: #0066cc;" onclick="addTool('GPT5')">GPT5</span>{% if popular_tools %}{% for tool, count in popular_tools|slice:":10" %}{% if tool not in 'cursor,claude code,GPT5' %}, <span style="cursor: pointer; color: #0066cc;" onclick="addTool('{{ tool }}')">{{ tool }}</span>{% endif %}{% endfor %}{% endif %}
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Project Title</label>
+            <input type="text" id="title-input" 
+                   placeholder="Enter your project title..."
+                   style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; font-size: 16px; box-sizing: border-box;"
+                   value="{% if post.title %}{{ post.title }}{% endif %}">
+        </div>
+
+        <!-- Short Description Section -->
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Short Description (for discovery feed)</label>
+            <input type="text" id="short-description-input" maxlength="100" 
+                   placeholder="A brief description of your project (max 100 characters)..."
+                   style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; box-sizing: border-box;"
+                   value="{% if post.short_description %}{{ post.short_description }}{% endif %}">
+            <div id="char-counter" style="font-size: 12px; color: #666; text-align: right; margin-top: 2px;">
+                <span id="char-count">{% if post.short_description %}{{ post.short_description|length }}{% else %}0{% endif %}</span>/100 characters
             </div>
         </div>
 
-        <!-- GitHub Section -->
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; font-weight: bold; margin-bottom: 5px;">GitHub Repository</label>
-            <input type="url" id="github-input" placeholder="https://github.com/username/project" 
-                   style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px;"
-                   value="{% if post.github_url %}{{ post.github_url }}{% endif %}">
-        </div>
+        <textarea
+            name="body_content"
+            id="body_content"
+            style="width: 100%; min-height: 200px; padding: 8px; border: 1px solid #ddd; border-radius: 3px; resize: vertical; box-sizing: border-box; font-family: inherit;"
+            placeholder="Describe your project..."
+        >{% if post %}{{ post.content }}{% else %}{{ template_body }}{% endif %}</textarea>
+    {% endif %}
 
-        <!-- Comments Section -->
-        <div style="margin-bottom: 15px;">
-            <label style="display: flex; align-items: center; font-weight: bold;">
-                <input type="checkbox" id="comments-checkbox" 
-                       style="margin-right: 8px;" 
-                       {% if post.comments_enabled != False %}checked{% endif %}>
-                Enable comments on this project
-            </label>
+    {% if not post.is_page and not is_page %}
+        <!-- Project Details Sections -->
+        <div style="margin-top: 20px;">
+            <!-- Tags Section -->
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 5px;">Tags</label>
+                <input type="text" id="tags-input" placeholder="mobile, crypto, dev tools" 
+                       style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; box-sizing: border-box;"
+                       value="{% if post.tags %}{{ post.tags|join:", " }}{% endif %}">
+                <div id="suggested-tags" style="margin-top: 5px; font-size: 12px; color: #666;">
+                    Popular: <span style="cursor: pointer; color: #0066cc;" onclick="addTag('mobile')">mobile</span>, <span style="cursor: pointer; color: #0066cc;" onclick="addTag('crypto')">crypto</span>, <span style="cursor: pointer; color: #0066cc;" onclick="addTag('dev tools')">dev tools</span>{% if popular_tags %}{% for tag, count in popular_tags|slice:":10" %}{% if tag not in 'mobile,crypto,dev tools' %}, <span style="cursor: pointer; color: #0066cc;" onclick="addTag('{{ tag }}')">{{ tag }}</span>{% endif %}{% endfor %}{% endif %}
+                </div>
+            </div>
+
+            <!-- Tools Section -->
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 5px;">Tools Used</label>
+                <input type="text" id="tools-input" placeholder="cursor, claude code, GPT5" 
+                       style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; box-sizing: border-box;"
+                       value="{% if post.tools %}{{ post.tools|join:", " }}{% endif %}">
+                <div id="suggested-tools" style="margin-top: 5px; font-size: 12px; color: #666;">
+                    Popular: <span style="cursor: pointer; color: #0066cc;" onclick="addTool('cursor')">cursor</span>, <span style="cursor: pointer; color: #0066cc;" onclick="addTool('claude code')">claude code</span>, <span style="cursor: pointer; color: #0066cc;" onclick="addTool('GPT5')">GPT5</span>{% if popular_tools %}{% for tool, count in popular_tools|slice:":10" %}{% if tool not in 'cursor,claude code,GPT5' %}, <span style="cursor: pointer; color: #0066cc;" onclick="addTool('{{ tool }}')">{{ tool }}</span>{% endif %}{% endfor %}{% endif %}
+                </div>
+            </div>
+
+            <!-- GitHub Section -->
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; font-weight: bold; margin-bottom: 5px;">GitHub Repository</label>
+                <input type="url" id="github-input" placeholder="https://github.com/username/project" 
+                       style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; box-sizing: border-box;"
+                       value="{% if post.github_url %}{{ post.github_url }}{% endif %}">
+            </div>
+
+            <!-- Comments Section -->
+            <div style="margin-bottom: 15px;">
+                <label style="display: flex; align-items: center; font-weight: bold;">
+                    <input type="checkbox" id="comments-checkbox" 
+                           style="margin-right: 8px;" 
+                           {% if post.comments_enabled != False %}checked{% endif %}>
+                    Enable comments on this project
+                </label>
+            </div>
         </div>
-    </div>
+    {% endif %}
 
     <span class="helptext sticky">
         <span>

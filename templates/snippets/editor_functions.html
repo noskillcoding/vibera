@@ -118,12 +118,21 @@
 	// Media preview functions (available to all users)
 	window.addImageToPreview = function(imageUrl, fileName) {
 		console.log('Adding image to preview:', imageUrl, fileName);
+		
+		// Check if this is a page - if so, insert directly into textarea
+		const isPage = document.querySelector('.page-description') !== null;
+		if (isPage) {
+			console.log('Page detected - inserting media directly into textarea');
+			insertMediaToTextarea(imageUrl, fileName);
+			return;
+		}
+		
 		const mediaPreview = document.getElementById('media-preview');
 		const mediaContainer = document.getElementById('media-container');
 		
 		if (!mediaPreview || !mediaContainer) {
 			console.error('Media preview elements not found');
-			return;
+			throw new Error('Media preview elements not found');
 		}
 		
 		// Show the preview area
@@ -255,11 +264,15 @@
 		const commentsCheckbox = document.getElementById('comments-checkbox');
 		const shortDescInput = document.getElementById('short-description-input');
 		
+		// Check if this is a page by looking for the page description element
+		const isPage = document.querySelector('.post-form .page-description') !== null || 
+		               $headerContent.innerHTML.includes('<b>is_page:</b> true');
+		
 		// Build header content from scratch to avoid corruption
 		let headerParts = [];
 		
 		// Include title from input field or default
-		let title = 'New post';
+		let title = isPage ? 'New page' : 'New post';
 		if (titleInput && titleInput.value.trim()) {
 			title = titleInput.value.trim();
 		} else {
@@ -270,36 +283,43 @@
 		}
 		headerParts.push(`<b>title:</b> ${title}`);
 		
-		// Add short description if present
-		if (shortDescInput && shortDescInput.value.trim()) {
-			headerParts.push(`<b>short_description:</b> ${shortDescInput.value.trim()}`);
-		}
-		
-		// Add tags if present
-		if (tagsInput && tagsInput.value.trim()) {
-			headerParts.push(`<b>tags:</b> ${tagsInput.value.trim()}`);
-		}
-		
-		// Add tools if present
-		if (toolsInput && toolsInput.value.trim()) {
-			headerParts.push(`<b>tools:</b> ${toolsInput.value.trim()}`);
-		}
-		
-		// Add github_url if present
-		if (githubInput && githubInput.value.trim()) {
-			headerParts.push(`<b>github_url:</b> ${githubInput.value.trim()}`);
-		}
-		
-		// Add comments_enabled if disabled
-		if (commentsCheckbox && !commentsCheckbox.checked) {
-			headerParts.push(`<b>comments_enabled:</b> false`);
-		}
-		
-		// Add media URLs from preview area
-		const mediaItems = document.querySelectorAll('.media-item');
-		const mediaUrls = Array.from(mediaItems).map(item => item.getAttribute('data-url'));
-		if (mediaUrls.length > 0) {
-			headerParts.push(`<b>media_urls:</b> ${JSON.stringify(mediaUrls)}`);
+		// For pages, only add title and is_page flag
+		if (isPage) {
+			headerParts.push(`<b>is_page:</b> true`);
+		} else {
+			// For posts, add all the project-specific fields
+			
+			// Add short description if present
+			if (shortDescInput && shortDescInput.value.trim()) {
+				headerParts.push(`<b>short_description:</b> ${shortDescInput.value.trim()}`);
+			}
+			
+			// Add tags if present
+			if (tagsInput && tagsInput.value.trim()) {
+				headerParts.push(`<b>tags:</b> ${tagsInput.value.trim()}`);
+			}
+			
+			// Add tools if present
+			if (toolsInput && toolsInput.value.trim()) {
+				headerParts.push(`<b>tools:</b> ${toolsInput.value.trim()}`);
+			}
+			
+			// Add github_url if present
+			if (githubInput && githubInput.value.trim()) {
+				headerParts.push(`<b>github_url:</b> ${githubInput.value.trim()}`);
+			}
+			
+			// Add comments_enabled if disabled
+			if (commentsCheckbox && !commentsCheckbox.checked) {
+				headerParts.push(`<b>comments_enabled:</b> false`);
+			}
+			
+			// Add media URLs from preview area
+			const mediaItems = document.querySelectorAll('.media-item');
+			const mediaUrls = Array.from(mediaItems).map(item => item.getAttribute('data-url'));
+			if (mediaUrls.length > 0) {
+				headerParts.push(`<b>media_urls:</b> ${JSON.stringify(mediaUrls)}`);
+			}
 		}
 		
 		// Set the complete header content
@@ -403,18 +423,35 @@
 							$textarea.value = currentText.substring(0, start) + currentText.substring(start + placeholder.length);
 						}
 						
-						// Add image to preview area (with slight delay for upload to complete)
-						setTimeout(() => {
-							try {
-								addImageToPreview(imageUrl, file.name);
-							} catch (err) {
-							console.error('Error adding image to preview:', err);
-							// Fallback: add markdown to textarea
-								const imageName = file.name.split('.')[0];
-								const markdown = `![${imageName}](${imageUrl})\n`;
-								$textarea.value = $textarea.value + markdown;
+						// Check if this is a page by looking for the page description element
+						const isPage = document.querySelector('.page-description') !== null;
+						
+						if (isPage) {
+							// For pages, insert media directly into textarea
+							const isVideo = imageUrl.toLowerCase().match(/\.(mp4|webm|mkv)$/);
+							const imageName = file.name.split('.')[0];
+							let markdown;
+							if (isVideo) {
+								markdown = `<video src="${imageUrl}" controls style="max-width: 100%;"></video>\n\n`;
+							} else {
+								markdown = `![${imageName}](${imageUrl})\n\n`;
 							}
-						}, 1500); // Wait 1.5 seconds for upload to complete
+							$textarea.value = $textarea.value.substring(0, position) + markdown + $textarea.value.substring(position);
+							$textarea.selectionStart = $textarea.selectionEnd = position + markdown.length;
+						} else {
+							// For posts, add image to preview area (with slight delay for upload to complete)
+							setTimeout(() => {
+								try {
+									addImageToPreview(imageUrl, file.name);
+								} catch (err) {
+								console.error('Error adding image to preview:', err);
+								// Fallback: add markdown to textarea
+									const imageName = file.name.split('.')[0];
+									const markdown = `![${imageName}](${imageUrl})\n`;
+									$textarea.value = $textarea.value + markdown;
+								}
+							}, 1500); // Wait 1.5 seconds for upload to complete
+						}
 					} else {
 						// Handle error in response
 						console.error('Upload error:', imageUrl);
