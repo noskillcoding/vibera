@@ -186,7 +186,7 @@ ul.post-list li span.number {
 
 ul.post-list li small {
     text-align: right;
-    flex: 0 0 115px;
+    flex: 0 0 auto;
 }
 
 /* media center */

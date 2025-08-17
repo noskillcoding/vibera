@@ -12,34 +12,95 @@
 
 {% block content %}
 <h1>Themes</h1>
-<div style="width: 100%;text-align:right;">→</div>
-<div
-  style="display: grid;grid-template-columns: 150px 150px 150px 150px 150px 150px 150px;grid-gap: 27px;overflow-x: scroll;padding-bottom: 20px;"
->
-  {% for style in stylesheets %}
-  <div style="width:100%; background-color: #eceff4; padding: 3px; text-align: center;">
-    <img src="{{ style.image }}" height=100>
-    <br>
-    <b style="color: #444">{{ style.title }}</b>
-    <br>
-    <span>
-      <form method="get" action="{% url 'styles' id=blog.subdomain %}" style="display:inline;" target="_blank">
-          <input type="hidden" name="stylesheet" value="{{ style.identifier }}">
-          <input type="hidden" name="preview" value="true">
-          <button type="submit">Preview</button>
-      </form>
-      <form method="post" action="{% url 'styles' id=blog.subdomain %}" style="display:inline;">
-          {% csrf_token %}
-          <input type="hidden" name="stylesheet" value="{{ style.identifier }}">
-          <button type="submit" onclick="return confirm('This will overwrite your current styles, are you sure?')">Apply {{ style.name }}</button>
-      </form>
-    </span>
+
+{% for style in stylesheets %}
+<details style="margin-bottom: 15px;">
+    <summary style="cursor: default; list-style: none;" onclick="return false;">
+        <ul class="post-list" style="margin: 0;">
+            <li style="justify-content: space-between;">
+                <div style="display: flex; align-items: baseline;">
+                    <span class="number">{{ forloop.counter }}.</span>
+                    <span style="font-size: 14px;">{% if style.title %}{{ style.title }}{% else %}{{ style.identifier|title }}{% endif %} <span style="font-size: 10px; cursor: pointer; padding: 1px 3px;" onclick="event.stopPropagation(); toggleDetails(this)">▼</span></span>
+                </div>
+                <small style="display: flex; gap: 5px;">
+                    <form method="get" action="{% url 'styles' id=blog.subdomain %}" style="display:inline;" target="_blank">
+                        <input type="hidden" name="stylesheet" value="{{ style.identifier }}">
+                        <input type="hidden" name="preview" value="true">
+                        <button type="submit" onclick="event.stopPropagation()">Preview</button>
+                    </form>
+                    <form method="post" action="{% url 'styles' id=blog.subdomain %}" style="display:inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="stylesheet" value="{{ style.identifier }}">
+                        <button type="submit" onclick="event.stopPropagation(); return confirm('This will overwrite your current styles, are you sure?')">Apply</button>
+                    </form>
+                </small>
+            </li>
+        </ul>
+    </summary>
     
-    </span>
-  </div>
-  {% endfor %}
-</div>
-<div style="width: 100%;text-align:right;">→</div>
+    <div style="margin-left: 50px; margin-top: 5px;">
+        <p style="font-size: 12px; margin: 5px 0; font-weight: bold;">Theme Characteristics:</p>
+        <ul style="font-size: 12px; margin: 0; padding: 0; list-style: none;">
+            <li><strong>Name:</strong> {% if style.title %}{{ style.title }}{% else %}{{ style.identifier|title }}{% endif %}</li>
+            <li><strong>Identifier:</strong> {{ style.identifier }}</li>
+            {% if style.css %}
+                {% if 'Georgia' in style.css %}
+                    <li><strong>Font:</strong> Georgia serif (literary feel)</li>
+                {% elif 'Fira' in style.css %}
+                    <li><strong>Font:</strong> Fira Code monospace (developer theme)</li>
+                {% elif 'system-ui' in style.css %}
+                    <li><strong>Font:</strong> System UI (clean, native feel)</li>
+                {% else %}
+                    <li><strong>Font:</strong> Verdana, sans-serif (default)</li>
+                {% endif %}
+                
+                {% if '--width: 900px' in style.css %}
+                    <li><strong>Layout:</strong> Wider than default (900px)</li>
+                {% elif '--width: 800px' in style.css %}
+                    <li><strong>Layout:</strong> Standard width (800px)</li>
+                {% elif '--width: 720px' in style.css %}
+                    <li><strong>Layout:</strong> Narrow width (720px)</li>
+                {% else %}
+                    <li><strong>Layout:</strong> Responsive width</li>
+                {% endif %}
+                
+                {% if '#fefefe' in style.css or '#f8f8f8' in style.css %}
+                    <li><strong>Colors:</strong> Warm off-white background with dark text</li>
+                {% elif '#01242e' in style.css %}
+                    <li><strong>Colors:</strong> Cool blue background with light text</li>
+                {% elif '#1f1b1b' in style.css %}
+                    <li><strong>Colors:</strong> Warm brown background with light text</li>
+                {% else %}
+                    <li><strong>Colors:</strong> Default color scheme</li>
+                {% endif %}
+                
+                {% if '--font-scale: 1.3em' in style.css %}
+                    <li><strong>Typography:</strong> Larger text (1.3em){% if 'font-style: italic' in style.css %}, italic headings{% endif %}</li>
+                {% elif '--font-scale: 1em' in style.css %}
+                    <li><strong>Typography:</strong> Standard text size (1em)</li>
+                {% else %}
+                    <li><strong>Typography:</strong> Custom text sizing</li>
+                {% endif %}
+                
+                {% if 'prefers-color-scheme: dark' in style.css %}
+                    <li><strong>Dark Mode:</strong> {% if '#1f1b1b' in style.css %}Warm brown/beige dark theme{% elif '#01242e' in style.css %}Cool blue dark theme{% else %}Supported{% endif %}</li>
+                {% else %}
+                    <li><strong>Dark Mode:</strong> Not supported</li>
+                {% endif %}
+            {% else %}
+                <li><em>Theme characteristics not available</em></li>
+            {% endif %}
+        </ul>
+    </div>
+</details>
+
+{% empty %}
+<ul class="post-list">
+    <li>
+        No themes available
+    </li>
+</ul>
+{% endfor %}
 
 <form method="POST" class="post-form full-width">
   <p class="sticky-controls">
@@ -83,8 +144,34 @@
   const preview = name => {
     window.open('?preview=True&style=' + name)
   }
+  
+  function toggleDetails(arrow) {
+    const details = arrow.closest('details');
+    if (details.open) {
+      details.removeAttribute('open');
+      arrow.textContent = '▼';
+    } else {
+      details.setAttribute('open', '');
+      arrow.textContent = '▲';
+    }
+  }
 </script>
 {% endif %}
+
+<script>
+  function toggleDetails(arrow) {
+    event.preventDefault();
+    event.stopPropagation();
+    const details = arrow.closest('details');
+    if (details.open) {
+      details.removeAttribute('open');
+      arrow.textContent = '▼';
+    } else {
+      details.setAttribute('open', '');
+      arrow.textContent = '▲';
+    }
+  }
+</script>
 
 {{ request.user.settings.dashboard_footer | safe }}
 
