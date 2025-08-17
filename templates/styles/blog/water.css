@@ -1,0 +1,35 @@
+@import 'https://cdn.jsdelivr.net/npm/water.css@2/out/water.css';
+
+nav a {
+    margin-right: 10px;
+}
+
+footer {
+    text-align: center;
+}
+
+.title:hover {
+    text-decoration: none;
+}
+
+/* Additional Vibera-specific styling */
+ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+}
+
+ul.blog-posts li {
+    display: flex;
+}
+
+ul.blog-posts li span {
+    flex: 0 0 130px;
+}
+
+.title h1 {
+    font-size: 1.5em;
+}
+
+.inline {
+    width: auto !important;
+}

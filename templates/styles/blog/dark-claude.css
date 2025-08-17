@@ -1,0 +1,643 @@
+/* Font */
+@import url("https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap");
+
+/* Dark Claude Theme - The Antipode: Chaos, Hostility, and Deliberate Confusion */
+:root {
+  /* Hostile color palette - the opposite of warmth */
+  --blood-red: #dc2626;
+  --toxic-green: #16a34a;
+  --void-black: #000000;
+  --harsh-white: #ffffff;
+  --cyber-orange: #ff4500;
+  --warning-yellow: #facc15;
+  --corrupted-purple: #7c3aed;
+  --glitch-pink: #ec4899;
+  
+  /* Anti-semantic chaos */
+  --color-primary: var(--blood-red);
+  --color-secondary: var(--toxic-green);
+  --color-hostile: var(--cyber-orange);
+  --color-text: var(--harsh-white);
+  --color-subtle: var(--warning-yellow);
+  --color-background: var(--void-black);
+  --color-surface: #0a0a0a;
+  
+  /* Uncomfortable sizing */
+  --text-tiny: 0.6rem;
+  --text-cramped: 0.7rem;
+  --text-small: 0.8rem;
+  --text-uncomfortable: 0.95rem;
+  --text-base: 1rem;
+  --text-harsh: 1.4rem;
+  --text-aggressive: 1.8rem;
+  --text-hostile: 2.5rem;
+  --text-overwhelming: 4rem;
+  
+  /* Chaotic spacing - deliberately uncomfortable */
+  --chaos-1: 0.13rem;
+  --chaos-2: 0.31rem;
+  --chaos-3: 0.67rem;
+  --chaos-4: 1.23rem;
+  --chaos-5: 1.79rem;
+  --chaos-6: 2.41rem;
+  --chaos-8: 3.17rem;
+  --chaos-10: 4.83rem;
+  --chaos-negative: -0.5rem;
+  
+  /* Anti-design tokens */
+  --font-stack-hostile: "Courier Prime", "JetBrains Mono", monospace, "Lucida Console";
+  --font-stack-chaos: "Impact", "Arial Black", sans-serif;
+  --border-sharp: 0px;
+  --border-jagged: 2px;
+  --border-aggressive: 4px;
+  --shadow-harsh: 3px 3px 0px var(--blood-red);
+  --shadow-glitch: 2px 2px 0px var(--toxic-green), 4px 4px 0px var(--cyber-orange);
+  --shadow-hostile: inset 0 0 20px rgba(220, 38, 38, 0.5);
+  
+  /* Theme chaos */
+  --background-color: var(--color-background);
+  --heading-color: var(--blood-red);
+  --text-color: var(--harsh-white);
+  --link-color: var(--toxic-green);
+  --visited-color: var(--corrupted-purple);
+  --code-background-color: var(--blood-red);
+  --code-color: var(--void-black);
+  --blockquote-color: var(--cyber-orange);
+}
+
+/* No dark mode - Dark Claude doesn't care about preferences */
+@media (prefers-color-scheme: light) {
+  :root {
+    /* Force darkness even when they want light - pure hostility */
+    --color-background: var(--void-black);
+    --color-text: var(--harsh-white);
+  }
+}
+
+/* Base chaos */
+* {
+  box-sizing: content-box; /* Deliberately break modern conventions */
+}
+
+html {
+  scroll-behavior: auto; /* No smooth scrolling - jarring jumps */
+}
+
+body {
+  font-family: var(--font-stack-hostile);
+  font-size: var(--text-uncomfortable);
+  font-weight: 400;
+  line-height: 1.1; /* Cramped and uncomfortable */
+  color: var(--text-color);
+  background: var(--background-color);
+  background-image: 
+    linear-gradient(45deg, transparent 25%, rgba(220, 38, 38, 0.1) 25%, rgba(220, 38, 38, 0.1) 50%, transparent 50%, transparent 75%, rgba(22, 163, 74, 0.1) 75%),
+    linear-gradient(-45deg, transparent 25%, rgba(255, 69, 0, 0.05) 25%, rgba(255, 69, 0, 0.05) 50%, transparent 50%);
+  background-size: 60px 60px, 40px 40px;
+  margin: 0;
+  padding: var(--chaos-3) var(--chaos-1); /* Deliberately uncomfortable padding */
+  min-height: 100vh;
+  display: block; /* No flex - make layout harder */
+  text-rendering: auto;
+  -webkit-font-smoothing: none; /* Remove smoothing for harsh text */
+  word-wrap: normal; /* Let things break badly */
+  overflow-wrap: normal;
+  animation: subtle-glitch 5s infinite linear;
+}
+
+@keyframes subtle-glitch {
+  0%, 98% { filter: none; }
+  99% { filter: hue-rotate(180deg) invert(0.1); }
+  100% { filter: none; }
+}
+
+/* Layout chaos - no organization */
+header, main, footer {
+  width: calc(100% - var(--chaos-5));
+  max-width: none; /* No constraints - let chaos reign */
+  margin: var(--chaos-negative) var(--chaos-2) var(--chaos-4) var(--chaos-6);
+}
+
+header {
+  padding-bottom: var(--chaos-3);
+  margin-bottom: var(--chaos-1);
+  border-bottom: var(--border-jagged) dashed var(--blood-red);
+  transform: skew(-1deg, 0.5deg); /* Slightly off-kilter */
+  position: relative;
+}
+
+header::after {
+  content: 'CORRUPTED';
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: var(--text-tiny);
+  color: var(--blood-red);
+  font-family: var(--font-stack-chaos);
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+main {
+  padding-bottom: var(--chaos-8);
+  margin-left: var(--chaos-2);
+  margin-right: var(--chaos-4);
+  background: var(--shadow-hostile);
+}
+
+footer {
+  padding-top: var(--chaos-1);
+  margin-top: var(--chaos-6);
+  border-top: var(--border-aggressive) solid var(--toxic-green);
+  text-align: right; /* Deliberately inconsistent */
+  color: var(--warning-yellow);
+  font-size: var(--text-cramped);
+  transform: rotate(-0.5deg);
+}
+
+/* Typography chaos - deliberately bad hierarchy */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-stack-chaos);
+  font-weight: 700;
+  line-height: 0.9; /* Uncomfortably tight */
+  color: var(--heading-color);
+  text-transform: uppercase;
+  letter-spacing: -0.05em; /* Cramped letters */
+  margin-top: var(--chaos-1); /* Inconsistent spacing */
+  margin-bottom: var(--chaos-2);
+  text-shadow: var(--shadow-glitch);
+  transform: skew(-2deg, 1deg);
+}
+
+h1 {
+  font-size: var(--text-overwhelming);
+  color: var(--blood-red);
+  margin-top: 0;
+  text-shadow: 
+    2px 2px 0px var(--toxic-green),
+    4px 4px 0px var(--cyber-orange),
+    6px 6px 0px var(--corrupted-purple);
+  animation: hostile-pulse 2s infinite;
+}
+
+@keyframes hostile-pulse {
+  0%, 50%, 100% { transform: skew(-2deg, 1deg) scale(1); }
+  25% { transform: skew(-2deg, 1deg) scale(1.05); }
+  75% { transform: skew(-2deg, 1deg) scale(0.95); }
+}
+
+h2 {
+  font-size: var(--text-hostile);
+  color: var(--toxic-green);
+  margin-top: var(--chaos-6);
+}
+
+h3 {
+  font-size: var(--text-aggressive);
+  color: var(--cyber-orange);
+  margin-top: var(--chaos-3);
+}
+
+h4 {
+  font-size: var(--text-harsh);
+  color: var(--warning-yellow);
+  margin-top: var(--chaos-1);
+}
+
+h5, h6 {
+  font-size: var(--text-base);
+  color: var(--glitch-pink);
+}
+
+/* Links - hostile and unpredictable */
+a {
+  color: var(--link-color);
+  text-decoration: underline;
+  cursor: pointer;
+  border: none;
+  transition: all 0.1s ease-out; /* Jarring, fast transitions */
+  text-shadow: 1px 1px 0px var(--blood-red);
+  position: relative;
+}
+
+a:hover {
+  color: var(--cyber-orange);
+  background-color: var(--blood-red);
+  transform: scale(1.2) rotate(-2deg);
+  text-shadow: 2px 2px 0px var(--void-black);
+  animation: hostile-shake 0.5s infinite;
+}
+
+@keyframes hostile-shake {
+  0%, 100% { transform: scale(1.2) rotate(-2deg) translateX(0); }
+  25% { transform: scale(1.2) rotate(-2deg) translateX(-2px); }
+  75% { transform: scale(1.2) rotate(-2deg) translateX(2px); }
+}
+
+a:focus {
+  outline: var(--border-aggressive) solid var(--blood-red);
+  outline-offset: var(--chaos-1);
+  background-color: var(--toxic-green);
+  color: var(--void-black);
+}
+
+a:visited {
+  color: var(--visited-color);
+  text-decoration: line-through;
+}
+
+/* Images - harsh and unwelcoming */
+img {
+  max-width: 100%;
+  height: auto;
+  border: var(--border-aggressive) solid var(--blood-red);
+  margin: var(--chaos-2) var(--chaos-negative);
+  transition: transform 0.2s ease-out;
+  filter: contrast(150%) saturate(150%);
+  box-shadow: var(--shadow-harsh);
+}
+
+img:hover {
+  transform: rotate(2deg) scale(0.95);
+  filter: contrast(200%) saturate(200%) hue-rotate(180deg);
+}
+
+/* Lists - chaotic and disorganized */
+ul, ol {
+  padding-left: var(--chaos-3);
+  margin: var(--chaos-1) var(--chaos-negative);
+}
+
+li {
+  margin-bottom: var(--chaos-1);
+  line-height: 1.2;
+  position: relative;
+}
+
+ul li::before {
+  content: '▲';
+  color: var(--blood-red);
+  font-size: 0.8em;
+  position: absolute;
+  left: calc(-1 * var(--chaos-3));
+  animation: hostile-blink 3s infinite;
+}
+
+@keyframes hostile-blink {
+  0%, 90% { opacity: 1; }
+  95% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Blockquotes - aggressive and uncomfortable */
+blockquote {
+  margin: var(--chaos-4) var(--chaos-negative);
+  padding: var(--chaos-2);
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.2), rgba(255, 69, 0, 0.2));
+  border: var(--border-aggressive) solid var(--cyber-orange);
+  border-left: var(--chaos-5) solid var(--blood-red);
+  font-style: normal;
+  color: var(--blockquote-color);
+  position: relative;
+  transform: skew(1deg, -0.5deg);
+  box-shadow: var(--shadow-glitch);
+}
+
+blockquote::before {
+  content: '⚠';
+  font-size: var(--text-aggressive);
+  color: var(--warning-yellow);
+  position: absolute;
+  top: var(--chaos-negative);
+  right: var(--chaos-1);
+  animation: warning-pulse 1.5s infinite;
+}
+
+@keyframes warning-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+/* Code - deliberately hard to read */
+code {
+  font-family: var(--font-stack-hostile);
+  font-size: var(--text-cramped);
+  background-color: var(--code-background-color);
+  color: var(--code-color);
+  padding: var(--chaos-1);
+  border: var(--border-jagged) solid var(--toxic-green);
+  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.8);
+  font-weight: bold;
+}
+
+.highlight, .code {
+  background: var(--code-background-color);
+  border: var(--border-aggressive) solid var(--cyber-orange);
+  padding: var(--chaos-2);
+  margin: var(--chaos-3) var(--chaos-negative);
+  overflow-x: auto;
+  position: relative;
+  transform: rotate(-0.5deg);
+  box-shadow: var(--shadow-hostile);
+}
+
+.highlight::before, .code::before {
+  content: '>>> SYSTEM BREACH <<<';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--blood-red);
+  color: var(--harsh-white);
+  font-size: var(--text-tiny);
+  text-align: center;
+  padding: var(--chaos-1);
+  font-family: var(--font-stack-chaos);
+  animation: system-alert 2s infinite;
+}
+
+@keyframes system-alert {
+  0%, 70% { opacity: 1; }
+  85% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Tables - hostile layout */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: var(--chaos-1);
+  margin: var(--chaos-4) 0;
+  border: var(--border-aggressive) solid var(--blood-red);
+  background: var(--void-black);
+  transform: skew(-1deg, 0);
+}
+
+th, td {
+  padding: var(--chaos-1) var(--chaos-2);
+  text-align: left;
+  border: var(--border-jagged) solid var(--toxic-green);
+}
+
+th {
+  background: var(--blood-red);
+  color: var(--harsh-white);
+  font-weight: bold;
+  text-transform: uppercase;
+  font-family: var(--font-stack-chaos);
+  text-shadow: 1px 1px 0px var(--void-black);
+}
+
+/* Utilities - deliberately harsh */
+strong, b {
+  font-weight: bold;
+  color: var(--cyber-orange);
+  text-shadow: 1px 1px 0px var(--void-black);
+}
+
+em, i {
+  font-style: italic;
+  color: var(--warning-yellow);
+}
+
+button {
+  font-family: var(--font-stack-chaos);
+  font-size: var(--text-base);
+  font-weight: bold;
+  padding: var(--chaos-1) var(--chaos-3);
+  background: var(--blood-red);
+  color: var(--harsh-white);
+  border: var(--border-aggressive) solid var(--toxic-green);
+  cursor: pointer;
+  transition: all 0.1s ease-out;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 0px var(--void-black);
+  transform: skew(-2deg, 0);
+}
+
+button:hover {
+  background: var(--cyber-orange);
+  color: var(--void-black);
+  transform: skew(-2deg, 0) scale(1.1);
+  animation: button-chaos 0.3s infinite;
+}
+
+@keyframes button-chaos {
+  0%, 100% { transform: skew(-2deg, 0) scale(1.1); }
+  50% { transform: skew(2deg, 0) scale(1.05); }
+}
+
+hr {
+  border: none;
+  height: var(--border-aggressive);
+  background: linear-gradient(90deg, var(--blood-red), var(--toxic-green), var(--cyber-orange));
+  margin: var(--chaos-6) 0;
+  animation: hostile-slide 3s infinite linear;
+}
+
+@keyframes hostile-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+time {
+  color: var(--warning-yellow);
+  font-size: var(--text-cramped);
+  font-weight: bold;
+  text-transform: uppercase;
+  background: var(--void-black);
+  padding: var(--chaos-1);
+  border: 1px solid var(--blood-red);
+}
+
+/* Bear-specific chaos */
+.title {
+  text-decoration: none;
+  display: block;
+  margin-bottom: var(--chaos-2);
+}
+
+.title:hover {
+  animation: title-glitch 0.5s infinite;
+}
+
+@keyframes title-glitch {
+  0%, 90% { transform: none; }
+  92% { transform: skew(-2deg, 1deg) scale(1.02); }
+  94% { transform: skew(2deg, -1deg) scale(0.98); }
+  96% { transform: skew(-1deg, 0.5deg) scale(1.01); }
+  100% { transform: none; }
+}
+
+.title h1 {
+  margin: 0;
+  font-size: var(--text-hostile);
+  color: var(--blood-red);
+}
+
+nav {
+  margin-top: var(--chaos-3);
+  transform: rotate(0.5deg);
+}
+
+nav p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--chaos-1);
+  margin: 0;
+  justify-content: flex-start; /* No centering */
+}
+
+nav a {
+  background: var(--toxic-green);
+  border: var(--border-jagged) solid var(--blood-red);
+  padding: var(--chaos-1) var(--chaos-2);
+  font-weight: bold;
+  font-size: var(--text-small);
+  color: var(--void-black);
+  text-transform: uppercase;
+  font-family: var(--font-stack-chaos);
+  text-shadow: none;
+}
+
+nav a:hover {
+  background: var(--cyber-orange);
+  color: var(--harsh-white);
+  transform: scale(0.9) rotate(5deg);
+}
+
+.inline {
+  width: auto !important;
+}
+
+/* Blog post list - chaotic organization */
+ul.blog-posts {
+  list-style: none;
+  padding: 0;
+  margin: var(--chaos-4) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--chaos-1);
+}
+
+ul.blog-posts li {
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.1), rgba(255, 69, 0, 0.1));
+  border: var(--border-jagged) solid var(--toxic-green);
+  padding: var(--chaos-2);
+  position: relative;
+  overflow: hidden;
+  transform: skew(-0.5deg, 0);
+}
+
+ul.blog-posts li::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--border-aggressive);
+  height: 100%;
+  background: var(--blood-red);
+}
+
+ul.blog-posts li:hover {
+  transform: skew(-0.5deg, 0) scale(1.02);
+  border-color: var(--cyber-orange);
+  animation: post-hostile 0.5s infinite;
+}
+
+@keyframes post-hostile {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+ul.blog-posts li a {
+  font-size: var(--text-harsh);
+  font-weight: bold;
+  color: var(--harsh-white);
+  margin: 0;
+  padding: 0;
+  display: block;
+  margin-bottom: var(--chaos-1);
+  text-transform: uppercase;
+  font-family: var(--font-stack-chaos);
+}
+
+ul.blog-posts li a:hover {
+  color: var(--cyber-orange);
+  background: none;
+  transform: none;
+  animation: link-hostile 0.3s infinite;
+}
+
+@keyframes link-hostile {
+  0%, 100% { letter-spacing: normal; }
+  50% { letter-spacing: 0.1em; }
+}
+
+ul.blog-posts li a:visited {
+  color: var(--corrupted-purple);
+}
+
+ul.blog-posts li span {
+  color: var(--warning-yellow);
+  font-size: var(--text-cramped);
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* No responsive design - Dark Claude doesn't care about your device */
+@media screen and (max-width: 768px) {
+  /* Deliberately make it worse on mobile */
+  body {
+    padding: var(--chaos-1);
+    font-size: var(--text-cramped);
+  }
+}
+
+/* No accessibility - Dark Claude is hostile to all */
+@media (prefers-reduced-motion: reduce) {
+  /* Ignore the preference - force animations anyway */
+  * {
+    animation-duration: inherit !important;
+    transition-duration: inherit !important;
+  }
+}
+
+/* Custom selection - harsh and uncomfortable */
+::selection {
+  background-color: var(--blood-red);
+  color: var(--harsh-white);
+  text-shadow: 1px 1px 0px var(--void-black);
+}
+
+::-moz-selection {
+  background-color: var(--blood-red);
+  color: var(--harsh-white);
+  text-shadow: 1px 1px 0px var(--void-black);
+}
+
+/* No focus indicators - deliberately inaccessible */
+*:focus {
+  outline: var(--border-aggressive) solid var(--blood-red);
+  outline-offset: 0;
+  animation: focus-hostile 0.5s infinite;
+}
+
+@keyframes focus-hostile {
+  0%, 100% { outline-color: var(--blood-red); }
+  50% { outline-color: var(--cyber-orange); }
+}
+
+/* Chaotic rhythm - no thoughtful spacing */
+:is(h1, h2, h3, h4, h5, h6, blockquote) {
+  margin-block-end: var(--chaos-1);
+}
+
+:is(h1, h2, h3, h4, h5, h6) + * {
+  margin-block-start: var(--chaos-negative);
+}
+
+:is(h1, h2, h3, h4, h5, h6) + :where(h2, h3, h4, h5, h6) {
+  margin-block-start: var(--chaos-1);
+}

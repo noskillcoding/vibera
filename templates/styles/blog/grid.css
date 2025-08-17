@@ -1,0 +1,509 @@
+/* Font */
+@import url("https://api.fontshare.com/v2/css?f[]=clash-display@400,600,700&display=swap");
+
+/* Settings */
+:root {
+  --color-dark: #1a1a1a;
+  --color-light: #fafafa;
+  --color-primary: #1a8fe3;
+  --color-border: rgba(0, 0, 0, 0.025);
+  --size-step-0: clamp(1rem, calc(0.96rem + 0.22vw), 1.13rem);
+  --size-step-1: clamp(1.25rem, calc(1.16rem + 0.43vw), 1.5rem);
+  --size-step-2: clamp(1.56rem, calc(1.41rem + 0.76vw), 2rem);
+  --size-step-3: clamp(1.95rem, calc(1.71rem + 1.24vw), 2.66rem);
+  --size-step-4: clamp(2.44rem, calc(2.05rem + 1.93vw), 3.55rem);
+  --spacing: 1.5rem;
+  --spacing-neg: -1.5rem;
+  --font-stack: "Clash Display", Inter, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+    "Noto Color Emoji";
+  --background-color: var(--color-light);
+  --heading-color: var(--color-dark);
+  --text-color: var(--color-dark);
+  --link-color: var(--color-dark);
+  --visited-color: var(--color-dark);
+  --code-background-color: var(--color-border);
+  --code-color: var(--color-dark);
+  --blockquote-color: var(--color-dark);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-border: rgba(255, 255, 255, 0.025);
+    --color-dark: #fafafa;
+    --color-light: #1a1a1a;
+    --background-color: var(--color-light);
+    --heading-color: var(--color-dark);
+    --text-color: var(--color-dark);
+    --link-color: var(--color-dark);
+    --visited-color: var(--color-dark);
+    --code-background-color: var(--color-border);
+    --code-color: var(--color-dark);
+    --blockquote-color: var(--color-dark);
+  }
+}
+
+/* HTML Styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: var(--font-stack);
+  font-size: var(--size-step-1);
+  line-height: 1.7;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  position: relative;
+  text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  background-image: linear-gradient(
+      var(--color-border) 0.5px,
+      transparent 0.5px,
+      transparent calc(100% - 0.5px),
+      var(--color-border) calc(100% - 0.5px)
+    ),
+    linear-gradient(
+      90deg,
+      var(--color-border) 0.5px,
+      transparent 0.5px,
+      transparent calc(100% - 0.5px),
+      var(--color-border) calc(100% - 0.5px)
+    );
+  background-size: var(--spacing);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(var(--spacing) * 2);
+  background: linear-gradient(var(--background-color), transparent);
+  z-index: 1;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: calc(var(--spacing) * 2);
+  background: linear-gradient(transparent, var(--background-color));
+  z-index: 1;
+}
+
+header, main, footer {
+  width: 100%;
+  padding: var(--spacing);
+  position: relative;
+  background-color: var(--background-color);
+  max-width: 65ch;
+  margin-inline: auto;
+}
+
+footer {
+  padding: var(--spacing) !important;
+}
+
+header::before, main::before, footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: var(--spacing);
+  width: 1px;
+  height: 100%;
+  background: var(--color-border);
+}
+
+header::after, main::after, footer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: var(--spacing);
+  width: 1px;
+  height: 100%;
+  background: var(--color-border);
+}
+
+header {
+  padding-bottom: var(--spacing);
+}
+
+main {
+  flex: 1;
+  padding-bottom: calc(var(--spacing) * 2);
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.3;
+  text-wrap: balance;
+  position: relative;
+  min-width: calc(100% + calc(var(--spacing) * 3));
+  width: calc(100% + calc(var(--spacing) * 3));
+  margin-left: calc(var(--spacing-neg) * 1.5);
+  padding-left: calc(var(--spacing) * 1.5);
+  padding-right: calc(var(--spacing) * 1.5);
+  color: var(--heading-color);
+  font-family: var(--font-stack);
+}
+
+h1::before, h2::before, h3::before, h4::before, h5::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--background-color) 0%,
+    var(--color-border) 2%,
+    var(--color-border) 98%,
+    var(--background-color) 100%
+  );
+}
+
+h1::after, h2::after, h3::after, h4::after, h5::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--background-color) 0%,
+    var(--color-border) 2%,
+    var(--color-border) 98%,
+    var(--background-color) 100%
+  );
+}
+
+h1 {
+  font-size: var(--size-step-4);
+  max-width: 24ch;
+}
+
+h2 {
+  font-size: var(--size-step-3);
+  max-width: 32ch;
+}
+
+h3 {
+  font-size: var(--size-step-2);
+  max-width: 32ch;
+}
+
+h4 {
+  font-size: var(--size-step-1);
+}
+
+h5 {
+  font-size: var(--size-step-0);
+}
+
+h6 {
+  font-size: var(--size-step-0);
+}
+
+/* Links */
+a {
+  display: inline-block;
+  color: currentColor;
+  text-decoration: none;
+  padding: calc(var(--spacing) / 4);
+  position: relative;
+  cursor: pointer;
+}
+
+a::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--color-border);
+  transition: height 0.2s ease-in-out;
+}
+
+a::after {
+  content: "→";
+  opacity: 0.25;
+  padding-left: calc(var(--spacing) / 4);
+}
+
+a:hover::before, a:focus::before {
+  height: 100%;
+}
+
+/* Images */
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+p:has(img) {
+  position: relative;
+  min-width: calc(100% + calc(var(--spacing) * 3));
+  width: calc(100% + calc(var(--spacing) * 3));
+  margin-left: calc(var(--spacing-neg) * 1.5);
+  padding-left: calc(var(--spacing) * 1.5);
+  padding-right: calc(var(--spacing) * 1.5);
+}
+
+p:has(img)::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--background-color) 0%,
+    var(--color-border) 2%,
+    var(--color-border) 98%,
+    var(--background-color) 100%
+  );
+}
+
+p:has(img)::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--background-color) 0%,
+    var(--color-border) 2%,
+    var(--color-border) 98%,
+    var(--background-color) 100%
+  );
+}
+
+/* Lists */
+ul, ol {
+  padding-inline-start: var(--spacing);
+}
+
+li {
+  --flow-space: var(--spacing);
+  margin-block-start: var(--flow-space, var(--spacing));
+}
+
+/* Blockquotes */
+blockquote {
+  padding-inline-start: var(--spacing);
+  border-inline-start: 0.3em solid var(--color-primary);
+  font-style: italic;
+  font-size: var(--size-step-1);
+  color: var(--blockquote-color);
+  max-width: 50ch;
+  margin: var(--spacing) 0;
+}
+
+/* Code */
+code {
+  font-family: monospace;
+  padding: 2px;
+  background-color: var(--code-background-color);
+  color: var(--code-color);
+  border-radius: 3px;
+}
+
+.highlight, .code {
+  padding: 1px var(--spacing);
+  background-color: var(--code-background-color);
+  overflow-x: auto;
+  line-height: 1.2;
+  color: var(--code-color);
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+}
+
+/* Utilities */
+strong, b {
+  color: var(--heading-color);
+  font-weight: 600;
+}
+
+button, main .upvote-button {
+  background-image: none;
+  background-color: var(--color-dark);
+  color: var(--background-color);
+  border: none;
+  font-size: var(--size-step-0);
+  padding: calc(var(--spacing) / 3) var(--spacing);
+  cursor: pointer;
+  font-family: var(--font-stack);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+hr {
+  border: 0;
+  height: 1px;
+  display: inline-block;
+  width: calc(100% + calc(var(--spacing) * 3));
+  margin-left: calc(var(--spacing-neg) * 1.5);
+  background: linear-gradient(
+    90deg,
+    var(--background-color) 0%,
+    var(--color-border) 2%,
+    var(--color-border) 98%,
+    var(--background-color) 100%
+  );
+}
+
+time {
+  font-style: normal;
+  opacity: 0.5;
+}
+
+/* Bear Content Specific */
+.title {
+  text-decoration: none;
+  width: 100%;
+}
+
+.title::before, .title::after {
+  display: none;
+}
+
+.title h1 {
+  font-size: var(--size-step-2);
+  margin: 0;
+  color: var(--heading-color);
+}
+
+nav p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing);
+  row-gap: 0;
+  margin: 0;
+}
+
+nav p a {
+  text-decoration: none;
+  position: relative;
+}
+
+nav p a::before {
+  content: "";
+  position: absolute;
+  top: -3%;
+  left: calc(var(--spacing-neg) / 2);
+  width: 1px;
+  height: 106%;
+  background: linear-gradient(
+    var(--background-color) 0%,
+    var(--color-border) 2%,
+    var(--color-border) 98%,
+    var(--background-color) 100%
+  );
+}
+
+nav p a::after {
+  display: none;
+}
+
+nav p a:first-child::before {
+  display: none;
+}
+
+nav a {
+  margin-right: 0;
+}
+
+.inline {
+  width: auto !important;
+}
+
+/* Blog post list */
+ul.blog-posts {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+ul.blog-posts li {
+  display: flex;
+  flex: 1;
+  border: 1px solid var(--color-border);
+  padding: var(--spacing);
+  flex-direction: column;
+  margin: 0;
+}
+
+ul.blog-posts li a {
+  font-weight: 600;
+  color: var(--link-color);
+  margin-bottom: calc(var(--spacing) / 2);
+}
+
+ul.blog-posts li a::before {
+  display: none;
+}
+
+ul.blog-posts li a:visited {
+  color: var(--visited-color);
+}
+
+@media screen and (min-width: 600px) {
+  ul.blog-posts li {
+    gap: var(--spacing);
+  }
+}
+
+ul.blog-posts li span {
+  min-width: 11ch;
+  opacity: 0.8;
+}
+
+/* Flow and rhythm */
+content > div > * {
+  margin-block-start: var(--flow-space, var(--spacing));
+}
+
+:is(h1, h2, h3, h4, h5, blockquote) {
+  --flow-space: calc(var(--spacing) * 2);
+  margin-block-end: calc(var(--spacing) / 2);
+}
+
+:is(h1, h2, h3, h4, h5) + * {
+  --flow-space: calc(var(--spacing) / 3);
+}
+
+:is(h1, h2, h3, h4, h5) + :where(h2, h3, h4, h5) {
+  --flow-space: calc(var(--spacing) * 2);
+}

@@ -1,0 +1,308 @@
+/* Font */
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond&display=swap");
+
+/* Settings */
+:root {
+  --color-dark: #0c3934;
+  --color-light: #f8ebee;
+  --color-primary: #7a30cf;
+  --size-step-0: clamp(1rem, calc(0.96rem + 0.22vw), 1.13rem);
+  --size-step-1: clamp(1.25rem, calc(1.16rem + 0.43vw), 1.5rem);
+  --size-step-2: clamp(1.56rem, calc(1.41rem + 0.76vw), 2rem);
+  --size-step-3: clamp(1.95rem, calc(1.71rem + 1.24vw), 2.66rem);
+  --size-step-4: clamp(2.44rem, calc(2.05rem + 1.93vw), 3.55rem);
+  --spacing: 1.5rem;
+  --font-stack: "Cormorant Garamond", Georgia, Cambria, "Times New Roman", Times,
+    serif;
+  --background-color: var(--color-light);
+  --heading-color: var(--color-dark);
+  --text-color: var(--color-dark);
+  --link-color: var(--color-primary);
+  --visited-color: var(--color-primary);
+  --code-background-color: rgba(0, 0, 0, 0.1);
+  --code-color: var(--color-dark);
+  --blockquote-color: var(--color-dark);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-dark: #f8ebee;
+    --color-light: #0c3934;
+    --color-primary: #a973e8;
+    --background-color: var(--color-light);
+    --heading-color: var(--color-dark);
+    --text-color: var(--color-dark);
+    --link-color: var(--color-primary);
+    --visited-color: var(--color-primary);
+    --code-background-color: rgba(255, 255, 255, 0.1);
+    --code-color: var(--color-dark);
+    --blockquote-color: var(--color-dark);
+  }
+}
+
+/* HTML Styles */
+body {
+  background: var(--background-color);
+  color: var(--text-color);
+  padding: var(--spacing)
+    clamp(calc(var(--spacing) / 2), 5vw, calc(var(--spacing) * 3));
+  font-family: var(--font-stack);
+  font-size: var(--size-step-1);
+  line-height: 1.4;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  max-width: none;
+  text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+header, main, footer {
+  width: 100%;
+}
+
+header {
+  padding-bottom: var(--spacing);
+  text-transform: uppercase;
+}
+
+main {
+  flex: 1;
+  padding-bottom: calc(var(--spacing) * 2);
+  line-height: 1.6;
+}
+
+a {
+  color: var(--link-color);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a:hover {
+  text-decoration-color: var(--heading-color);
+  text-decoration: underline;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  background-color: var(--color-primary);
+  -webkit-filter: contrast(80%) grayscale(30%) opacity(70%);
+  filter: contrast(80%) grayscale(30%) opacity(70%);
+  mix-blend-mode: luminosity;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 800;
+  line-height: 1.2;
+  text-wrap: balance;
+  color: var(--heading-color);
+  font-family: var(--font-stack);
+}
+
+h1 {
+  font-size: var(--size-step-4);
+  line-height: 1;
+  font-weight: 400;
+}
+
+h2 {
+  font-size: var(--size-step-3);
+}
+
+h3 {
+  font-size: var(--size-step-2);
+}
+
+h4 {
+  font-size: var(--size-step-1);
+}
+
+h5 {
+  font-size: var(--size-step-0);
+}
+
+h6 {
+  font-size: var(--size-step-0);
+}
+
+ul, ol {
+  -webkit-padding-start: var(--spacing);
+  padding-inline-start: var(--spacing);
+}
+
+li {
+  --flow-space: var(--spacing);
+  margin-block-start: var(--flow-space, var(--spacing));
+}
+
+blockquote {
+  -webkit-padding-start: var(--spacing);
+  padding-inline-start: var(--spacing);
+  -webkit-border-start: 0.3em solid;
+  border-inline-start: 0.3em solid;
+  font-style: italic;
+  font-size: var(--size-step-1);
+  border-width: 1px;
+  color: var(--blockquote-color);
+}
+
+strong, b {
+  color: var(--heading-color);
+}
+
+button {
+  margin: 0;
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+}
+
+th {
+  text-align: left;
+}
+
+hr {
+  border: 0;
+  border-top: 1px dashed;
+}
+
+code {
+  font-family: monospace;
+  padding: 2px;
+  background-color: var(--code-background-color);
+  color: var(--code-color);
+  border-radius: 3px;
+}
+
+footer {
+  padding: 25px 0;
+  text-align: center;
+}
+
+/* Utilities */
+content > div > * {
+  -webkit-margin-before: var(--flow-space, var(--spacing));
+  margin-block-start: var(--flow-space, var(--spacing));
+}
+
+/* Flow and rhythm */
+:is(h1, h2, h3, h4, h5, blockquote) {
+  --flow-space: calc(var(--spacing) * 2);
+  margin-block-end: calc(var(--spacing) / 2);
+}
+
+:is(h1, h2, h3, h4, h5) + * {
+  --flow-space: calc(var(--spacing) / 3);
+}
+
+:is(h1, h2, h3, h4, h5) + :where(h2, h3, h4, h5) {
+  --flow-space: calc(var(--spacing) * 2);
+}
+
+/* Line lengths */
+main, header, footer {
+  max-width: 65ch;
+  margin-inline: auto;
+}
+
+blockquote {
+  max-width: 50ch;
+}
+
+h1 {
+  max-width: 24ch;
+}
+
+h2, h3 {
+  max-width: 36ch;
+}
+
+/* Bear Content */
+.title {
+  text-decoration: none;
+}
+
+.title:hover {
+  text-decoration: none;
+  color: var(--color-primary);
+}
+
+.title h1 {
+  font-size: var(--size-step-2);
+  margin: 0;
+  margin-bottom: calc(var(--spacing) / 2);
+  text-align: center;
+  max-width: 100%;
+  color: var(--heading-color);
+}
+
+nav p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing);
+  row-gap: 0;
+  margin: 0;
+  justify-content: center;
+  font-size: var(--size-step-0);
+}
+
+nav p a {
+  color: var(--heading-color);
+}
+
+nav a {
+  margin-right: 0;
+}
+
+.inline {
+  width: auto !important;
+}
+
+/* blog post list */
+ul.blog-posts {
+  list-style-type: none;
+  padding: unset;
+}
+
+ul.blog-posts li {
+  display: flex;
+  flex-direction: column;
+}
+
+@media screen and (min-width: 600px) {
+  ul.blog-posts li {
+    flex-direction: row;
+    gap: calc(var(--spacing) / 2);
+  }
+}
+
+ul.blog-posts li span {
+  min-width: 11ch;
+  flex: 0 0 11ch;
+}
+
+ul.blog-posts li a:visited {
+  color: var(--visited-color);
+}
+
+.highlight, .code {
+  padding: 1px var(--spacing);
+  background-color: var(--code-background-color);
+  border-radius: 3px;
+  overflow-x: auto;
+  line-height: 1.2;
+  font-size: var(--size-step-0);
+  color: var(--code-color);
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+}

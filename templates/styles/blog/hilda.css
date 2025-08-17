@@ -1,0 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Inter&display=swap');
+
+:root {
+    --width: 700px;
+    --font-main: 'Bubblegum Sans', cursive;
+    --font-secondary: 'Inter', sans-serif;
+    --font-scale: 1em;
+    --background-color: #F4DCB9;
+    --heading-color: #49232D;
+    --text-color: #49232D;
+    --link-color: #EA6953;
+    --visited-color: #9B3235;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
+}
+
+html {
+    background-image: linear-gradient(180deg, #f1cfad 12.50%, #e3c08e 12.50%, #e3c08e 25%, #dab26d 25%, #dab26d 37.50%, #c99b6a 37.50%, #c99b6a 50%, #f1cfad 50%, #f1cfad 62.50%, #e3c08e 62.50%, #e3c08e 75%, #dab26d 75%, #dab26d 87.50%, #c99b6a 87.50%, #c99b6a 100%); 
+    background-size: 2400.00px 2400.00px;
+}
+
+body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: 40px auto;
+    padding: 40px;
+    max-width: var(--width);
+    width: 100%;
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+    border: 7px solid #49232D;
+    border-width: 7px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+}
+
+a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline; 
+}
+
+nav a {
+    margin-right: 8px;
+}
+
+strong, b {
+    color: var(--heading-color);
+}
+
+button {
+    margin: 0;
+    cursor: pointer;
+}
+
+time {
+    font-family: monospace;
+    font-style: normal;
+    font-size: 15px;
+}
+
+nav {
+    border-bottom: 1px dashed;
+}
+
+main {
+    padding-top: 20px;
+    line-height: 1.6;
+}
+
+table {
+    width: 100%;
+}
+
+hr {
+    border: 0;
+    border-top: 1px dashed;
+}
+
+img {
+    max-width: 100%;
+}
+
+code {
+    font-family: monospace;
+    padding: 2px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+}
+
+blockquote {
+    border-left: 1px solid #999;
+    color: var(--blockquote-color);
+    padding-left: 20px;
+    font-style: italic;
+}
+
+footer {
+    padding: 25px 0;
+    text-align: center;
+}
+
+.title:hover {
+    text-decoration: none;
+}
+
+.title h1 {
+    color: var(--heading-color);
+    font-size: 1.9em;
+}
+
+.inline {
+    width: auto !important;
+}
+
+.highlight, .code {
+    padding: 1px 15px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+}
+
+/* blog post list */
+ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+}
+
+ul.blog-posts li {
+    display: flex;
+}
+
+ul.blog-posts li span {
+    flex: 0 0 130px;
+}
+
+ul.blog-posts li a:visited {
+    color: var(--visited-color);
+}

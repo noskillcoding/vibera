@@ -1,0 +1,593 @@
+/* Font */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+/* Claude Theme - Reflecting thoughtfulness, clarity, and helpfulness */
+:root {
+  /* Core Claude colors - representing thoughtfulness and warmth */
+  --claude-blue: #2563eb;
+  --claude-teal: #0891b2;  
+  --claude-orange: #ea580c;
+  --claude-warm: #f97316;
+  --claude-soft: #f8fafc;
+  --claude-subtle: #64748b;
+  --claude-deep: #1e293b;
+  --claude-light: #ffffff;
+  
+  /* Semantic color system */
+  --color-primary: var(--claude-teal);
+  --color-secondary: var(--claude-orange);
+  --color-accent: var(--claude-warm);
+  --color-text: var(--claude-deep);
+  --color-subtle: var(--claude-subtle);
+  --color-background: var(--claude-light);
+  --color-surface: var(--claude-soft);
+  
+  /* Typography scale - thoughtful and clear */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  
+  /* Spacing system - generous and breathable */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  
+  /* Design tokens */
+  --font-stack: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, 
+    "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", 
+    "Segoe UI Symbol";
+  --border-radius: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-full: 9999px;
+  --shadow-subtle: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-soft: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-thoughtful: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  
+  /* Theme variables */
+  --background-color: var(--color-background);
+  --heading-color: var(--color-text);
+  --text-color: var(--color-text);
+  --link-color: var(--color-primary);
+  --visited-color: var(--color-subtle);
+  --code-background-color: var(--color-surface);
+  --code-color: var(--color-text);
+  --blockquote-color: var(--color-subtle);
+}
+
+/* Dark mode - maintaining Claude's thoughtful character */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --claude-soft: #0f172a;
+    --claude-deep: #f1f5f9;
+    --claude-light: #1e293b;
+    --claude-subtle: #94a3b8;
+    --color-background: var(--claude-light);
+    --color-surface: var(--claude-soft);
+    --color-text: var(--claude-deep);
+    --color-subtle: var(--claude-subtle);
+  }
+}
+
+/* Base styles - clean and thoughtful */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-stack);
+  font-size: var(--text-lg);
+  font-weight: 400;
+  line-height: 1.7;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  margin: 0;
+  padding: var(--space-6);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Layout structure - logical and organized */
+header, main, footer {
+  width: 100%;
+  max-width: 65ch;
+  margin: 0 auto;
+}
+
+header {
+  padding-bottom: var(--space-8);
+  margin-bottom: var(--space-8);
+  border-bottom: 1px solid rgba(14, 165, 233, 0.1);
+  position: relative;
+}
+
+header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+  border-radius: var(--border-radius-full);
+}
+
+main {
+  flex: 1;
+  padding-bottom: var(--space-16);
+}
+
+footer {
+  padding-top: var(--space-8);
+  margin-top: var(--space-12);
+  border-top: 1px solid rgba(14, 165, 233, 0.1);
+  text-align: center;
+  color: var(--color-subtle);
+  font-size: var(--text-base);
+}
+
+/* Typography - clear hierarchy and excellent readability */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-stack);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--heading-color);
+  text-wrap: balance;
+  margin-top: var(--space-12);
+  margin-bottom: var(--space-4);
+  letter-spacing: -0.025em;
+}
+
+h1 {
+  font-size: var(--text-4xl);
+  font-weight: 700;
+  margin-top: 0;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+h2 {
+  font-size: var(--text-3xl);
+  margin-top: var(--space-16);
+}
+
+h3 {
+  font-size: var(--text-2xl);
+  margin-top: var(--space-12);
+}
+
+h4 {
+  font-size: var(--text-xl);
+  margin-top: var(--space-10);
+}
+
+h5 {
+  font-size: var(--text-lg);
+  margin-top: var(--space-8);
+}
+
+h6 {
+  font-size: var(--text-base);
+  font-weight: 500;
+  color: var(--color-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Links - helpful and clear */
+a {
+  color: var(--link-color);
+  text-decoration: none;
+  cursor: pointer;
+  border-bottom: 1px solid transparent;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  margin: calc(-1 * var(--space-1)) calc(-1 * var(--space-2));
+}
+
+a:hover {
+  background-color: rgba(14, 165, 233, 0.08);
+  border-bottom-color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+a:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  background-color: rgba(14, 165, 233, 0.12);
+}
+
+a:visited {
+  color: var(--visited-color);
+}
+
+/* Images - thoughtful presentation */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-soft);
+  margin: var(--space-8) 0;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+img:hover {
+  transform: scale(1.02);
+  box-shadow: var(--shadow-medium);
+}
+
+/* Lists - well organized */
+ul, ol {
+  padding-left: var(--space-6);
+  margin: var(--space-4) 0;
+}
+
+li {
+  margin-bottom: var(--space-3);
+  line-height: 1.6;
+}
+
+ul li::marker {
+  color: var(--color-primary);
+}
+
+ol li::marker {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+/* Blockquotes - thoughtful emphasis */
+blockquote {
+  margin: var(--space-8) 0;
+  padding: var(--space-6);
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.05), rgba(234, 88, 12, 0.05));
+  border-left: 4px solid var(--color-primary);
+  border-radius: var(--border-radius);
+  font-style: italic;
+  color: var(--blockquote-color);
+  position: relative;
+  box-shadow: var(--shadow-subtle);
+}
+
+blockquote::before {
+  content: '"';
+  font-size: var(--text-4xl);
+  color: var(--color-primary);
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-4);
+  line-height: 1;
+  opacity: 0.3;
+}
+
+/* Code - clear and accessible */
+code {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Consolas', monospace;
+  font-size: var(--text-sm);
+  background-color: var(--code-background-color);
+  color: var(--code-color);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--space-1);
+  border: 1px solid rgba(14, 165, 233, 0.1);
+}
+
+.highlight, .code {
+  background: var(--code-background-color);
+  border: 1px solid rgba(14, 165, 233, 0.1);
+  border-radius: var(--border-radius);
+  padding: var(--space-4);
+  margin: var(--space-6) 0;
+  overflow-x: auto;
+  box-shadow: var(--shadow-subtle);
+  position: relative;
+}
+
+.highlight::before, .code::before {
+  content: '💭 thoughtful code';
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-4);
+  font-size: var(--text-xs);
+  color: var(--color-subtle);
+  font-family: var(--font-stack);
+  opacity: 0.6;
+}
+
+/* Tables - organized information */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--space-8) 0;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+
+th, td {
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  border-bottom: 1px solid rgba(14, 165, 233, 0.1);
+}
+
+th {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.05), rgba(234, 88, 12, 0.05));
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+/* Utilities */
+strong, b {
+  font-weight: 600;
+  color: var(--heading-color);
+}
+
+em, i {
+  font-style: italic;
+  color: var(--color-subtle);
+}
+
+button {
+  font-family: var(--font-stack);
+  font-size: var(--text-base);
+  font-weight: 500;
+  padding: var(--space-3) var(--space-6);
+  background: linear-gradient(135deg, var(--color-primary), var(--claude-teal));
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-subtle);
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+  background: linear-gradient(135deg, var(--claude-blue), var(--color-primary));
+}
+
+button:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+  margin: var(--space-12) 0;
+}
+
+time {
+  color: var(--color-subtle);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+/* Bear-specific content */
+.title {
+  text-decoration: none;
+  display: block;
+  margin-bottom: var(--space-6);
+}
+
+.title:hover {
+  background: none;
+  transform: none;
+}
+
+.title h1 {
+  margin: 0;
+  font-size: var(--text-3xl);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+nav {
+  margin-top: var(--space-6);
+}
+
+nav p {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin: 0;
+  justify-content: center;
+}
+
+nav a {
+  background: rgba(14, 165, 233, 0.05);
+  border: 1px solid rgba(14, 165, 233, 0.2);
+  border-radius: var(--border-radius-full);
+  padding: var(--space-2) var(--space-4);
+  font-weight: 500;
+  font-size: var(--text-sm);
+  color: var(--color-primary);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+nav a:hover {
+  background: var(--color-primary);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-soft);
+}
+
+.inline {
+  width: auto !important;
+}
+
+/* Blog post list - organized and inviting */
+ul.blog-posts {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-8) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+ul.blog-posts li {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.02), rgba(234, 88, 12, 0.02));
+  border: 1px solid rgba(14, 165, 233, 0.1);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-6);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+ul.blog-posts li::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--color-primary), var(--color-secondary));
+}
+
+ul.blog-posts li:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-thoughtful);
+  border-color: var(--color-primary);
+}
+
+ul.blog-posts li a {
+  font-size: var(--text-xl);
+  font-weight: 600;
+  color: var(--heading-color);
+  margin: 0;
+  padding: 0;
+  display: block;
+  margin-bottom: var(--space-2);
+}
+
+ul.blog-posts li a:hover {
+  background: none;
+  transform: none;
+  color: var(--color-primary);
+}
+
+ul.blog-posts li a:visited {
+  color: var(--visited-color);
+}
+
+ul.blog-posts li span {
+  color: var(--color-subtle);
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+/* Responsive design - accessible to all */
+@media screen and (max-width: 768px) {
+  body {
+    padding: var(--space-4);
+    font-size: var(--text-base);
+  }
+  
+  h1 {
+    font-size: var(--text-3xl);
+  }
+  
+  h2 {
+    font-size: var(--text-2xl);
+  }
+  
+  h3 {
+    font-size: var(--text-xl);
+  }
+  
+  nav p {
+    justify-content: center;
+    gap: var(--space-2);
+  }
+  
+  nav a {
+    font-size: var(--text-xs);
+    padding: var(--space-2) var(--space-3);
+  }
+}
+
+/* Accessibility enhancements */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --color-primary: #0066cc;
+    --color-secondary: #cc3300;
+    --shadow-subtle: 0 2px 4px rgba(0, 0, 0, 0.3);
+    --shadow-soft: 0 2px 6px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Custom selection color - Claude blue */
+::selection {
+  background-color: rgba(14, 165, 233, 0.2);
+  color: var(--text-color);
+}
+
+::-moz-selection {
+  background-color: rgba(14, 165, 233, 0.2);
+  color: var(--text-color);
+}
+
+/* Focus indicators - helpful and clear */
+*:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Flow and rhythm - thoughtful spacing */
+:is(h1, h2, h3, h4, h5, h6, blockquote) {
+  margin-block-end: var(--space-4);
+}
+
+:is(h1, h2, h3, h4, h5, h6) + * {
+  margin-block-start: var(--space-2);
+}
+
+:is(h1, h2, h3, h4, h5, h6) + :where(h2, h3, h4, h5, h6) {
+  margin-block-start: var(--space-8);
+}
