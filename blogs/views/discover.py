@@ -18,6 +18,7 @@ posts_per_page = 20
 def get_base_query(user=None):
     queryset = Post.objects.select_related("blog").filter(
         publish=True,
+        is_page=False,  # Only show posts, not static pages
         blog__reviewed=True,
         blog__user__is_active=True,
         make_discoverable=True,
