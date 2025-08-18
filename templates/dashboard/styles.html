@@ -82,24 +82,30 @@
                 <!-- Layout Detection -->
                 {% if 'grid-template-columns' in style.css %}
                     <li><strong>Layout:</strong> Card-based grid system with responsive columns</li>
-                {% elif 'background-image.*linear-gradient.*radial-gradient' in style.css %}
-                    <li><strong>Layout:</strong> Glassmorphism OS-style interface layout</li>
-                {% elif 'background-image.*url(data:image/png' in style.css %}
+                {% elif 'radial-gradient(circle at' in style.css and 'linear-gradient(' in style.css %}
+                    <li><strong>Layout:</strong> Glassmorphism OS-style interface with gradient overlays</li>
+                {% elif 'url(data:image/png' in style.css %}
                     <li><strong>Layout:</strong> Paper texture background with wide content area</li>
-                {% elif 'text-align.*center' in style.css and 'column-count.*2' in style.css %}
+                {% elif 'text-align: center' in style.css and 'column-count: 2' in style.css %}
                     <li><strong>Layout:</strong> Classic newspaper column layout</li>
-                {% elif 'border.*2px solid' in style.css and 'max-width.*700px' in style.css %}
-                    <li><strong>Layout:</strong> High contrast bordered container (accessibility)</li>
-                {% elif 'transform.*rotate' in style.css and 'border.*3px solid' in style.css %}
-                    <li><strong>Layout:</strong> Playful rotated sections with bold borders</li>
-                {% elif 'background-image.*linear-gradient.*var(--color-border)' in style.css %}
+                {% elif 'border: 2px solid' in style.css and 'max-width: 700px' in style.css %}
+                    <li><strong>Layout:</strong> High contrast bordered container (accessibility-focused)</li>
+                {% elif 'transform: rotate' in style.css and 'border: 3px solid' in style.css %}
+                    <li><strong>Layout:</strong> Playful rotated sections with bold comic borders</li>
+                {% elif 'background-image: linear-gradient(' in style.css and '--color-border' in style.css %}
                     <li><strong>Layout:</strong> Geometric grid overlay with structured spacing</li>
-                {% elif '--width.*900px' in style.css %}
+                {% elif '--width: 900px' in style.css %}
                     <li><strong>Layout:</strong> Wider content area (900px)</li>
-                {% elif '--width.*1000px' in style.css %}
+                {% elif '--width: 1000px' in style.css %}
                     <li><strong>Layout:</strong> Extra wide vintage layout (1000px)</li>
+                {% elif 'padding: 20px 1000px' in style.css %}
+                    <li><strong>Layout:</strong> Unique wide padding with texture background</li>
+                {% elif 'max-width: 65ch' in style.css %}
+                    <li><strong>Layout:</strong> Optimal reading width (65 characters)</li>
+                {% elif 'order: 1' in style.css and 'sticky' in style.css %}
+                    <li><strong>Layout:</strong> Sticky bottom navigation with flexible sections</li>
                 {% else %}
-                    <li><strong>Layout:</strong> Responsive flexible width</li>
+                    <li><strong>Layout:</strong> Standard responsive design</li>
                 {% endif %}
                 
                 <!-- Color Scheme Detection -->
@@ -134,45 +140,55 @@
                 {% endif %}
                 
                 <!-- Special Features Detection -->
-                {% if 'backdrop-filter.*blur' in style.css %}
+                {% if 'backdrop-filter: blur' in style.css %}
                     <li><strong>Features:</strong> Glassmorphism effects with backdrop blur</li>
-                {% elif 'animation.*bounce' in style.css and 'cursor.*url' in style.css %}
-                    <li><strong>Features:</strong> Comic Sans nostalgia with bouncing animations</li>
-                {% elif 'box-shadow.*var(--shadow-lg)' in style.css %}
+                {% elif 'animation: bounce' in style.css and 'cursor: url(' in style.css %}
+                    <li><strong>Features:</strong> Comic Sans nostalgia with bouncing animations and emoji cursors</li>
+                {% elif 'box-shadow: var(--shadow-lg)' in style.css %}
                     <li><strong>Features:</strong> Modern card design with elevated shadows</li>
-                {% elif 'text-shadow.*2px 2px 0px' in style.css %}
+                {% elif 'text-shadow: 2px 2px 0px' in style.css %}
                     <li><strong>Features:</strong> Hostile glitch effects and aggressive styling</li>
-                {% elif 'transition.*cubic-bezier' in style.css %}
-                    <li><strong>Features:</strong> Thoughtful micro-interactions and smooth transitions</li>
-                {% elif 'border.*2px solid' in style.css and 'focus.*3px solid' in style.css %}
+                {% elif 'transition: all' in style.css and 'cubic-bezier' in style.css %}
+                    <li><strong>Features:</strong> Thoughtful micro-interactions with smooth transitions</li>
+                {% elif 'border: 2px solid' in style.css and 'outline: 3px solid' in style.css %}
                     <li><strong>Features:</strong> Enhanced accessibility with bold focus states</li>
-                {% elif 'background-image.*url(data:image/png' in style.css %}
-                    <li><strong>Features:</strong> Paper texture background pattern</li>
-                {% elif 'transform.*skew' in style.css %}
-                    <li><strong>Features:</strong> Geometric grid lines and structured borders</li>
-                {% elif 'filter.*sepia.*grayscale' in style.css %}
+                {% elif 'image-rendering: pixelated' in style.css %}
+                    <li><strong>Features:</strong> Retro gaming pixelated graphics and effects</li>
+                {% elif 'transform: skew' in style.css %}
+                    <li><strong>Features:</strong> Geometric transformations and structured borders</li>
+                {% elif 'filter: sepia' in style.css and 'grayscale' in style.css %}
                     <li><strong>Features:</strong> Vintage newspaper image filters</li>
-                {% elif 'border-radius.*var(--border-radius-full)' in style.css %}
+                {% elif 'border-radius: var(--border-radius-full)' in style.css %}
                     <li><strong>Features:</strong> Rounded design elements and soft shadows</li>
+                {% elif 'animation: typing' in style.css %}
+                    <li><strong>Features:</strong> Typewriter effect with vintage styling</li>
+                {% elif 'text-transform: uppercase' in style.css and 'letter-spacing:' in style.css %}
+                    <li><strong>Features:</strong> Bold typography with magazine-style formatting</li>
+                {% elif '::selection' in style.css %}
+                    <li><strong>Features:</strong> Custom text selection colors and careful attention to detail</li>
                 {% else %}
-                    <li><strong>Features:</strong> Clean, minimalist styling</li>
+                    <li><strong>Features:</strong> Standard web styling</li>
                 {% endif %}
                 
                 <!-- Dark Mode Detection -->
                 {% if 'prefers-color-scheme: dark' in style.css %}
-                    {% if 'hostile' in style.css or '#dc2626' in style.css %}
-                        <li><strong>Dark Mode:</strong> Forced darkness (ignores user preference)</li>
+                    {% if '@media (prefers-color-scheme: light)' in style.css %}
+                        <li><strong>Dark Mode:</strong> Forced darkness (hostile, ignores user preference)</li>
                     {% elif '#0c0a09' in style.css %}
-                        <li><strong>Dark Mode:</strong> Modern dark theme with elevated surfaces</li>
+                        <li><strong>Dark Mode:</strong> Modern dark theme with elevated card surfaces</li>
                     {% elif '#1e293b' in style.css %}
-                        <li><strong>Dark Mode:</strong> Thoughtful dark mode with careful contrast</li>
+                        <li><strong>Dark Mode:</strong> Thoughtful dark mode with careful contrast ratios</li>
                     {% elif '#19150f' in style.css %}
-                        <li><strong>Dark Mode:</strong> Warm dark theme maintaining elegance</li>
+                        <li><strong>Dark Mode:</strong> Warm dark theme maintaining delightful elegance</li>
+                    {% elif '#1a1a1a' in style.css %}
+                        <li><strong>Dark Mode:</strong> Clean structured dark theme with blue accents</li>
+                    {% elif '#000' in style.css %}
+                        <li><strong>Dark Mode:</strong> High contrast pure black/white (accessibility)</li>
                     {% else %}
-                        <li><strong>Dark Mode:</strong> Adaptive dark theme supported</li>
+                        <li><strong>Dark Mode:</strong> Adaptive dark theme with theme-specific adjustments</li>
                     {% endif %}
                 {% else %}
-                    <li><strong>Dark Mode:</strong> Light mode only</li>
+                    <li><strong>Dark Mode:</strong> Light mode only design</li>
                 {% endif %}
             {% else %}
                 <li><em>Theme characteristics not available</em></li>
