@@ -6,7 +6,7 @@ from django.utils.html import escape, format_html, format_html_join
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
-from blogs.models import Blog, PersistentStore, Post, Stylesheet, Upvote, Hit, Subscriber, UserSettings, Media, Comment
+from blogs.models import Blog, PersistentStore, Post, Stylesheet, Upvote, Hit, Subscriber, UserSettings, Media, Comment, DangerousReport
 
 
 admin.autodiscover()
@@ -254,9 +254,33 @@ class HitAdmin(admin.ModelAdmin):
                            id=obj.post.pk,
                            post=escape(obj.post))
 
-    list_display = ('created_date', 'post_link', 'hash_id')
-    search_fields = ('created_date', 'post__title')
-    ordering = ('-created_date',)
+
+@admin.register(DangerousReport)
+class DangerousReportAdmin(admin.ModelAdmin):
+    list_display = ('id', 'post_link', 'user_email', 'report_preview', 'created_at')
+    list_display_links = ('id', 'report_preview')  # Make ID and report preview clickable to edit report
+    list_filter = ('created_at', 'post__blog')
+    search_fields = ('user__email', 'post__title', 'comment')
+    raw_id_fields = ('post', 'user')
+    readonly_fields = ('created_at',)
+    ordering = ('-created_at',)
+    
+    def post_link(self, obj):
+        return format_html('<a href="/mothership/blogs/post/{id}/change/" target="_blank">{title}</a>',
+                           id=obj.post.pk,
+                           title=escape(obj.post.title))
+    post_link.short_description = 'Post'
+    
+    def user_email(self, obj):
+        return obj.user.email
+    user_email.short_description = 'Reporter'
+    
+    def report_preview(self, obj):
+        preview = obj.comment[:50]
+        if len(obj.comment) > 50:
+            preview += "..."
+        return preview
+    report_preview.short_description = 'Report Comment'
 
 
 @admin.register(Subscriber)

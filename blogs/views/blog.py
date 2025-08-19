@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from django.utils.text import slugify
 
-from blogs.models import Blog, Post, Upvote, Comment
+from blogs.models import Blog, Post, Upvote, Comment, DangerousReport
 from blogs.helpers import salt_and_hash, unmark
 from blogs.views.analytics import render_analytics
 
@@ -189,6 +189,7 @@ def post(request, slug):
         'meta_description': meta_description,
         'meta_image': post.meta_image or blog.meta_image,
         'upvoted': upvoted,
+        'user_has_reported': post.user_has_reported(request.user),
     }
 
     response = render(request, 'post.html', context)
@@ -286,6 +287,45 @@ def add_comment(request, uid):
                 content=content
             )
             return redirect(f"/{post.slug}/?comment_added=true")
+        except Exception as e:
+            return redirect(f"/{post.slug}/?error=submission_failed")
+    
+    raise Http404("Invalid request method")
+
+
+@csrf_exempt
+def report_dangerous(request, uid):
+    if request.method == 'POST':
+        post = get_object_or_404(Post, uid=uid)
+        
+        # Check if user is authenticated
+        if not request.user.is_authenticated:
+            return redirect(f"/{post.slug}/?error=login_required")
+        
+        # Basic validation
+        comment = request.POST.get('comment', '').strip()
+        
+        if not comment:
+            return redirect(f"/{post.slug}/?error=missing_report_comment")
+        
+        # Validate comment length (5-100 chars)
+        if len(comment) < 5 or len(comment) > 100:
+            return redirect(f"/{post.slug}/?error=invalid_report_comment")
+        
+        try:
+            # Create or update the dangerous report (one per user per post)
+            report, created = DangerousReport.objects.get_or_create(
+                post=post,
+                user=request.user,
+                defaults={'comment': comment}
+            )
+            
+            if not created:
+                # Update existing report
+                report.comment = comment
+                report.save()
+            
+            return redirect(f"/{post.slug}/?report_added=true")
         except Exception as e:
             return redirect(f"/{post.slug}/?error=submission_failed")
     

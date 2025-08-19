@@ -21,7 +21,7 @@
         </div>
     {% endif %}
 
-    <details style="font-size: 14px; max-width: 100%;">
+    <details id="comments-section" style="font-size: 14px; max-width: 100%;" {% if request.GET.comment_added %}open{% endif %}>
         <summary style="cursor: pointer; margin-bottom: 15px;">
             Comments ({{ post.comments.count }})
         </summary>
@@ -75,3 +75,15 @@
         </div>
     </details>
 </div>
+
+{% if request.GET.comment_added %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Scroll to comments section after successful submission
+    const commentsSection = document.getElementById('comments-section');
+    if (commentsSection) {
+        commentsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+});
+</script>
+{% endif %}

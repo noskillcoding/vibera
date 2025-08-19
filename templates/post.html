@@ -161,6 +161,26 @@
     {% endif %}
 
     {% if not preview %}
+        <!-- Display dangerous report success/error messages -->
+        {% if request.GET.report_added %}
+            <div style="background: #fff3cd; color: #856404; padding: 10px; border-radius: 4px; margin: 10px 0;">
+                Report submitted successfully.
+            </div>
+        {% endif %}
+        
+        {% if request.GET.error == "missing_report_comment" %}
+            <div style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; margin: 10px 0;">
+                Please provide a reason why this post is dangerous.
+            </div>
+        {% elif request.GET.error == "invalid_report_comment" %}
+            <div style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; margin: 10px 0;">
+                Report comment must be between 5 and 100 characters.
+            </div>
+        {% elif request.GET.error == "report_failed" %}
+            <div style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; margin: 10px 0;">
+                There was an error submitting your report. Please try again.
+            </div>
+        {% endif %}
         {% if post.make_discoverable %}
             {% include 'snippets/upvote_form.html' with post=post upvoted=upvoted %}
         {% endif %}
@@ -168,6 +188,11 @@
         <!-- Comments Section for Posts (not Pages) -->
         {% if post.comments_enabled and not post.is_page %}
             {% include 'snippets/comments_section.html' with post=post %}
+        {% endif %}
+        
+        <!-- Reports Section -->
+        {% if post.make_discoverable %}
+            {% include 'snippets/dangerous_report_form.html' with post=post user_has_reported=user_has_reported %}
         {% endif %}
     {% endif %}
 

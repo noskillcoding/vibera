@@ -11,6 +11,7 @@
         >
         {% else %}
         <button
+            type="submit"
             class="upvote-button"
             title="Toast this post"
         >
@@ -25,17 +26,78 @@
 </form>
 
 <script>
-    document.querySelector('#upvote-form').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const form = e.target;
+    console.log('Upvote script loaded');
+    
+    // Wait for DOM to be ready
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM ready, looking for upvote form...');
+        
+        const form = document.querySelector('#upvote-form');
+        if (!form) {
+            console.error('Upvote form not found!');
+            return;
+        }
+        
+        console.log('Upvote form found, attaching event listener');
+        
+        const button = form.querySelector('button');
+        console.log('Button found:', button);
+        console.log('Button disabled?', button.disabled);
+        console.log('Button type:', button.type);
+        
+        // Add click listener directly to button
+        button.addEventListener('click', (e) => {
+            console.log('Direct button click detected!');
+            e.preventDefault();
+            handleUpvote(form);
+        });
+        
+        // Also listen for form submit
+        form.addEventListener('submit', (e) => {
+            console.log('Form submit event triggered!');
+            e.preventDefault();
+            handleUpvote(form);
+        });
+    });
+    
+    function handleUpvote(form) {
+        console.log('Handling upvote...');
+        
+        const button = form.querySelector('button');
+        const upvoteCount = document.querySelector('.upvote-count');
+        
+        // Disable button during request
+        button.disabled = true;
+        button.style.opacity = "0.5";
+        
         fetch(form.action, {
             method: form.method,
             body: new FormData(form),
+        })
+        .then(response => {
+            console.log('Upvote response status:', response.status);
+            console.log('Upvote response:', response);
+            
+            if (response.ok) {
+                // Success - update UI
+                button.style.color = "salmon";
+                button.title = "Toasted";
+                upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML) + 1)}`;
+                console.log('Upvote successful!');
+            } else {
+                // Server error - revert
+                button.disabled = false;
+                button.style.opacity = "1";
+                console.error('Upvote failed with status:', response.status);
+                alert('Upvote failed. Are you logged in?');
+            }
+        })
+        .catch(error => {
+            // Network error - revert
+            button.disabled = false;
+            button.style.opacity = "1";
+            console.error('Upvote error:', error);
+            alert('Network error. Check console for details.');
         });
-        const button = form.querySelector('button')
-        button.disabled = true
-        button.style.color = "salmon"
-        const upvoteCount = document.querySelector('.upvote-count')
-        upvoteCount.innerHTML = `${(parseInt(upvoteCount.innerHTML.split(" ")[0]) + 1)}`
-    });
+    }
 </script>

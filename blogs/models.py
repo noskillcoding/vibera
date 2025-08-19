@@ -296,6 +296,12 @@ class Post(models.Model):
     @property
     def token(self):
         return hashlib.sha256(self.uid.encode()).hexdigest()[0:10]
+    
+    def user_has_reported(self, user):
+        """Check if a specific user has reported this post as dangerous"""
+        if not user.is_authenticated:
+            return False
+        return self.dangerous_reports.filter(user=user).exists()
 
     def update_score(self):
         self.upvotes = self.upvote_set.count()
@@ -481,3 +487,17 @@ class PersistentStore(models.Model):
 
     def __str__(self):
         return self.last_executed.strftime('%d %B %Y, %I:%M %p')
+
+
+class DangerousReport(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='dangerous_reports')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.CharField(max_length=100, help_text="Brief explanation of why this post is dangerous")
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ('post', 'user')  # One report per user per post
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"Report on '{self.post.title}' by {self.user.email}"

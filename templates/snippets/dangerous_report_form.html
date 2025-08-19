@@ -1,0 +1,75 @@
+<!-- Reports Section matching Comments design -->
+<div style="margin-top: 20px; max-width: 100%;">
+    
+    <details id="reports-section" style="font-size: 14px; max-width: 100%;" {% if request.GET.report_added %}open{% endif %}>
+        <summary style="cursor: pointer; margin-bottom: 15px; color: #d63031;">
+            Reports ({{ post.dangerous_reports.count }})
+        </summary>
+        
+        <div class="reports-content" style="max-width: 100%;">
+        
+        <!-- Existing Reports -->
+        {% if post.dangerous_reports.all %}
+            <div class="reports-list" style="margin: 20px 0;">
+                {% for report in post.dangerous_reports.all %}
+                    <div class="report" style="background: #ffebee; padding: 15px; margin: 10px 0; border-radius: 8px; border-left: 4px solid #d63031;">
+                        <div class="report-header" style="font-size: 0.9em; color: #666; margin-bottom: 8px;">
+                            <strong>{{ report.user.email }}</strong>
+                            <span style="margin-left: 10px;">{{ report.created_at|date:"M d, Y H:i" }}</span>
+                        </div>
+                        <div class="report-content" style="white-space: pre-wrap; color: #d63031;">{{ report.comment }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <!-- Report Form -->
+        {% if user.is_authenticated %}
+            {% if not user_has_reported %}
+                <div class="report-form" style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; max-width: 100%; box-sizing: border-box;">
+                    <h4 style="color: #d63031;">Report Dangerous Content</h4>
+                    <form action="{% url 'report_dangerous' uid=post.uid %}" method="post" style="max-width: 100%;">
+                        {% csrf_token %}
+                        
+                        <div style="margin: 10px 0;">
+                            <p style="color: #666; font-size: 14px; margin-bottom: 10px;">
+                                Your email ({{ user.email }}) will be shown as the reporter name.
+                            </p>
+                        </div>
+                        
+                        <div style="margin: 10px 0;">
+                            <textarea id="comment" name="comment" required minlength="5" maxlength="100" rows="3"
+                                      style="width: 100%; max-width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; resize: vertical; box-sizing: border-box;"
+                                      placeholder="Why is this post dangerous? (5-100 characters)"></textarea>
+                        </div>
+                        
+                        <button type="submit" style="background: #d63031; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+                            Submit Report
+                        </button>
+                    </form>
+                </div>
+            {% else %}
+                <div style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; color: #666; text-align: center;">
+                    <p>You have already reported this post.</p>
+                </div>
+            {% endif %}
+        {% else %}
+            <div style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; color: #666;">
+                <p><a href="/accounts/login/">Log in</a> to report dangerous content.</p>
+            </div>
+        {% endif %}
+        </div>
+    </details>
+</div>
+
+{% if request.GET.report_added %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Scroll to reports section after successful submission
+    const reportsSection = document.getElementById('reports-section');
+    if (reportsSection) {
+        reportsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+});
+</script>
+{% endif %}
