@@ -6,7 +6,7 @@ from django.utils.html import escape, format_html, format_html_join
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 
-from blogs.models import Blog, PersistentStore, Post, Stylesheet, Upvote, Hit, Subscriber, UserSettings, Media
+from blogs.models import Blog, PersistentStore, Post, Stylesheet, Upvote, Hit, Subscriber, UserSettings, Media, Comment
 
 
 admin.autodiscover()
@@ -222,6 +222,29 @@ class UpvoteAdmin(admin.ModelAdmin):
 @admin.register(Media)
 class MediaAdmin(admin.ModelAdmin):
     raw_id_fields = ('blog',)
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    raw_id_fields = ('post', 'user')
+    list_display = ('content_preview', 'user_display', 'post_title', 'created_at')
+    list_filter = ('created_at', 'use_email_as_name')
+    search_fields = ('content', 'user__email', 'post__title')
+    ordering = ('-created_at',)
+    
+    def content_preview(self, obj):
+        return obj.content[:100] + '...' if len(obj.content) > 100 else obj.content
+    content_preview.short_description = 'Comment'
+    
+    def user_display(self, obj):
+        if obj.use_email_as_name:
+            return obj.user.email
+        else:
+            return 'Anonymous'
+    user_display.short_description = 'Author'
+    
+    def post_title(self, obj):
+        return obj.post.title
+    post_title.short_description = 'Post'
 
 @admin.register(Hit)
 class HitAdmin(admin.ModelAdmin):
