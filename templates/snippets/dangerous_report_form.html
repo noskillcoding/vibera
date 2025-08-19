@@ -14,7 +14,7 @@
                 {% for report in post.dangerous_reports.all %}
                     <div style="margin: 4px 0; padding: 2px 0; border-left: 2px solid {% if report.deleted %}rgba(128,128,128,0.4){% else %}#d63031{% endif %}; padding-left: 6px;">
                         <div style="font-size: 0.9em; opacity: 0.8; display: flex; justify-content: space-between; align-items: center;">
-                            <span style="{% if not report.deleted %}color: #d63031;{% endif %}"><strong>{{ report.user.email }}</strong> • {{ report.created_at|date:"M d, Y H:i" }}</span>
+                            <span><strong>{{ report.user.email }}</strong> • {{ report.created_at|date:"M d, Y H:i" }}</span>
                             {% if not report.deleted and report.user == request.user %}
                                 <form method="post" action="{% url 'delete_report' uid=post.uid %}" style="display: inline;" onsubmit="return confirm('Delete this report?');">
                                     {% csrf_token %}
