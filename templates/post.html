@@ -89,6 +89,17 @@
                 </time>
             </i>
         </p>
+        
+        <!-- Warning banner for posts with active reports -->
+        {% if post.active_reports_count > 0 %}
+            <div style="background: #ffebee; border: 1px solid #f44336; border-radius: 4px; padding: 10px; margin: 15px 0; display: flex; align-items: center; gap: 8px;">
+                <span style="color: #f44336; font-size: 18px;">⚠️</span>
+                <span style="color: #d32f2f; font-weight: 500;">
+                    This post has been reported as potentially dangerous. 
+                    <a href="#reports-section" style="color: #d32f2f; text-decoration: underline;">View reports below</a>.
+                </span>
+            </div>
+        {% endif %}
 
         <!-- Media Gallery for Posts -->
         {% if post.media_urls %}
