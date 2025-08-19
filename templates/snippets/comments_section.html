@@ -1,0 +1,74 @@
+<!-- Comments Section -->
+<details style="margin-top: 30px; font-size: 14px;">
+    <summary style="cursor: pointer; margin-bottom: 15px;">
+        Comments ({{ post.comments.count }})
+    </summary>
+    
+    <div class="comments-content" style="padding-left: 20px;">
+        <!-- Display success/error messages -->
+        {% if request.GET.comment_added %}
+            <div style="background: #d4edda; color: #155724; padding: 10px; border-radius: 4px; margin: 10px 0;">
+                Comment added successfully!
+            </div>
+        {% endif %}
+        
+        {% if request.GET.error %}
+            <div style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; margin: 10px 0;">
+                {% if request.GET.error == "login_required" %}
+                    Please <a href="/accounts/login/">log in</a> to leave a comment.
+                {% elif request.GET.error == "missing_content" %}
+                    Please write a comment.
+                {% elif request.GET.error == "invalid_content" %}
+                    Comment must be between 5 and 1000 characters.
+                {% else %}
+                    There was an error submitting your comment. Please try again.
+                {% endif %}
+            </div>
+        {% endif %}
+        
+        <!-- Existing Comments -->
+        {% if post.comments.all %}
+            <div class="comments-list" style="margin: 20px 0;">
+                {% for comment in post.comments.all %}
+                    <div class="comment" style="background: #f9f9f9; padding: 15px; margin: 10px 0; border-radius: 8px;">
+                        <div class="comment-header" style="font-size: 0.9em; color: #666; margin-bottom: 8px;">
+                            <strong>{{ comment.display_name }}</strong>
+                            <span style="margin-left: 10px;">{{ comment.created_at|date:"M d, Y H:i" }}</span>
+                        </div>
+                        <div class="comment-content" style="white-space: pre-wrap;">{{ comment.content }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <!-- Comment Form -->
+        {% if user.is_authenticated %}
+            <div class="comment-form" style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
+                <h4>Add a Comment</h4>
+                <form action="{% url 'add_comment' uid=post.uid %}" method="post" style="max-width: 500px;">
+                    <div style="margin: 10px 0;">
+                        <label>
+                            <input type="checkbox" name="use_email_as_name" style="margin-right: 5px;">
+                            Show my email ({{ user.email }}) as author name (otherwise "Anonymous")
+                        </label>
+                    </div>
+                    
+                    <div style="margin: 10px 0;">
+                        <label for="content" style="display: block; margin-bottom: 5px; font-weight: bold;">Comment *</label>
+                        <textarea id="content" name="content" required minlength="5" maxlength="1000" rows="4"
+                                  style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; resize: vertical;"></textarea>
+                        <small style="color: #666;">5-1000 characters</small>
+                    </div>
+                    
+                    <button type="submit" style="background: #007cba; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
+                        Post Comment
+                    </button>
+                </form>
+            </div>
+        {% else %}
+            <div style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; color: #666;">
+                <p><a href="/accounts/login/">Log in</a> to leave a comment.</p>
+            </div>
+        {% endif %}
+    </div>
+</details>

@@ -38,12 +38,7 @@
                 {% format_date post.published_date blog.date_format blog.lang tz %}
             </time>
         </span>
-        <a href="{% url 'post_edit' id=blog.subdomain  uid=post.uid %}">
-            {{ post.title }}
-        </a>
-        {% if not post.publish %}
-            <small>(not published)</small>
-        {% endif %}
+        <a href="{% url 'post_edit' id=blog.subdomain  uid=post.uid %}">{{ post.title }}</a>{% if not post.publish %}&nbsp;<small>(not published)</small>{% endif %}
     </li>
     {% empty %}
     <li>

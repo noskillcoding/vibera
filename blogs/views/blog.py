@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from django.utils.text import slugify
 
-from blogs.models import Blog, Post, Upvote
+from blogs.models import Blog, Post, Upvote, Comment
 from blogs.helpers import salt_and_hash, unmark
 from blogs.views.analytics import render_analytics
 
@@ -92,18 +92,25 @@ def posts(request, blog):
             return not_found(request)
     
     tag_param = request.GET.get('q', '')
+    tool_param = request.GET.get('tool', '')
+    
     tags = [t.strip() for t in tag_param.split(',')] if tag_param else []
     tags = [t for t in tags if t]  # Remove empty strings
+    
+    tools = [t.strip() for t in tool_param.split(',')] if tool_param else []
+    tools = [t for t in tools if t]  # Remove empty strings
 
     posts = blog.posts.filter(blog=blog, publish=True, published_date__lte=timezone.now(), is_page=False).order_by('-published_date')
-    if tags:
-        # Filter posts that contain ALL specified tags
-        posts = [post for post in posts if all(tag in post.tags for tag in tags)]
+    
+    if tags or tools:
+        # Filter posts that contain ALL specified tags AND tools
+        posts = [post for post in posts if 
+                 all(tag in post.tags for tag in tags) and
+                 all(tool in post.tools for tool in tools)]
         
         available_tags = set()
         for post in posts:
             available_tags.update(post.tags)
-
     else:
         available_tags = set(blog.tags)
 
@@ -119,7 +126,9 @@ def posts(request, blog):
             'posts': posts,
             'meta_description': meta_description,
             'query': tag_param,
+            'tool_query': tool_param,
             'active_tags': tags,
+            'active_tools': tools,
             'available_tags': available_tags,
             'blog_path_title': blog_path_title
         }
@@ -242,3 +251,42 @@ def robots(request):
         return not_found(request)
 
     return render(request, 'robots.txt',  {'blog': blog}, content_type="text/plain")
+
+
+@csrf_exempt
+def add_comment(request, uid):
+    if request.method == 'POST':
+        post = get_object_or_404(Post, uid=uid)
+        
+        # Check if user is authenticated
+        if not request.user.is_authenticated:
+            return redirect(f"/{post.slug}/?error=login_required")
+        
+        # Check if comments are enabled for this post
+        if not post.comments_enabled:
+            raise Http404("Comments are disabled for this post")
+        
+        # Basic validation
+        content = request.POST.get('content', '').strip()
+        use_email_as_name = request.POST.get('use_email_as_name') == 'on'
+        
+        if not content:
+            return redirect(f"/{post.slug}/?error=missing_content")
+        
+        # Simple spam prevention - check if content is too short or too long
+        if len(content) < 5 or len(content) > 1000:
+            return redirect(f"/{post.slug}/?error=invalid_content")
+        
+        try:
+            # Create the comment
+            comment = Comment.objects.create(
+                post=post,
+                user=request.user,
+                use_email_as_name=use_email_as_name,
+                content=content
+            )
+            return redirect(f"/{post.slug}/?comment_added=true")
+        except Exception as e:
+            return redirect(f"/{post.slug}/?error=submission_failed")
+    
+    raise Http404("Invalid request method")

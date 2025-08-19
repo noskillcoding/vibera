@@ -469,6 +469,32 @@ def preview(request, id):
                     post.meta_description = value
                 elif name == 'meta_image':
                     post.meta_image = value
+                elif name == 'media_urls':
+                    try:
+                        media_urls = json.loads(value) if value else []
+                        post.media_urls = media_urls
+                    except (json.JSONDecodeError, TypeError):
+                        pass  # Keep default empty list
+                elif name == 'tags' or name == 'all_tags':
+                    # Handle tags
+                    tags = []
+                    for tag in value.split(','):
+                        stripped_tag = tag.strip()
+                        if stripped_tag and stripped_tag not in tags:
+                            tags.append(stripped_tag)
+                    post.all_tags = json.dumps(tags)
+                elif name == 'tools' or name == 'all_tools':
+                    # Handle tools
+                    tools = []
+                    for tool in value.split(','):
+                        stripped_tool = tool.strip()
+                        if stripped_tool and stripped_tool not in tools:
+                            tools.append(stripped_tool)
+                    post.all_tools = json.dumps(tools)
+                elif name == 'github_url':
+                    post.github_url = value
+                elif name == 'comments_enabled':
+                    post.comments_enabled = value
 
             if not post.title:
                 post.title = "New post"
@@ -504,6 +530,7 @@ def preview(request, id):
             'full_path': full_path,
             'canonical_url': canonical_url,
             'meta_image': post.meta_image or blog.meta_image,
+            'tz': request.COOKIES.get('timezone', 'UTC'),
             'preview': True,
         }
     )

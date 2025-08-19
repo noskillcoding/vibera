@@ -391,6 +391,30 @@ class Hit(models.Model):
         return f"{self.created_date.strftime('%d %b %Y, %X')} - {self.hash_id} - {self.post}"
 
 
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    use_email_as_name = models.BooleanField(default=False)  # True = show email, False = anonymous
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['created_at']
+        indexes = [
+            models.Index(fields=['post', 'created_at']),
+        ]
+    
+    @property
+    def display_name(self):
+        if self.use_email_as_name:
+            return self.user.email
+        else:
+            return "Anonymous"
+    
+    def __str__(self):
+        return f"Comment by {self.display_name} on {self.post.title}"
+
+
 class Subscriber(models.Model):
     blog = models.ForeignKey(Blog, on_delete=models.CASCADE)
     email_address = models.EmailField()

@@ -101,6 +101,9 @@
 		document.body.appendChild(previewForm)
 	
 		$previewButton.onclick = event => {
+			// Sync form fields to header before preview
+			syncFormFieldsToHeader();
+			
 			window.open('about:blank','print_popup','width=1000,height=800');
 			headerContent.value = document.querySelector('#header_content').innerText
 			bodyContent.value = document.querySelector('#body_content').value
@@ -151,14 +154,14 @@
 			const video = document.createElement('video');
 			video.src = imageUrl;
 			video.style.cssText = 'width: 80px; height: 80px; object-fit: cover; border-radius: 3px; cursor: pointer;';
-			video.onclick = () => insertMediaToTextarea(imageUrl, fileName);
+			video.onclick = () => openMediaOverlay(imageUrl, 'video');
 			mediaItem.appendChild(video);
 		} else {
 			const img = document.createElement('img');
 			img.src = imageUrl;
 			img.style.cssText = 'width: 80px; height: 80px; object-fit: cover; border-radius: 3px; cursor: pointer;';
 			img.loading = 'lazy';
-			img.onclick = () => insertMediaToTextarea(imageUrl, fileName);
+			img.onclick = () => openMediaOverlay(imageUrl, 'image');
 			
 			// Add error handling for broken images
 			img.onerror = function() {

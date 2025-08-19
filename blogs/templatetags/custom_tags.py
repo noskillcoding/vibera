@@ -95,6 +95,9 @@ def fix_links(text):
     return fixed_text
 
 class MyRenderer(HTMLRenderer):
+    def __init__(self, post=None):
+        super().__init__()
+        self.post = post
     def heading(self, text, level, **attrs):
         return f'<h{level} id={slugify(text)}>{text}</h{level}>'
     
@@ -110,6 +113,20 @@ class MyRenderer(HTMLRenderer):
         if title:
             return f"<a href='{url}' title='{title}'>{text}</a>"
         return f"<a href='{url}'>{text}</a>"
+    
+    def image(self, alt, url, title=None):
+        # For posts (not pages), show image syntax as plain text
+        if self.post and not self.post.is_page:
+            if title:
+                return f"![{alt}]({url} \"{title}\")"
+            else:
+                return f"![{alt}]({url})"
+        
+        # For pages and other content, render images normally
+        if title:
+            title = title.replace("'", "&apos;").replace('"', "&quot;")
+            return f"<img src='{url}' alt='{alt}' title='{title}' />"
+        return f"<img src='{url}' alt='{alt}' />"
 
 
     def text(self, text):
@@ -153,13 +170,14 @@ class MyRenderer(HTMLRenderer):
         highlighted_code = highlight(code, lexer, formatter)
         return highlighted_code
 
-markdown_renderer = create_markdown(
-    renderer=MyRenderer(),
-    plugins=['math', 'strikethrough', 'footnotes', 'table', 'superscript', 'subscript', 'mark', 'task_lists', 'abbr', RSTDirective([
-        Admonition(),
-        TableOfContents(),
-    ]),],
-    escape=False)
+def create_post_aware_markdown(post=None):
+    return create_markdown(
+        renderer=MyRenderer(post=post),
+        plugins=['math', 'strikethrough', 'footnotes', 'table', 'superscript', 'subscript', 'mark', 'task_lists', 'abbr', RSTDirective([
+            Admonition(),
+            TableOfContents(),
+        ]),],
+        escape=False)
 
 
 @register.simple_tag(takes_context=False)
@@ -175,7 +193,8 @@ def markdown(content, blog=None, post=None, tz=None):
 
     try:
         # TODO: Implement excluding_script to not parse script tags
-        # processed_markup = excluding_script(content)
+        # processed_markup = excluding_script(content, post=post)
+        markdown_renderer = create_post_aware_markdown(post=post)
         processed_markup = markdown_renderer(content)
     except TypeError:
         return ''
@@ -192,7 +211,7 @@ def markdown(content, blog=None, post=None, tz=None):
 
 
 # Exclude script and style tags from markdown rendering
-def excluding_script(markup):
+def excluding_script(markup, post=None):
     placeholders = {}
 
     def placeholder_div(match):
@@ -203,6 +222,7 @@ def excluding_script(markup):
 
     markup = re.sub(r'(<script.*?>.*?</script>|<style.*?>.*?</style>)', placeholder_div, markup, flags=re.DOTALL)
 
+    markdown_renderer = create_post_aware_markdown(post=post)
     markup = markdown_renderer(markup)
 
     for key in sorted(placeholders.keys(), reverse=True):

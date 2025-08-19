@@ -95,6 +95,7 @@ urlpatterns = [
     path('robots.txt', blog.robots, name='robots'),
     path('public-analytics/', blog.public_analytics, name="public_analytics"),
     path('upvote/<uid>/', blog.upvote, name='upvote'),
+    path('comment/<uid>/', blog.add_comment, name='add_comment'),
     path('hit/<uid>/', analytics.post_hit, name='post_hit'),
     path('subscribe/', emailer.subscribe, name='subscribe'),
     path('email-subscribe/', emailer.email_subscribe, name='email_subscribe'),

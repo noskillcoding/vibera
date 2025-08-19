@@ -89,6 +89,33 @@
                 </time>
             </i>
         </p>
+
+        <!-- Media Gallery for Posts -->
+        {% if post.media_urls %}
+            <div class="media-gallery" style="margin: 20px 0; display: flex; flex-wrap: wrap; gap: 10px;">
+                {% for media_url in post.media_urls %}
+                    {% if media_url %}
+                        <!-- Check if it's a video -->
+                        {% if '.mp4' in media_url or '.webm' in media_url or '.mkv' in media_url %}
+                            <a href="#" onclick="openMediaOverlay('{{ media_url }}', 'video'); return false;" style="text-decoration: none;">
+                                <div style="position: relative; width: 100px; height: 100px; border-radius: 8px; overflow: hidden; border: 1px solid #ddd;">
+                                    <video src="{{ media_url }}" style="width: 100%; height: 100%; object-fit: cover;" muted preload="metadata"></video>
+                                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.7); border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">
+                                        <span style="color: white; font-size: 12px;">▶️</span>
+                                    </div>
+                                    <div style="position: absolute; bottom: 2px; right: 2px; background: rgba(0,0,0,0.7); color: white; font-size: 10px; padding: 1px 3px; border-radius: 2px;">VIDEO</div>
+                                </div>
+                            </a>
+                        {% else %}
+                            <!-- It's an image -->
+                            <a href="#" onclick="openMediaOverlay('{{ media_url }}', 'image'); return false;" style="text-decoration: none;">
+                                <img src="{{ media_url }}" alt="Project media" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; border: 1px solid #ddd;">
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
     {% endif %}
 
     {% markdown content=post.content blog=blog post=post tz=tz %}
@@ -101,19 +128,102 @@
         </p>
     {% endif %}
 
-    {% if not preview %}
-        {% if post.tags|length > 0 %}
-            <p class="tags">
-                {% for tag in post.tags %}
-                    <a href="/{{ blog.blog_path }}/?q={{tag}}">#{{ tag }}</a>
-                {% endfor %}
-            </p>
-        {% endif %}
+    {% if not preview and not post.is_page %}
+        <!-- Tags, Tools, and GitHub Section for Posts -->
+        <div style="margin: 30px 0; padding: 20px 0; border-top: 1px solid #eee;">
+            <!-- Tags -->
+            {% if post.tags|length > 0 %}
+                <p class="tags" style="margin: 10px 0;">
+                    <strong>Tags:</strong>
+                    {% for tag in post.tags %}
+                        <a href="/{{ blog.blog_path }}/?q={{tag}}">#{{ tag }}</a>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+            {% endif %}
 
+            <!-- Tools -->
+            {% if post.tools|length > 0 %}
+                <p class="tools" style="margin: 10px 0;">
+                    <strong>Tools:</strong>
+                    {% for tool in post.tools %}
+                        <a href="/{{ blog.blog_path }}/?tool={{ tool }}">{{ tool }}</a>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+            {% endif %}
+
+            <!-- GitHub Link -->
+            {% if post.github_url %}
+                <p class="github-link" style="margin: 10px 0;">
+                    <strong>GitHub:</strong> <a href="{{ post.github_url }}" target="_blank">{{ post.github_url }}</a>
+                </p>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {% if not preview %}
         {% if post.make_discoverable %}
             {% include 'snippets/upvote_form.html' with post=post upvoted=upvoted %}
         {% endif %}
+        
+        <!-- Comments Section for Posts (not Pages) -->
+        {% if post.comments_enabled and not post.is_page %}
+            {% include 'snippets/comments_section.html' with post=post %}
+        {% endif %}
     {% endif %}
+
+    <!-- Media Overlay Modal -->
+    <div id="mediaOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); z-index: 1000; cursor: pointer;">
+        <div style="position: absolute; top: 20px; right: 20px; color: white; font-size: 30px; cursor: pointer; background: rgba(0,0,0,0.7); border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; z-index: 1001;" onclick="closeMediaOverlay()">×</div>
+        <div id="mediaContent" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;"></div>
+    </div>
+
+    <script>
+        function openMediaOverlay(url, type) {
+            const overlay = document.getElementById('mediaOverlay');
+            const content = document.getElementById('mediaContent');
+            
+            if (type === 'video') {
+                content.innerHTML = `<video controls style="max-width: calc(100vw - 40px); max-height: calc(100vh - 40px); width: auto; height: auto;" onclick="event.stopPropagation();"><source src="${url}" type="video/mp4">Your browser does not support the video tag.</video>`;
+            } else {
+                content.innerHTML = `<img src="${url}" alt="Media" style="max-width: calc(100vw - 40px); max-height: calc(100vh - 40px); width: auto; height: auto; object-fit: contain;" onclick="event.stopPropagation();">`;
+            }
+            
+            overlay.style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+        
+        function closeMediaOverlay() {
+            const overlay = document.getElementById('mediaOverlay');
+            const content = document.getElementById('mediaContent');
+            
+            // Stop any playing videos
+            const videos = content.querySelectorAll('video');
+            videos.forEach(video => {
+                video.pause();
+                video.currentTime = 0;
+            });
+            
+            // Clear content
+            content.innerHTML = '';
+            
+            overlay.style.display = 'none';
+            document.body.style.overflow = ''; // Restore scrolling
+        }
+        
+        // Close overlay on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeMediaOverlay();
+            }
+        });
+        
+        // Better click handling - only close on background click, not on media
+        document.getElementById('mediaOverlay').addEventListener('click', function(e) {
+            if (e.target === this || e.target === document.getElementById('mediaContent')) {
+                closeMediaOverlay();
+            }
+        });
+    </script>
 
 {% endblock %}
 

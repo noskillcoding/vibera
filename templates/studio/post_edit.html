@@ -128,9 +128,9 @@ New post | Bear Blog
                     {% for media_url in post.media_urls %}
                         <div class="media-item" data-url="{{ media_url }}" style="position: relative;">
                             {% if media_url|slice:"-4:" == ".mp4" or media_url|slice:"-5:" == ".webm" or media_url|slice:"-4:" == ".mkv" %}
-                                <video src="{{ media_url }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 3px; cursor: pointer;" onclick="insertMediaToTextarea('{{ media_url }}', '{{ media_url|slice:"-20:" }}')"></video>
+                                <video src="{{ media_url }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 3px; cursor: pointer;" onclick="openMediaOverlay('{{ media_url }}', 'video')"></video>
                             {% else %}
-                                <img src="{{ media_url }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 3px; cursor: pointer;" onclick="insertMediaToTextarea('{{ media_url }}')" loading="lazy">
+                                <img src="{{ media_url }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 3px; cursor: pointer;" onclick="openMediaOverlay('{{ media_url }}', 'image')" loading="lazy">
                             {% endif %}
                             <button onclick="removeMedia('{{ media_url }}')" style="position: absolute; top: -5px; right: -5px; background: red; color: white; border: none; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; cursor: pointer;">×</button>
                         </div>
@@ -222,6 +222,60 @@ New post | Bear Blog
         </span>
     </span>
 </form>
+
+<!-- Media Overlay Modal -->
+<div id="mediaOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); z-index: 1000; cursor: pointer;">
+    <div style="position: absolute; top: 20px; right: 20px; color: white; font-size: 30px; cursor: pointer; background: rgba(0,0,0,0.7); border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; z-index: 1001;" onclick="closeMediaOverlay()">×</div>
+    <div id="mediaContent" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box;"></div>
+</div>
+
+<script>
+    function openMediaOverlay(url, type) {
+        const overlay = document.getElementById('mediaOverlay');
+        const content = document.getElementById('mediaContent');
+        
+        if (type === 'video') {
+            content.innerHTML = `<video controls style="max-width: calc(100vw - 40px); max-height: calc(100vh - 40px); width: auto; height: auto;" onclick="event.stopPropagation();"><source src="${url}" type="video/mp4">Your browser does not support the video tag.</video>`;
+        } else {
+            content.innerHTML = `<img src="${url}" alt="Media" style="max-width: calc(100vw - 40px); max-height: calc(100vh - 40px); width: auto; height: auto; object-fit: contain;" onclick="event.stopPropagation();">`;
+        }
+        
+        overlay.style.display = 'block';
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+    
+    function closeMediaOverlay() {
+        const overlay = document.getElementById('mediaOverlay');
+        const content = document.getElementById('mediaContent');
+        
+        // Stop any playing videos
+        const videos = content.querySelectorAll('video');
+        videos.forEach(video => {
+            video.pause();
+            video.currentTime = 0;
+        });
+        
+        // Clear content
+        content.innerHTML = '';
+        
+        overlay.style.display = 'none';
+        document.body.style.overflow = ''; // Restore scrolling
+    }
+    
+    // Close overlay on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeMediaOverlay();
+        }
+    });
+    
+    // Better click handling - only close on background click, not on media
+    document.getElementById('mediaOverlay').addEventListener('click', function(e) {
+        if (e.target === this || e.target === document.getElementById('mediaContent')) {
+            closeMediaOverlay();
+        }
+    });
+</script>
 
 {% include '../snippets/editor_functions.html' with blog=blog post=post%}
 {{ request.user.settings.dashboard_footer | safe }}

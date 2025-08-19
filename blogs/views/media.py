@@ -93,7 +93,7 @@ def upload_image(request, id):
         post_uid = request.POST.get('post_uid')
         post = None
         if post_uid:
-            from .models import Post
+            from blogs.models import Post
             try:
                 post = Post.objects.get(blog=blog, uid=post_uid)
             except Post.DoesNotExist:
@@ -105,79 +105,111 @@ def upload_image(request, id):
 
 
 def upload_files(blog, file_list, post=None):
-    file_links = []
+    try:
+        file_links = []
 
-    # Check per-post limit if post is provided
-    if post and len(post.media_urls) >= 15:
-        file_links.append('Error: Maximum 15 files per post limit reached.')
-        return sorted(file_links)
-
-    for file in file_list:
-        # Check per-post limit for each file if post is provided
-        if post and len(post.media_urls) + len(file_links) >= 15:
-            file_links.append('Error: Upload would exceed 15 files per post limit.')
-            break
-            
-        # Fair use limit
-        if blog.media.count() > 20000:
-            file_links.append('Error: Fair usage limit exceeded. Contact site admin.')
-            return sorted(file_links)
-
-        # Upload size limit
-        if file.size > file_size_limit:
-            file_links.append(f'Error: File {file.name} exceeds 10MB limit')
-            break
-        
-        # Only allowed file types
-        if not file.name.lower().endswith(tuple(file_types)):
-            file_links.append(f'Error: File type not supported: {file.name}')
-            break
-        
-        extension = file.name.split('.')[-1].lower()
-        
-        # Strip metadata if the file is an image
-        if extension in image_types and not extension.endswith('svg') and not extension.endswith('gif'):
-            try:
-                file = process_image(file, blog.optimise_images)
-            except UnidentifiedImageError:
-                file_links.append(f'Error: The image file cannot be identified or is not a valid image.')
-                break
-
-        file_name = slugify(file.name.split('.')[-2].lower())
-        extension = file.name.split('.')[-1].lower()
-
-        # Check for duplicate names
-        count = 0
-        new_file_name = file_name
-        while blog.media.filter(url__icontains=new_file_name).exists():
-            count += 1
-            new_file_name = f"{file_name}-{count}"
-        file_name = new_file_name
-        
-        filepath = f'{blog.subdomain}/{file_name}.{extension}'
-        url = f'https://{bucket_name}.sfo3.cdn.digitaloceanspaces.com/{filepath}'
-        file_links.append(url)
-
-        # Add to post's media_urls if post is provided
+        # Check per-post limit if post is provided
         if post:
-            post.media_urls.append(url)
-            post.save()
+            try:
+                media_urls = post.media_urls or []
+                if len(media_urls) >= 15:
+                    file_links.append('Error: Maximum 15 files per post limit reached.')
+                    return sorted(file_links)
+            except (AttributeError, TypeError):
+                # Initialize media_urls if it's missing or corrupted
+                post.media_urls = []
+                post.save()
 
-        # Create Media object first
-        Media.objects.create(blog=blog, url=url)
+        for file in file_list:
+            # Check per-post limit for each file if post is provided
+            if post:
+                try:
+                    media_urls = post.media_urls or []
+                    if len(media_urls) + len(file_links) >= 15:
+                        file_links.append('Error: Upload would exceed 15 files per post limit.')
+                        break
+                except (AttributeError, TypeError):
+                    # If there's still an issue, skip this check
+                    pass
+                
+            # Fair use limit
+            if blog.media.count() > 20000:
+                file_links.append('Error: Fair usage limit exceeded. Contact site admin.')
+                return sorted(file_links)
 
-        # Read file data before starting thread
-        file_data = file.read()
-        content_type = file.content_type
+            # Upload size limit
+            if file.size > file_size_limit:
+                file_links.append(f'Error: File {file.name} exceeds 10MB limit')
+                break
+            
+            # Only allowed file types
+            if not file.name.lower().endswith(tuple(file_types)):
+                file_links.append(f'Error: File type not supported: {file.name}')
+                break
+            
+            try:
+                extension = file.name.split('.')[-1].lower()
+                
+                # Strip metadata if the file is an image
+                if extension in image_types and not extension.endswith('svg') and not extension.endswith('gif'):
+                    try:
+                        file = process_image(file, blog.optimise_images)
+                    except UnidentifiedImageError:
+                        file_links.append('Error: The image file cannot be identified or is not a valid image.')
+                        break
+                    except Exception as e:
+                        file_links.append(f'Error: Image processing failed: {str(e)}')
+                        break
 
-        # Move S3 upload to a thread
-        thread = threading.Thread(
-            target=upload_to_s3,
-            args=(filepath, file_data, content_type)
-        )
-        thread.start()
-    
-    return sorted(file_links)
+                file_name = slugify(file.name.split('.')[-2].lower())
+                extension = file.name.split('.')[-1].lower()
+
+                # Check for duplicate names
+                count = 0
+                new_file_name = file_name
+                while blog.media.filter(url__icontains=new_file_name).exists():
+                    count += 1
+                    new_file_name = f"{file_name}-{count}"
+                file_name = new_file_name
+                
+                filepath = f'{blog.subdomain}/{file_name}.{extension}'
+                url = f'https://{bucket_name}.sfo3.cdn.digitaloceanspaces.com/{filepath}'
+                file_links.append(url)
+
+                # Add to post's media_urls if post is provided
+                if post:
+                    try:
+                        if not post.media_urls:
+                            post.media_urls = []
+                        post.media_urls.append(url)
+                        post.save()
+                    except (AttributeError, TypeError):
+                        # Initialize and set media_urls
+                        post.media_urls = [url]
+                        post.save()
+
+                # Create Media object first
+                Media.objects.create(blog=blog, url=url)
+
+                # Read file data before starting thread
+                file_data = file.read()
+                content_type = file.content_type
+
+                # Move S3 upload to a thread
+                thread = threading.Thread(
+                    target=upload_to_s3,
+                    args=(filepath, file_data, content_type)
+                )
+                thread.start()
+                
+            except Exception as e:
+                file_links.append(f'Error: Failed to process {file.name}: {str(e)}')
+                break
+        
+        return sorted(file_links)
+        
+    except Exception as e:
+        return [f'Error: Upload function failed: {str(e)}']
 
 
 def upload_to_s3(filepath, file_data, content_type):
