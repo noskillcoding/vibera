@@ -3,7 +3,7 @@
     
     <details id="reports-section" style="font-size: 14px; max-width: 100%;" {% if request.GET.report_added %}open{% endif %}>
         <summary style="cursor: pointer; margin-bottom: 15px; color: #d63031;">
-            Reports ({{ post.dangerous_reports.count }})
+            Reports ({{ post.active_reports_count }})
         </summary>
         
         <div class="reports-content" style="max-width: 100%;">
@@ -12,12 +12,25 @@
         {% if post.dangerous_reports.all %}
             <div class="reports-list" style="margin: 20px 0;">
                 {% for report in post.dangerous_reports.all %}
-                    <div class="report" style="background: #ffebee; padding: 15px; margin: 10px 0; border-radius: 8px; border-left: 4px solid #d63031;">
-                        <div class="report-header" style="font-size: 0.9em; color: #666; margin-bottom: 8px;">
-                            <strong>{{ report.user.email }}</strong>
-                            <span style="margin-left: 10px;">{{ report.created_at|date:"M d, Y H:i" }}</span>
+                    <div style="margin: 4px 0; padding: 2px 0; border-left: 2px solid {% if report.deleted %}rgba(128,128,128,0.4){% else %}#d63031{% endif %}; padding-left: 6px;">
+                        <div style="font-size: 0.9em; opacity: 0.8; display: flex; justify-content: space-between; align-items: center;">
+                            <span style="{% if not report.deleted %}color: #d63031;{% endif %}"><strong>{{ report.user.email }}</strong> • {{ report.created_at|date:"M d, Y H:i" }}</span>
+                            {% if not report.deleted and report.user == request.user %}
+                                <form method="post" action="{% url 'delete_report' uid=post.uid %}" style="display: inline;" onsubmit="return confirm('Delete this report?');">
+                                    {% csrf_token %}
+                                    <button type="submit" style="background: #dc3545; color: white; border: none; cursor: pointer; font-size: 10px; padding: 2px 6px; border-radius: 2px;" title="Delete report">
+                                        Delete
+                                    </button>
+                                </form>
+                            {% endif %}
                         </div>
-                        <div class="report-content" style="white-space: pre-wrap; color: #d63031;">{{ report.comment }}</div>
+                        <div style="{% if report.deleted %}font-style: italic; opacity: 0.6;{% else %}color: #d63031;{% endif %}">
+                            {% if report.deleted %}
+                                This report was deleted by its author
+                            {% else %}
+                                {{ report.comment }}
+                            {% endif %}
+                        </div>
                     </div>
                 {% endfor %}
             </div>

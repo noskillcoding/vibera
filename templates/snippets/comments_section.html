@@ -7,6 +7,12 @@
         </div>
     {% endif %}
     
+    {% if request.GET.comment_deleted %}
+        <div style="background: #fff3cd; color: #856404; padding: 10px; border-radius: 4px; margin: 10px 0; max-width: 100%;">
+            Comment deleted successfully.
+        </div>
+    {% endif %}
+    
     {% if request.GET.error %}
         <div style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; margin: 10px 0; max-width: 100%;">
             {% if request.GET.error == "login_required" %}
@@ -23,7 +29,7 @@
 
     <details id="comments-section" style="font-size: 14px; max-width: 100%;" {% if request.GET.comment_added %}open{% endif %}>
         <summary style="cursor: pointer; margin-bottom: 15px;">
-            Comments ({{ post.comments.count }})
+            Comments ({{ post.active_comments_count }})
         </summary>
         
         <div class="comments-content" style="max-width: 100%;">
@@ -32,12 +38,25 @@
         {% if post.comments.all %}
             <div class="comments-list" style="margin: 20px 0;">
                 {% for comment in post.comments.all %}
-                    <div class="comment" style="background: #f9f9f9; padding: 15px; margin: 10px 0; border-radius: 8px;">
-                        <div class="comment-header" style="font-size: 0.9em; color: #666; margin-bottom: 8px;">
-                            <strong>{{ comment.display_name }}</strong>
-                            <span style="margin-left: 10px;">{{ comment.created_at|date:"M d, Y H:i" }}</span>
+                    <div style="margin: 4px 0; padding: 2px 0;">
+                        <div style="font-size: 0.9em; opacity: 0.8; display: flex; justify-content: space-between; align-items: center;">
+                            <span><strong>{{ comment.display_name }}</strong> • {{ comment.created_at|date:"M d, Y H:i" }}</span>
+                            {% if not comment.deleted and comment.user == request.user %}
+                                <form method="post" action="{% url 'delete_comment' comment_id=comment.id %}" style="display: inline;" onsubmit="return confirm('Delete this comment?');">
+                                    {% csrf_token %}
+                                    <button type="submit" style="background: #dc3545; color: white; border: none; cursor: pointer; font-size: 10px; padding: 2px 6px; border-radius: 2px;" title="Delete comment">
+                                        Delete
+                                    </button>
+                                </form>
+                            {% endif %}
                         </div>
-                        <div class="comment-content" style="white-space: pre-wrap;">{{ comment.content }}</div>
+                        <div style="{% if comment.deleted %}font-style: italic; opacity: 0.6;{% endif %}">
+                            {% if comment.deleted %}
+                                This comment was deleted by its author
+                            {% else %}
+                                {{ comment.content }}
+                            {% endif %}
+                        </div>
                     </div>
                 {% endfor %}
             </div>
@@ -56,7 +75,7 @@
                     </div>
                     
                     <div style="margin: 10px 0;">
-                        <label for="content" style="display: block; margin-bottom: 5px; font-weight: bold;">Comment *</label>
+                        <label for="content" style="display: block; margin-bottom: 5px; font-weight: bold;">Comment</label>
                         <textarea id="content" name="content" required minlength="5" maxlength="1000" rows="4"
                                   style="width: 100%; max-width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; resize: vertical; box-sizing: border-box;"></textarea>
                         <small style="color: #666;">5-1000 characters</small>

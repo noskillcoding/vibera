@@ -189,7 +189,7 @@ def post(request, slug):
         'meta_description': meta_description,
         'meta_image': post.meta_image or blog.meta_image,
         'upvoted': upvoted,
-        'user_has_reported': post.user_has_reported(request.user),
+        'user_has_reported': post.user_has_active_report(request.user),
     }
 
     response = render(request, 'post.html', context)
@@ -313,20 +313,51 @@ def report_dangerous(request, uid):
             return redirect(f"/{post.slug}/?error=invalid_report_comment")
         
         try:
-            # Create or update the dangerous report (one per user per post)
-            report, created = DangerousReport.objects.get_or_create(
+            # Check if user already has an active (non-deleted) report
+            if post.user_has_active_report(request.user):
+                return redirect(f"/{post.slug}/?error=already_reported")
+            
+            # Create a new report (allows multiple reports per user over time)
+            DangerousReport.objects.create(
                 post=post,
                 user=request.user,
-                defaults={'comment': comment}
+                comment=comment
             )
-            
-            if not created:
-                # Update existing report
-                report.comment = comment
-                report.save()
             
             return redirect(f"/{post.slug}/?report_added=true")
         except Exception as e:
             return redirect(f"/{post.slug}/?error=submission_failed")
+    
+    raise Http404("Invalid request method")
+
+
+@csrf_exempt
+def delete_comment(request, comment_id):
+    if request.method == 'POST':
+        comment = get_object_or_404(Comment, id=comment_id)
+        
+        # Only allow author to delete their own comment
+        if request.user != comment.user:
+            raise Http404("Permission denied")
+        
+        # Soft delete the comment
+        comment.soft_delete()
+        
+        return redirect(f"/{comment.post.slug}/?comment_deleted=true")
+    
+    raise Http404("Invalid request method")
+
+
+@csrf_exempt  
+def delete_report(request, uid):
+    if request.method == 'POST':
+        # Get report by post uid and user (since we don't have report uid)
+        post = get_object_or_404(Post, uid=uid)
+        report = get_object_or_404(DangerousReport, post=post, user=request.user)
+        
+        # Soft delete the report
+        report.soft_delete()
+        
+        return redirect(f"/{post.slug}/?report_deleted=true")
     
     raise Http404("Invalid request method")

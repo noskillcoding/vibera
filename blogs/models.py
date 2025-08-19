@@ -297,11 +297,25 @@ class Post(models.Model):
     def token(self):
         return hashlib.sha256(self.uid.encode()).hexdigest()[0:10]
     
+    def user_has_active_report(self, user):
+        """Check if a specific user has an active (non-deleted) report on this post"""
+        if not user.is_authenticated:
+            return False
+        return self.dangerous_reports.filter(user=user, deleted=False).exists()
+    
     def user_has_reported(self, user):
-        """Check if a specific user has reported this post as dangerous"""
+        """Check if a specific user has ever reported this post (for backwards compatibility)"""
         if not user.is_authenticated:
             return False
         return self.dangerous_reports.filter(user=user).exists()
+    
+    def active_comments_count(self):
+        """Count of non-deleted comments"""
+        return self.comments.filter(deleted=False).count()
+    
+    def active_reports_count(self):
+        """Count of non-deleted reports"""
+        return self.dangerous_reports.filter(deleted=False).count()
 
     def update_score(self):
         self.upvotes = self.upvote_set.count()
@@ -403,6 +417,8 @@ class Comment(models.Model):
     use_email_as_name = models.BooleanField(default=False)  # True = show email, False = anonymous
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
     
     class Meta:
         ordering = ['created_at']
@@ -416,6 +432,13 @@ class Comment(models.Model):
             return self.user.email
         else:
             return "Anonymous"
+    
+    def soft_delete(self):
+        """Soft delete this comment"""
+        from django.utils import timezone
+        self.deleted = True
+        self.deleted_at = timezone.now()
+        self.save()
     
     def __str__(self):
         return f"Comment by {self.display_name} on {self.post.title}"
@@ -494,10 +517,19 @@ class DangerousReport(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     comment = models.CharField(max_length=100, help_text="Brief explanation of why this post is dangerous")
     created_at = models.DateTimeField(auto_now_add=True)
+    deleted = models.BooleanField(default=False)
+    deleted_at = models.DateTimeField(null=True, blank=True)
     
     class Meta:
-        unique_together = ('post', 'user')  # One report per user per post
+        # Remove unique_together constraint to allow multiple reports per user
         ordering = ['-created_at']
+    
+    def soft_delete(self):
+        """Soft delete this report"""
+        from django.utils import timezone
+        self.deleted = True
+        self.deleted_at = timezone.now()
+        self.save()
     
     def __str__(self):
         return f"Report on '{self.post.title}' by {self.user.email}"

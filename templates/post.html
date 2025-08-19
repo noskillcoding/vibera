@@ -168,6 +168,12 @@
             </div>
         {% endif %}
         
+        {% if request.GET.report_deleted %}
+            <div style="background: #fff3cd; color: #856404; padding: 10px; border-radius: 4px; margin: 10px 0;">
+                Report deleted successfully.
+            </div>
+        {% endif %}
+        
         {% if request.GET.error == "missing_report_comment" %}
             <div style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; margin: 10px 0;">
                 Please provide a reason why this post is dangerous.
@@ -175,6 +181,10 @@
         {% elif request.GET.error == "invalid_report_comment" %}
             <div style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; margin: 10px 0;">
                 Report comment must be between 5 and 100 characters.
+            </div>
+        {% elif request.GET.error == "already_reported" %}
+            <div style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; margin: 10px 0;">
+                You have already reported this post.
             </div>
         {% elif request.GET.error == "report_failed" %}
             <div style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; margin: 10px 0;">
