@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Account Settings | Bear Blog{% endblock %}
+
+{% block custom_styles %}
+    {% include 'styles/blog/default.css' %}
+    {% include 'styles/dashboard.css' %}
+    {{ request.user.settings.dashboard_styles | safe }}
+{% endblock %}
+
+{% block nav %}
+<span>
+    <a href="{% url 'account' %}">Dashboard</a>
+</span>
+{% endblock %}
+
+{% block content %}
+<h1>Account Settings</h1>
+
+{% if success_message %}
+<div style="background: #d4edda; color: #155724; padding: 10px; border-radius: 4px; margin: 15px 0;">
+    {{ success_message }}
+</div>
+{% endif %}
+
+{% if error_message %}
+<div style="background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; margin: 15px 0;">
+    {{ error_message }}
+</div>
+{% endif %}
+
+<div style="max-width: 500px;">
+    <form method="POST">
+        {% csrf_token %}
+        
+        <h2>Display Name Settings</h2>
+        
+        <p>
+            <label for="nickname">Nickname</label>
+            <br>
+            {% if user_settings.nickname %}
+                <input type="text" 
+                       value="{{ user_settings.nickname }}" 
+                       disabled
+                       style="max-width: 300px; background: #f5f5f5; color: #666;"/>
+                <br>
+                <small style="color: #666;">
+                    <strong>Note:</strong> Your nickname cannot be changed once set. This is permanent.
+                </small>
+            {% else %}
+                <input type="text" 
+                       name="nickname" 
+                       placeholder="Enter a nickname..." 
+                       maxlength="30"
+                       style="max-width: 300px;"/>
+                <br>
+                <small style="color: #666;">
+                    <strong>Warning:</strong> You can only set your nickname once. It cannot be changed later.<br>
+                    Use 2-30 characters. Letters, numbers, hyphens (-), and underscores (_) only.
+                </small>
+            {% endif %}
+        </p>
+        
+        {% if not user_settings.nickname %}
+        <p>
+            <button type="submit">Set Nickname</button>
+        </p>
+        {% endif %}
+        
+        <hr style="margin: 30px 0;">
+        
+        <h2>How Your Name Appears</h2>
+        <p style="color: #666; line-height: 1.5;">
+            When posting comments or reports, you can choose how your name appears:
+            <br><br>
+            {% if user_settings.nickname %}
+            • <strong>Use nickname:</strong> {{ user_settings.nickname }}<br>
+            {% endif %}
+            • <strong>Use email:</strong> {{ request.user.email }}<br>
+            • <strong>Anonymous:</strong> Anonymous (comments only)<br>
+            <br>
+            {% if not user_settings.nickname %}
+            <em>Set a nickname above to use it in comments and reports instead of your email.</em>
+            {% endif %}
+        </p>
+    </form>
+</div>
+
+<p style="margin-top: 40px;">
+    <a href="{% url 'account' %}">&larr; Back to Dashboard</a>
+</p>
+
+{% endblock %}

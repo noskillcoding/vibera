@@ -181,6 +181,15 @@ def post(request, slug):
     if post.publish is False and not request.GET.get('token') == post.token:
         return not_found(request)
 
+    # Get user's most recent active report for delete button logic
+    user_latest_report = None
+    if request.user.is_authenticated:
+        user_latest_report = DangerousReport.objects.filter(
+            post=post, 
+            user=request.user, 
+            deleted=False
+        ).order_by('-created_at').first()
+
     context = {
         'blog': blog,
         'post': post,
@@ -190,6 +199,7 @@ def post(request, slug):
         'meta_image': post.meta_image or blog.meta_image,
         'upvoted': upvoted,
         'user_has_reported': post.user_has_active_report(request.user),
+        'user_latest_report': user_latest_report,
     }
 
     response = render(request, 'post.html', context)
@@ -269,7 +279,12 @@ def add_comment(request, uid):
         
         # Basic validation
         content = request.POST.get('content', '').strip()
+        display_option = request.POST.get('display_option', 'email')
+        
+        # Handle legacy use_email_as_name parameter for backwards compatibility
         use_email_as_name = request.POST.get('use_email_as_name') == 'on'
+        if use_email_as_name:
+            display_option = 'email'
         
         if not content:
             return redirect(f"/{post.slug}/?error=missing_content")
@@ -279,11 +294,16 @@ def add_comment(request, uid):
             return redirect(f"/{post.slug}/?error=invalid_content")
         
         try:
+            # Determine display settings based on choice
+            use_nickname = display_option == 'nickname' and request.user.settings.nickname
+            use_email_as_name_final = display_option == 'email'
+            
             # Create the comment
             comment = Comment.objects.create(
                 post=post,
                 user=request.user,
-                use_email_as_name=use_email_as_name,
+                use_email_as_name=use_email_as_name_final,
+                use_nickname=use_nickname,
                 content=content
             )
             return redirect(f"/{post.slug}/?comment_added=true")
@@ -304,6 +324,7 @@ def report_dangerous(request, uid):
         
         # Basic validation
         comment = request.POST.get('comment', '').strip()
+        display_option = request.POST.get('display_option', 'email')
         
         if not comment:
             return redirect(f"/{post.slug}/?error=missing_report_comment")
@@ -317,10 +338,14 @@ def report_dangerous(request, uid):
             if post.user_has_active_report(request.user):
                 return redirect(f"/{post.slug}/?error=already_reported")
             
+            # Determine display settings based on choice
+            use_nickname = display_option == 'nickname' and request.user.settings.nickname
+            
             # Create a new report (allows multiple reports per user over time)
             DangerousReport.objects.create(
                 post=post,
                 user=request.user,
+                use_nickname=use_nickname,
                 comment=comment
             )
             
@@ -351,13 +376,26 @@ def delete_comment(request, comment_id):
 @csrf_exempt  
 def delete_report(request, uid):
     if request.method == 'POST':
-        # Get report by post uid and user (since we don't have report uid)
+        # Get post and most recent active report by user
         post = get_object_or_404(Post, uid=uid)
-        report = get_object_or_404(DangerousReport, post=post, user=request.user)
         
-        # Soft delete the report
-        report.soft_delete()
-        
-        return redirect(f"/{post.slug}/?report_deleted=true")
+        try:
+            # Get the most recent non-deleted report by this user for this post
+            report = DangerousReport.objects.filter(
+                post=post, 
+                user=request.user, 
+                deleted=False
+            ).order_by('-created_at').first()
+            
+            if not report:
+                raise Http404("No active report found")
+            
+            # Soft delete the report
+            report.soft_delete()
+            
+            return redirect(f"/{post.slug}/?report_deleted=true")
+            
+        except Exception as e:
+            return redirect(f"/{post.slug}/?error=report_delete_failed")
     
     raise Http404("Invalid request method")

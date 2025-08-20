@@ -68,10 +68,41 @@
                 <h4>Add a Comment</h4>
                 <form action="{% url 'add_comment' uid=post.uid %}" method="post" style="max-width: 100%;">
                     <div style="margin: 10px 0;">
-                        <label>
-                            <input type="checkbox" name="use_email_as_name" style="margin-right: 5px;">
-                            Show my email ({{ user.email }}) as author name (otherwise "Anonymous")
-                        </label>
+                        <label style="display: block; margin-bottom: 5px; font-weight: bold;">Display name:</label>
+                        
+                        {% if user.settings.nickname %}
+                        <div style="margin: 5px 0;">
+                            <label>
+                                <input type="radio" name="display_option" value="nickname" style="margin-right: 5px;" checked>
+                                Use nickname: <strong>{{ user.settings.nickname }}</strong>
+                            </label>
+                        </div>
+                        <div style="margin: 5px 0;">
+                            <label>
+                                <input type="radio" name="display_option" value="email" style="margin-right: 5px;">
+                                Use email: {{ user.email }}
+                            </label>
+                        </div>
+                        <div style="margin: 5px 0;">
+                            <label>
+                                <input type="radio" name="display_option" value="anonymous" style="margin-right: 5px;">
+                                Anonymous
+                            </label>
+                        </div>
+                        {% else %}
+                        <div style="margin: 5px 0;">
+                            <label>
+                                <input type="radio" name="display_option" value="email" style="margin-right: 5px;" checked>
+                                Use email: {{ user.email }} <span style="font-size: 0.9em; color: #666;">(you can <a href="{% url 'user_account_settings' %}" target="_blank" style="color: #007cba; text-decoration: underline;">set up a nickname</a> to use instead of your email address)</span>
+                            </label>
+                        </div>
+                        <div style="margin: 5px 0;">
+                            <label>
+                                <input type="radio" name="display_option" value="anonymous" style="margin-right: 5px;">
+                                Anonymous
+                            </label>
+                        </div>
+                        {% endif %}
                     </div>
                     
                     <div style="margin: 10px 0;">

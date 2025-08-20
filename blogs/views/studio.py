@@ -43,6 +43,45 @@ def get_popular_tags_and_tools(limit=10):
 
 
 @login_required
+def user_account_settings(request):
+    """Handle user account settings including nickname"""
+    user_settings = request.user.settings
+    success_message = None
+    error_message = None
+    
+    if request.method == "POST":
+        nickname = request.POST.get('nickname', '').strip()
+        
+        if nickname and user_settings.nickname:
+            error_message = "Nickname cannot be changed once set."
+        elif nickname:
+            # Validate nickname (basic validation)
+            if len(nickname) < 2 or len(nickname) > 30:
+                error_message = "Nickname must be between 2 and 30 characters."
+            elif not nickname.replace('_', '').replace('-', '').isalnum():
+                error_message = "Nickname can only contain letters, numbers, hyphens, and underscores."
+            else:
+                try:
+                    user_settings.nickname = nickname
+                    user_settings.save()
+                    success_message = "Nickname set successfully!"
+                except Exception as e:
+                    if 'unique constraint' in str(e).lower():
+                        error_message = "This nickname is already taken."
+                    else:
+                        error_message = "An error occurred. Please try again."
+        elif 'clear_nickname' in request.POST and not user_settings.nickname:
+            # Allow clearing only if nickname is not set yet (shouldn't happen but just in case)
+            pass
+    
+    return render(request, 'dashboard/user_account_settings.html', {
+        'user_settings': user_settings,
+        'success_message': success_message,
+        'error_message': error_message,
+    })
+
+
+@login_required
 def list(request):
     blogs = Blog.objects.filter(user=request.user).order_by("created_date")
 

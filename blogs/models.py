@@ -26,6 +26,7 @@ class UserSettings(models.Model):
 
     dashboard_styles = models.TextField(blank=True)
     dashboard_footer = models.TextField(blank=True)
+    nickname = models.CharField(max_length=30, blank=True, null=True, unique=True, help_text="Display name for comments and reports. Cannot be changed once set.")
 
     def __str__(self):
         return f'{self.user} - Settings'
@@ -415,6 +416,7 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     use_email_as_name = models.BooleanField(default=False)  # True = show email, False = anonymous
+    use_nickname = models.BooleanField(default=False)  # True = show nickname, False = use email/anonymous
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     deleted = models.BooleanField(default=False)
@@ -428,7 +430,9 @@ class Comment(models.Model):
     
     @property
     def display_name(self):
-        if self.use_email_as_name:
+        if self.use_nickname and self.user.settings.nickname:
+            return self.user.settings.nickname
+        elif self.use_email_as_name:
             return self.user.email
         else:
             return "Anonymous"
@@ -515,6 +519,7 @@ class PersistentStore(models.Model):
 class DangerousReport(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='dangerous_reports')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    use_nickname = models.BooleanField(default=False)  # True = show nickname, False = show email
     comment = models.CharField(max_length=100, help_text="Brief explanation of why this post is dangerous")
     created_at = models.DateTimeField(auto_now_add=True)
     deleted = models.BooleanField(default=False)
@@ -523,6 +528,13 @@ class DangerousReport(models.Model):
     class Meta:
         # Remove unique_together constraint to allow multiple reports per user
         ordering = ['-created_at']
+    
+    @property
+    def display_name(self):
+        if self.use_nickname and self.user.settings.nickname:
+            return self.user.settings.nickname
+        else:
+            return self.user.email
     
     def soft_delete(self):
         """Soft delete this report"""

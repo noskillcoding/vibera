@@ -14,11 +14,11 @@
                 {% for report in post.dangerous_reports.all %}
                     <div style="margin: 4px 0; padding: 2px 0; border-left: 2px solid {% if report.deleted %}rgba(128,128,128,0.4){% else %}#d63031{% endif %}; padding-left: 6px;">
                         <div style="font-size: 0.9em; opacity: 0.8; display: flex; justify-content: space-between; align-items: center;">
-                            <span><strong>{{ report.user.email }}</strong> • {{ report.created_at|date:"M d, Y H:i" }}</span>
-                            {% if not report.deleted and report.user == request.user %}
+                            <span><strong>{{ report.display_name }}</strong> • {{ report.created_at|date:"M d, Y H:i" }}</span>
+                            {% if not report.deleted and report.user == request.user and user_latest_report and report.id == user_latest_report.id %}
                                 <form method="post" action="{% url 'delete_report' uid=post.uid %}" style="display: inline;" onsubmit="return confirm('Delete this report?');">
                                     {% csrf_token %}
-                                    <button type="submit" style="background: #dc3545; color: white; border: none; cursor: pointer; font-size: 10px; padding: 2px 6px; border-radius: 2px;" title="Delete report">
+                                    <button type="submit" style="background: #dc3545; color: white; border: none; cursor: pointer; font-size: 10px; padding: 2px 6px; border-radius: 2px;" title="Delete most recent report">
                                         Delete
                                     </button>
                                 </form>
@@ -45,9 +45,29 @@
                         {% csrf_token %}
                         
                         <div style="margin: 10px 0;">
-                            <p style="color: #666; font-size: 14px; margin-bottom: 10px;">
-                                Your email ({{ user.email }}) will be shown as the reporter name.
-                            </p>
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Reporter name:</label>
+                            
+                            {% if user.settings.nickname %}
+                            <div style="margin: 5px 0;">
+                                <label>
+                                    <input type="radio" name="display_option" value="nickname" style="margin-right: 5px;" checked>
+                                    Use nickname: <strong>{{ user.settings.nickname }}</strong>
+                                </label>
+                            </div>
+                            <div style="margin: 5px 0;">
+                                <label>
+                                    <input type="radio" name="display_option" value="email" style="margin-right: 5px;">
+                                    Use email: {{ user.email }}
+                                </label>
+                            </div>
+                            {% else %}
+                            <div style="margin: 5px 0;">
+                                <label>
+                                    <input type="radio" name="display_option" value="email" style="margin-right: 5px;" checked>
+                                    Use email: {{ user.email }} <span style="font-size: 0.9em; color: #666;">(you can <a href="{% url 'user_account_settings' %}" target="_blank" style="color: #007cba; text-decoration: underline;">set up a nickname</a> to use instead of your email address)</span>
+                                </label>
+                            </div>
+                            {% endif %}
                         </div>
                         
                         <div style="margin: 10px 0;">

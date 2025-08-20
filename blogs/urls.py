@@ -44,6 +44,7 @@ urlpatterns = [
 
     # User dashboard
     path('accounts/delete/', dashboard.delete_user, name='user_delete'),
+    path('accounts/settings/', studio.user_account_settings, name='user_account_settings'),
     path('signup/', signup_flow.signup, name="signup_flow"),
 
     path('dashboard/', studio.list, name="account"),

@@ -25,10 +25,14 @@ admin.site.register(User, UserAdmin)
 @admin.register(UserSettings)
 class UserSettingsAdmin(admin.ModelAdmin):
     raw_id_fields = ('user',)
-    list_display = ('email', 'user_link', 'date_joined', 'blogs', 'display_is_active', 'upgraded', 'upgraded_date', 'order_id')
+    list_display = ('email', 'nickname', 'user_link', 'date_joined', 'blogs', 'display_is_active', 'upgraded', 'upgraded_date', 'order_id')
     
     def email(self, obj):
         return obj.user.email
+    
+    def nickname(self, obj):
+        return obj.nickname or '-'
+    nickname.short_description = 'Nickname'
     
     def user_link(self, obj):
         user = obj.user
@@ -236,10 +240,7 @@ class CommentAdmin(admin.ModelAdmin):
     content_preview.short_description = 'Comment'
     
     def user_display(self, obj):
-        if obj.use_email_as_name:
-            return obj.user.email
-        else:
-            return 'Anonymous'
+        return obj.display_name
     user_display.short_description = 'Author'
     
     def post_title(self, obj):
@@ -272,7 +273,7 @@ class DangerousReportAdmin(admin.ModelAdmin):
     post_link.short_description = 'Post'
     
     def user_email(self, obj):
-        return obj.user.email
+        return obj.display_name
     user_email.short_description = 'Reporter'
     
     def report_preview(self, obj):
