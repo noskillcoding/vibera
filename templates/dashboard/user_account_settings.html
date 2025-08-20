@@ -86,6 +86,59 @@
     </form>
 </div>
 
+        <hr style="margin: 30px 0;">
+        
+        <h2>Account Management</h2>
+        
+        <p>
+            <a href="{% url 'dashboard_customisation' %}">Customise dashboard</a>
+        </p>
+        
+        <p>
+            <a href="/accounts/email/">Update email address</a>
+        </p>
+        
+        <p>
+            <a href="/accounts/password/change/">Change password</a>
+        </p>
+        
+        {% if subscription_link %}
+        <hr style="margin: 30px 0;">
+        <h2>Subscription</h2>
+        
+        <p>
+            You're currently on a <b>{{ variant }}</b> subscription.
+            <br>
+            Upgrade to
+            {% if variant == "Monthly" and upgrade_subscription_link %}
+            <a href="{{ upgrade_subscription_link }}" target="_blank">Yearly</a>
+            (2 months free) or {% endif %}
+            <a href="https://docs.bearblog.dev/upgrading-from-subscription-to-lifetime/" target="_blank">Lifetime</a>
+            (once-off purchase).  
+        </p>
+        <p>
+            <a href="{{ subscription_link }}" target="_blank">Manage subscription</a>
+        </p>
+        {% endif %}
+        
+        <hr style="margin: 30px 0;">
+        
+        <h2>Account Actions</h2>
+        
+        <p>
+            <a href="{% url 'account_logout' %}">Sign out</a>
+        </p>
+        
+        <p>
+            {% if subscription_link and not subscription_cancelled %}
+            <a onclick="alert('Please cancel your subscription before deleting your account.')">Delete account</a>
+            {% else %}
+            <a href="{% url 'user_delete' %}">Delete account</a>
+            {% endif %}
+        </p>
+        
+    </div>
+
 <p style="margin-top: 40px;">
     <a href="{% url 'account' %}">&larr; Back to Dashboard</a>
 </p>

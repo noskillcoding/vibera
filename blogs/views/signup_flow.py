@@ -63,7 +63,7 @@ def signup(request):
                 # Log in the user
                 login(request, user)
 
-                return redirect('dashboard', id=blog.subdomain)
+                return redirect('blog_home', id=blog.subdomain)
             except IntegrityError:
                 error_messages.append('An account with this email address already exists.')
                 

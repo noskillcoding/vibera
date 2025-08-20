@@ -9,18 +9,19 @@
 </p>
 
 <span>
-    <a href="{% url 'dashboard' id=blog.subdomain %}">Home</a>
+    <a href="{% url 'dashboard' id=blog.subdomain %}">Dashboard</a>
+    <a href="{% url 'blog_home' id=blog.subdomain %}">Home</a>
     {% if blog %}
     <a href="{% url 'nav' id=blog.subdomain %}">Nav</a>
     <a href="{% url 'posts_edit' id=blog.subdomain %}">Posts</a>
     <a href="{% url 'pages_edit' id=blog.subdomain %}">Pages</a>
     <a href="{% url 'styles' id=blog.subdomain %}">Themes</a>
-    <a href="{% url 'email_list' id=blog.subdomain %}">Emails</a>
+    <a href="{% url 'email_list' id=blog.subdomain %}">Email</a>
     {% endif %}
-    {% comment %} Upgrade link hidden - all users have premium features {% endcomment %}
 </span>
 
 <span>
+    <a href="{% url 'user_account_settings' %}">Account</a>
     {% if blog.analytics_active %}
     <a href="{% url 'analytics' id=blog.subdomain %}">Analytics</a>
     {% endif %}

@@ -74,35 +74,7 @@ def user_account_settings(request):
             # Allow clearing only if nickname is not set yet (shouldn't happen but just in case)
             pass
     
-    return render(request, 'dashboard/user_account_settings.html', {
-        'user_settings': user_settings,
-        'success_message': success_message,
-        'error_message': error_message,
-    })
-
-
-@login_required
-def list(request):
-    blogs = Blog.objects.filter(user=request.user).order_by("created_date")
-
-    if request.method == "POST":
-        form = BlogForm(request.POST)
-        if form.is_valid():
-            if blogs.count() >= request.user.settings.max_blogs:
-                form.add_error('title', 'You have reached the maximum number of blogs.')
-            else:
-                subdomain = slugify(form.cleaned_data['subdomain'])
-
-                if not is_protected(subdomain) and not Blog.objects.filter(subdomain=subdomain).exists():
-                    blog_info = form.save(commit=False)
-                    blog_info.user = request.user
-                    blog_info.save()
-                    return redirect('dashboard', id=blog_info.subdomain)
-                else:
-                    form.add_error('subdomain', 'This subdomain is already in use or protected.')
-    else:
-        form = BlogForm()
-
+    # Get subscription information (same logic as the old blog list)
     subscription_cancelled = None
     subscription_link = None
     variant = None
@@ -118,15 +90,29 @@ def list(request):
                 variant = subscription['data'][0]['attributes']['variant_name']
         except Exception as e:
             print('No sub found ', e)
-
-    return render(request, 'studio/blog_list.html', {
-        'blogs': blogs,
-        'form': form,
+    
+    return render(request, 'dashboard/user_account_settings.html', {
+        'user_settings': user_settings,
+        'success_message': success_message,
+        'error_message': error_message,
         'subscription_cancelled': subscription_cancelled,
         'subscription_link': subscription_link,
         'upgrade_subscription_link': upgrade_subscription_link,
-        'variant': variant
+        'variant': variant,
     })
+
+
+@login_required
+def list(request):
+    # In single-blog architecture, redirect to user's blog dashboard
+    blog = Blog.objects.filter(user=request.user).first()
+    
+    if not blog:
+        # If somehow user has no blog, redirect to home to create one
+        return redirect('/')
+    
+    # Redirect to the user's single blog dashboard
+    return redirect('dashboard', id=blog.subdomain)
 
 
 @login_required
@@ -154,6 +140,19 @@ def studio(request, id):
         'blog': blog,
         'error_messages': error_messages,
         'header_content': header_content,
+    })
+
+
+@login_required
+def blog_dashboard(request, id):
+    """New dashboard page with navigation hub and links"""
+    if request.user.is_superuser:
+        blog = get_object_or_404(Blog, subdomain=id)
+    else:
+        blog = get_object_or_404(Blog, user=request.user, subdomain=id)
+
+    return render(request, 'studio/blog_dashboard.html', {
+        'blog': blog,
     })
 
 

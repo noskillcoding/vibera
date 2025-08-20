@@ -19,7 +19,7 @@ import requests
 class UserSettings(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='settings', blank=True)
     upgraded = models.BooleanField(default=True, db_index=True)
-    max_blogs = models.IntegerField(default=999)
+    max_blogs = models.IntegerField(default=1)
     upgraded_date = models.DateTimeField(blank=True, null=True, db_index=True)
     order_id = models.CharField(max_length=100, blank=True, null=True)
     order_email = models.CharField(max_length=100, blank=True, null=True)

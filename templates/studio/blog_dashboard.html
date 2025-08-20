@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | Vibera{% endblock %}
+
+{% block custom_styles %}
+    {% include 'styles/blog/default.css' %}
+    {% include 'styles/dashboard.css' %}
+    {{ request.user.settings.dashboard_styles | safe }}
+{% endblock %}
+
+{% block nav %}{% include '../snippets/dashboard_nav.html' %}{% endblock %}
+
+{% block content %}
+<h1>Dashboard</h1>
+
+<p>
+    <a href="{% url 'blog_home' id=blog.subdomain %}">Home</a> - Set up your home page content, title, and description
+</p>
+
+<p>
+    <a href="{% url 'nav' id=blog.subdomain %}">Nav</a> - Customize your site's navigation menu
+</p>
+
+<p>
+    <a href="{% url 'posts_edit' id=blog.subdomain %}">Posts</a> - Create and manage your project showcases
+</p>
+
+<p>
+    <a href="{% url 'pages_edit' id=blog.subdomain %}">Pages</a> - Create standalone pages like About or Contact
+</p>
+
+<p>
+    <a href="{% url 'styles' id=blog.subdomain %}">Themes</a> - Customize your site's appearance and styling
+</p>
+
+<p>
+    <a href="{% url 'email_list' id=blog.subdomain %}">Email</a> - Manage subscribers and send newsletters
+</p>
+
+<p>
+    <a href="{% url 'user_account_settings' %}">Account</a> - Manage your account, password, email, and subscription
+</p>
+
+{% if blog.analytics_active %}
+<p>
+    <a href="{% url 'analytics' id=blog.subdomain %}">Analytics</a> - View detailed visitor statistics
+</p>
+{% endif %}
+
+<p>
+    <a href="{% url 'settings' id=blog.subdomain %}">Settings</a> - Configure your site settings and subdomain
+</p>
+
+{{ request.user.settings.dashboard_footer | safe }}
+{% endblock %}

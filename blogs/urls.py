@@ -51,7 +51,8 @@ urlpatterns = [
     path('dashboard/upgrade/', dashboard.upgrade, name='upgrade'),
     path('dashboard/customise/', studio.dashboard_customisation, name="dashboard_customisation"),
 
-    path('<id>/dashboard/', studio.studio, name="dashboard"),
+    path('<id>/dashboard/', studio.blog_dashboard, name="dashboard"),
+    path('<id>/home/', studio.studio, name="blog_home"),
     path('<id>/delete/', dashboard.blog_delete, name="blog_delete"),
     path('<id>/dashboard/nav/', dashboard.nav, name='nav'),
     path('<id>/dashboard/styles/', dashboard.styles, name='styles'),
