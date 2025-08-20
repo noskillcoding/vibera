@@ -15,7 +15,7 @@
 }
 
 .flex:hover::before {
-    content: "∞ʕ-ᴥ-ʔ∞";
+    content: "∞ʕ◉ᴥ◉ʔ∞";
     animation: none;
 }
 
@@ -35,7 +35,7 @@ a.account:hover {
 }
 
 a.account::before {
-    content: "ʕ-ᴥ-ʔ";
+    content: "∞ʕ-ᴥ-ʔ∞";
 }
 
 .account:hover::before {
