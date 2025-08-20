@@ -11,6 +11,8 @@ from blogs.helpers import clean_text
 from feedgen.feed import FeedGenerator
 import mistune
 import os
+import json
+from collections import Counter
 
 posts_per_page = 20
 
@@ -101,6 +103,18 @@ def discover(request):
             (Q(lang__startswith=lang) & ~Q(lang='')) |
             (Q(lang='') & Q(blog__lang__startswith=lang) & ~Q(blog__lang=''))
         )
+    
+    # Filter by tags and tools
+    selected_tags = request.GET.getlist('tags')
+    selected_tools = request.GET.getlist('tools')
+    
+    for tag in selected_tags:
+        if tag.strip():
+            base_query = base_query.filter(all_tags__icontains=f'"{tag.strip()}"')
+    
+    for tool in selected_tools:
+        if tool.strip():
+            base_query = base_query.filter(all_tools__icontains=f'"{tool.strip()}"')
 
     if newest:
         posts = base_query.order_by("-published_date")
@@ -108,6 +122,9 @@ def discover(request):
         posts = base_query.order_by("-score")
 
     posts = posts[posts_from:posts_to]
+    
+    # Get popular tags and tools for the filter dropdown
+    popular_tags, popular_tools = get_popular_tags_and_tools()
 
     return render(request, "discover.html", {
         "lang": lang,
@@ -118,11 +135,50 @@ def discover(request):
         "posts_from": posts_from,
         "newest": newest,
         "hide_list_cookie": hide_list_raw.split(',') if hide_list_raw else None,
+        "selected_tags": selected_tags,
+        "selected_tools": selected_tools,
+        "popular_tags": popular_tags,
+        "popular_tools": popular_tools,
     })
 
 
 def get_available_languages():
     return ["cs", "de", "el", "en", "es", "fi", "fr", "hu", "id", "it", "ja", "ko", "nl", "pl", "pt", "ru", "sv", "tr", "zh"]
+
+
+def get_popular_tags_and_tools():
+    """Get top 5 most popular tags and tools from discoverable posts"""
+    # Get recent discoverable posts
+    recent_posts = get_base_query().filter(
+        published_date__gte=timezone.now() - timezone.timedelta(days=90)
+    ).values('all_tags', 'all_tools')
+    
+    all_tags = []
+    all_tools = []
+    
+    for post in recent_posts:
+        if post['all_tags']:
+            try:
+                tags = json.loads(post['all_tags'])
+                all_tags.extend(tags)
+            except (json.JSONDecodeError, TypeError):
+                pass
+        
+        if post['all_tools']:
+            try:
+                tools = json.loads(post['all_tools'])
+                all_tools.extend(tools)
+            except (json.JSONDecodeError, TypeError):
+                pass
+    
+    # Count occurrences and get top 5
+    tag_counts = Counter(all_tags)
+    tool_counts = Counter(all_tools)
+    
+    popular_tags = [tag for tag, count in tag_counts.most_common(5)]
+    popular_tools = [tool for tool, count in tool_counts.most_common(5)]
+    
+    return popular_tags, popular_tools
 
 
 # RSS/Atom feed
@@ -184,20 +240,42 @@ def feed(request):
 
 
 def search(request):
-    search_string = request.POST.get('query', "") if request.method == "POST" else ""
+    search_string = request.POST.get('query', "") if request.method == "POST" else request.GET.get('query', "")
     posts = None
 
-    if search_string:
-        posts = (
-            get_base_query().filter(
+    # Get tags and tools from URL parameters
+    selected_tags = request.GET.getlist('tags')
+    selected_tools = request.GET.getlist('tools')
+
+    if search_string or selected_tags or selected_tools:
+        base_query = get_base_query()
+        
+        if search_string:
+            base_query = base_query.filter(
                 Q(title__icontains=search_string) |
-                Q(all_tags__icontains=search_string)
+                Q(all_tags__icontains=search_string) |
+                Q(all_tools__icontains=search_string)
             )
-            .order_by('-upvotes')
-            .select_related("blog")[0:20]
-        )
+        
+        # Filter by tags and tools
+        for tag in selected_tags:
+            if tag.strip():
+                base_query = base_query.filter(all_tags__icontains=f'"{tag.strip()}"')
+        
+        for tool in selected_tools:
+            if tool.strip():
+                base_query = base_query.filter(all_tools__icontains=f'"{tool.strip()}"')
+        
+        posts = base_query.order_by('-upvotes').select_related("blog")[0:50]
+
+    # Get popular tags and tools for the filter dropdown
+    popular_tags, popular_tools = get_popular_tags_and_tools()
 
     return render(request, "search.html", {
         "posts": posts,
         "search_string": search_string,
+        "selected_tags": selected_tags,
+        "selected_tools": selected_tools,
+        "popular_tags": popular_tags,
+        "popular_tools": popular_tools,
     })
