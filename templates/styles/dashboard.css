@@ -10,24 +10,24 @@
 }
 
 .flex::before {
-    content: "ᕦʕ •ᴥ•ʔᕤ";
+    content: "∞ʕ◎ᴥ◎ʔ∞";
     animation: blink 10s infinite;
 }
 
 .flex:hover::before {
-    content: "ᕙʕ ಠᴥಠʔᕗ";
+    content: "∞ʕ-ᴥ-ʔ∞";
     animation: none;
 }
 
 .upgrade:hover .flex::before {
-    content: "ᕙʕ ಠᴥಠʔᕗ";
-    animation: none;
+    content: "∞ʕ◎ᴥ◎ʔ∞";
+    animation: blink 10s infinite;
     text-decoration: underline;
 }
 
 @keyframes blink {
-    0%, 96% { content: "ᕦʕ •ᴥ•ʔᕤ"; }
-    97%, 100% { content: "ᕦʕ -ᴥ-ʔᕤ"; }
+    0%, 96% { content: "∞ʕ◎ᴥ◎ʔ∞"; }
+    97%, 100% { content: "∞ʕ-ᴥ-ʔ∞"; }
 }
 
 a.account:hover {
@@ -39,7 +39,7 @@ a.account::before {
 }
 
 .account:hover::before {
-    content: "ʕ•ᴥ•ʔ";
+    content: "∞ʕ◎ᴥ◎ʔ∞";
 }
 
 header nav {
