@@ -257,7 +257,7 @@ class HitAdmin(admin.ModelAdmin):
 
 @admin.register(DangerousReport)
 class DangerousReportAdmin(admin.ModelAdmin):
-    list_display = ('id', 'post_link', 'user_email', 'report_preview', 'created_at')
+    list_display = ('id', 'report_preview', 'user_email', 'post_link', 'created_at')
     list_display_links = ('id', 'report_preview')  # Make ID and report preview clickable to edit report
     list_filter = ('created_at', 'post__blog')
     search_fields = ('user__email', 'post__title', 'comment')
