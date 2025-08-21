@@ -26,6 +26,7 @@ class UserSettings(models.Model):
 
     dashboard_styles = models.TextField(blank=True)
     dashboard_footer = models.TextField(blank=True)
+    landing_styles = models.TextField(blank=True)
     nickname = models.CharField(max_length=30, blank=True, null=True, unique=True, help_text="Display name for comments and reports. Cannot be changed once set.")
 
     def __str__(self):

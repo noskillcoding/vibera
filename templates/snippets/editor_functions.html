@@ -112,10 +112,14 @@
 	}
 
 	function deletePost() {
+		{% if post %}
 		if (confirm('Are you sure?')) {
 			$form.action = '{% url "post_delete" id=blog.subdomain uid=post.uid %}';
 			$form.submit()
 		}
+		{% else %}
+		alert('Delete function not available on this page.');
+		{% endif %}
 	}
 
 	// Media preview functions (available to all users)
@@ -485,7 +489,7 @@
 	$uploadButton.onclick = event => {
 	    event.preventDefault()
 		if (confirm("You've discovered a Pro feature ʕ•ᴥ•ʔﾉ♡\n\nUpgrade to unlock it and support the Tiny Internet!")) {
-	    	window.open('{% url \"upgrade\" %}')
+	    	window.open('{% url "upgrade" %}')
 		}
 	}
 

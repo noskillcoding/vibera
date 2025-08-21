@@ -4,6 +4,14 @@
 {% include 'snippets/seo_tags.html' with site_name='ʕ•ᴥ•ʔ Bear Blog' type="website" title='ʕ•ᴥ•ʔ Bear Blog' url='https://bearblog.dev' description='Free, no-nonsense, super-fast blogging' image="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png" %}
 {% endblock %}
 
+{% block custom_styles %}
+    {% if user.is_authenticated and user.settings.landing_styles %}
+    <style>
+        {{ user.settings.landing_styles | safe }}
+    </style>
+    {% endif %}
+{% endblock %}
+
 {% block nav %}
 {% endblock %}
 

@@ -6,11 +6,48 @@
     {% include 'styles/blog/default.css' %}
     {% include 'styles/dashboard.css' %}
     {{ request.user.settings.dashboard_styles | safe }}
+    <style>
+        @media (max-width: 768px) {
+            .preset-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+        }
+        @media (max-width: 480px) {
+            .preset-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
 {% endblock %}
 
 
 {% block content %}
 <h1>Customise dashboard</h1>
+
+<h2>Presets</h2>
+
+<div class="preset-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px;">
+    <button type="button" onclick="applyPreset('default', event)" style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; text-align: left;">
+        <strong>Default</strong><br>
+        <small style="color: #666;">Clean and minimal</small>
+    </button>
+    
+    <button type="button" onclick="applyPreset('msdos', event)" style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; text-align: left;">
+        <strong>MS-DOS</strong><br>
+        <small style="color: #666;">Retro terminal style</small>
+    </button>
+    
+    <button type="button" onclick="applyPreset('claude', event)" style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; text-align: left;">
+        <strong>Claude</strong><br>
+        <small style="color: #666;">Modern and thoughtful</small>
+    </button>
+    
+    <button type="button" onclick="applyPreset('darkClaude', event)" style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; text-align: left;">
+        <strong>Dark Claude</strong><br>
+        <small style="color: #666;">Dark and edgy</small>
+    </button>
+</div>
+
 <form method="POST" class="post-form full-width">{% csrf_token %}
     <p style="line-height: 0">
         <button onclick="event.preventDefault(); window.location = '/account/'">&#8592; Back</button>
@@ -18,4 +55,716 @@
     </p>
     {{ form.as_p }}
 </form>
+
+<script>
+function applyPreset(preset, event) {
+    console.log('applyPreset called with:', preset);
+    const stylesTextarea = document.querySelector('textarea[name="dashboard_styles"]');
+    const footerTextarea = document.querySelector('textarea[name="dashboard_footer"]');
+    const landingTextarea = document.querySelector('textarea[name="landing_styles"]');
+    
+    console.log('Found textareas:', {
+        styles: stylesTextarea,
+        footer: footerTextarea,
+        landing: landingTextarea
+    });
+    
+    const stylePresets = {
+        'default': '',
+        
+        'msdos': `/* MS-DOS Dashboard Theme */
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital@0;1&display=swap');
+
+body {
+    background-color: #000084 !important;
+    color: #B7B7B7 !important;
+    font-family: 'Space Mono', monospace !important;
+    font-size: 0.9em !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #000000 !important;
+    background: #00AAAA !important;
+    padding: 0.4em 0.6em !important;
+    font-family: 'Space Mono', monospace !important;
+    font-weight: 500 !important;
+}
+
+a {
+    color: #B7B7B7 !important;
+}
+
+a:hover {
+    color: #FFFFFF !important;
+    background: #00AAAA !important;
+    padding: 2px 4px;
+}
+
+button, input[type="submit"] {
+    background: #00AAAA !important;
+    color: #000000 !important;
+    border: 2px solid #B7B7B7 !important;
+    font-family: 'Space Mono', monospace !important;
+    padding: 8px 12px !important;
+}
+
+button:hover, input[type="submit"]:hover {
+    background: #B7B7B7 !important;
+    color: #000000 !important;
+}
+
+input, textarea, select {
+    background: #000060 !important;
+    color: #B7B7B7 !important;
+    border: 2px solid #00AAAA !important;
+    font-family: 'Space Mono', monospace !important;
+}
+
+.post-form {
+    background: #000060 !important;
+    border: 2px solid #00AAAA !important;
+    padding: 20px !important;
+}`,
+
+        'claude': `/* Claude Dashboard Theme */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+:root {
+    --claude-blue: #2563eb;
+    --claude-teal: #0891b2;  
+    --claude-orange: #ea580c;
+    --claude-warm: #f97316;
+    --claude-soft: #f8fafc;
+    --claude-subtle: #64748b;
+    --claude-deep: #1e293b;
+    --claude-light: #ffffff;
+}
+
+body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    background-color: var(--claude-light) !important;
+    color: var(--claude-deep) !important;
+    line-height: 1.6 !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Inter", sans-serif !important;
+    color: var(--claude-deep) !important;
+    font-weight: 600 !important;
+    margin-bottom: 1rem !important;
+}
+
+h1 {
+    color: var(--claude-teal) !important;
+    font-size: 2rem !important;
+}
+
+a {
+    color: var(--claude-teal) !important;
+    text-decoration: none !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+a:hover {
+    color: var(--claude-blue) !important;
+    text-decoration: underline !important;
+}
+
+button, input[type="submit"] {
+    background: var(--claude-teal) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 10px 16px !important;
+    font-family: "Inter", sans-serif !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+button:hover, input[type="submit"]:hover {
+    background: var(--claude-blue) !important;
+    transform: translateY(-1px) !important;
+}
+
+input, textarea, select {
+    border: 2px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    padding: 10px 12px !important;
+    font-family: "Inter", sans-serif !important;
+    background: white !important;
+    color: var(--claude-deep) !important;
+    transition: border-color 0.2s ease !important;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: var(--claude-teal) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.1) !important;
+}
+
+.post-form {
+    background: var(--claude-soft) !important;
+    border: 2px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    padding: 24px !important;
+}`,
+
+        'darkClaude': `/* Dark Claude Dashboard Theme - Chaotic and Hostile */
+@import url("https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap");
+
+:root {
+    --blood-red: #dc2626;
+    --toxic-green: #16a34a;
+    --void-black: #000000;
+    --harsh-white: #ffffff;
+    --cyber-orange: #ff4500;
+    --warning-yellow: #facc15;
+    --corrupted-purple: #7c3aed;
+    --glitch-pink: #ec4899;
+}
+
+body {
+    font-family: "Courier Prime", "JetBrains Mono", monospace !important;
+    background-color: var(--void-black) !important;
+    color: var(--harsh-white) !important;
+    line-height: 1.4 !important;
+    font-size: 0.95rem !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Impact", "Arial Black", sans-serif !important;
+    color: var(--blood-red) !important;
+    font-weight: 700 !important;
+    text-shadow: 2px 2px 0px var(--toxic-green) !important;
+    margin-bottom: 0.67rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+}
+
+h1 {
+    color: var(--cyber-orange) !important;
+    font-size: 1.8rem !important;
+    text-shadow: 3px 3px 0px var(--blood-red) !important;
+}
+
+a {
+    color: var(--warning-yellow) !important;
+    text-decoration: underline !important;
+    font-weight: 700 !important;
+}
+
+a:hover {
+    color: var(--glitch-pink) !important;
+    background: var(--blood-red) !important;
+    padding: 2px 4px !important;
+    text-shadow: 1px 1px 0px var(--void-black) !important;
+}
+
+button, input[type="submit"] {
+    background: var(--blood-red) !important;
+    color: var(--harsh-white) !important;
+    border: 3px solid var(--toxic-green) !important;
+    font-family: "Impact", sans-serif !important;
+    font-weight: 700 !important;
+    padding: 8px 16px !important;
+    text-transform: uppercase !important;
+    cursor: pointer !important;
+    text-shadow: 1px 1px 0px var(--void-black) !important;
+}
+
+button:hover, input[type="submit"]:hover {
+    background: var(--cyber-orange) !important;
+    border-color: var(--warning-yellow) !important;
+    color: var(--void-black) !important;
+    text-shadow: none !important;
+}
+
+input, textarea, select {
+    background: #0a0a0a !important;
+    color: var(--harsh-white) !important;
+    border: 2px solid var(--blood-red) !important;
+    font-family: "Courier Prime", monospace !important;
+    padding: 8px !important;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: var(--cyber-orange) !important;
+    outline: 2px solid var(--warning-yellow) !important;
+    box-shadow: 0 0 10px var(--corrupted-purple) !important;
+}
+
+.post-form {
+    background: #0a0a0a !important;
+    border: 3px solid var(--blood-red) !important;
+    padding: 20px !important;
+    box-shadow: 5px 5px 0px var(--toxic-green) !important;
+}`
+    };
+    
+    // Dynamic footer content based on current page
+    function getDynamicFooterContent(preset) {
+        const currentPath = window.location.pathname;
+        const pageType = getPageType(currentPath);
+        
+        if (preset === 'msdos') {
+            return getMSDOSFooter(pageType, currentPath);
+        } else if (preset === 'claude') {
+            return getClaudeFooter(pageType);
+        } else if (preset === 'darkClaude') {
+            return getDarkClaudeFooter(pageType);
+        }
+        return '';
+    }
+    
+    function getPageType(path) {
+        if (path.includes('/drops/')) return 'drops';
+        if (path.includes('/media/')) return 'media';
+        if (path.includes('/analytics/')) return 'analytics';
+        if (path.includes('/settings/')) return 'settings';
+        if (path.includes('/themes/')) return 'themes';
+        if (path.includes('/email/')) return 'email';
+        if (path.includes('/nav/')) return 'nav';
+        if (path.includes('/pages/')) return 'pages';
+        if (path.includes('/home/')) return 'home';
+        if (path.includes('/dashboard/')) return 'dashboard';
+        return 'general';
+    }
+    
+    function getMSDOSFooter(pageType, currentPath) {
+        const commands = {
+            'drops': '[<a href="/premium/drops/new/" style="color: #B7B7B7;">NEW</a>] [<a href="/premium/drops/" style="color: #B7B7B7;">LIST</a>] [<a href="/premium/media/" style="color: #B7B7B7;">MEDIA</a>]',
+            'media': '[<a href="/premium/media/" style="color: #B7B7B7;">UPLOAD</a>] [<a href="/premium/drops/" style="color: #B7B7B7;">DROPS</a>] [<a href="/premium/media/" style="color: #B7B7B7;">DELETE</a>]',
+            'analytics': '[<a href="/premium/analytics/" style="color: #B7B7B7;">STATS</a>] [<a href="/premium/drops/" style="color: #B7B7B7;">DROPS</a>] [<a href="/premium/dashboard/" style="color: #B7B7B7;">DASH</a>]',
+            'settings': '[<a href="/premium/settings/" style="color: #B7B7B7;">CONFIG</a>] [<a href="/premium/themes/" style="color: #B7B7B7;">THEME</a>] [<a href="/premium/settings/custom-domain/" style="color: #B7B7B7;">DOMAIN</a>]',
+            'themes': '[<a href="/premium/themes/" style="color: #B7B7B7;">APPLY</a>] [<a href="/premium/settings/" style="color: #B7B7B7;">CONFIG</a>] [<a href="/account/customise/" style="color: #B7B7B7;">CUSTOM</a>]',
+            'email': '[<a href="/premium/email/" style="color: #B7B7B7;">SEND</a>] [<a href="/premium/email/" style="color: #B7B7B7;">LIST</a>] [<a href="/premium/settings/" style="color: #B7B7B7;">CONFIG</a>]',
+            'nav': '[<a href="/premium/nav/" style="color: #B7B7B7;">EDIT</a>] [<a href="/premium/home/" style="color: #B7B7B7;">VIEW</a>] [<a href="/premium/settings/" style="color: #B7B7B7;">CONFIG</a>]',
+            'home': '[<a href="/premium/drops/new/" style="color: #B7B7B7;">NEW</a>] [<a href="/premium/drops/" style="color: #B7B7B7;">DROPS</a>] [<a href="/premium/settings/" style="color: #B7B7B7;">CONFIG</a>]',
+            'dashboard': '[<a href="/premium/drops/" style="color: #B7B7B7;">DROPS</a>] [<a href="/premium/settings/" style="color: #B7B7B7;">CONFIG</a>] [<a href="/premium/analytics/" style="color: #B7B7B7;">STATS</a>]'
+        };
+        
+        const status = {
+            'drops': 'content management',
+            'media': 'file system',
+            'analytics': 'data analysis',
+            'settings': 'system config',
+            'themes': 'display config',
+            'email': 'comm system',
+            'nav': 'menu editor',
+            'home': 'main interface',
+            'dashboard': 'control panel'
+        };
+        
+        return \`<div style="margin-top: 40px; padding: 15px; background: #000060; border: 2px solid #00AAAA; font-family: 'Space Mono', monospace; font-size: 12px; color: #B7B7B7;">
+    <div>C:\\\\VIBERA> <span style="color: #00AAAA;">\${status[pageType] || 'system status'}</span></div>
+    <div style="margin: 8px 0;">
+        Memory: 640K OK | Active: \${pageType.toUpperCase()} | Storage: ∞ MB
+    </div>
+    <div style="margin: 8px 0;">
+        <span style="color: #00AAAA;">Quick Commands:</span>
+        \${commands[pageType] || commands['dashboard']}
+    </div>
+    <div>Ready for input_</div>
+</div>\`;
+    }
+    
+    function getClaudeFooter(pageType) {
+        const tips = {
+            'drops': { title: '📝 Content Tips', tip: 'Use clear, descriptive titles and add relevant tags for better discoverability' },
+            'media': { title: '🖼️ Media Tips', tip: 'Optimize images before upload and use descriptive filenames for better organization' },
+            'analytics': { title: '📊 Analytics Tips', tip: 'Check analytics regularly to understand your audience and optimize content timing' },
+            'settings': { title: '⚙️ Configuration Tips', tip: 'Set up custom domains and configure RSS settings for professional presentation' },
+            'themes': { title: '🎨 Design Tips', tip: 'Choose themes that match your content style and ensure good readability' },
+            'email': { title: '📧 Newsletter Tips', tip: 'Send regular updates to keep subscribers engaged and grow your audience' },
+            'nav': { title: '🧭 Navigation Tips', tip: 'Keep navigation simple and intuitive - visitors should find content easily' },
+            'home': { title: '🏠 Homepage Tips', tip: 'Make a strong first impression with clear value proposition and easy navigation' },
+            'dashboard': { title: '📋 Workflow Tips', tip: 'Use the dashboard efficiently by bookmarking frequently used sections' }
+        };
+        
+        const actions = {
+            'drops': '[<a href="/premium/drops/new/" style="color: var(--claude-teal, #0891b2); text-decoration: none;">New Drop</a>] • [<a href="/premium/drops/template/" style="color: var(--claude-teal, #0891b2); text-decoration: none;">Template</a>] • [<a href="/premium/media/" style="color: var(--claude-teal, #0891b2); text-decoration: none;">Media</a>]',
+            'media': '[<a href="/premium/media/" style="color: var(--claude-teal, #0891b2); text-decoration: none;">Upload</a>] • [<a href="/premium/drops/" style="color: var(--claude-teal, #0891b2); text-decoration: none;">Use in Drop</a>] • [<a href="/premium/settings/" style="color: var(--claude-teal, #0891b2); text-decoration: none;">Settings</a>]',
+            'analytics': '[<a href="/premium/analytics/" style="color: var(--claude-teal, #0891b2); text-decoration: none;">Overview</a>] • [<a href="/premium/drops/" style="color: var(--claude-teal, #0891b2); text-decoration: none;">Content</a>] • [<a href="/premium/email/" style="color: var(--claude-teal, #0891b2); text-decoration: none;">Newsletter</a>]',
+            'settings': '[<a href="/premium/settings/custom-domain/" style="color: var(--claude-teal, #0891b2); text-decoration: none;">Domain</a>] • [<a href="/premium/themes/" style="color: var(--claude-teal, #0891b2); text-decoration: none;">Themes</a>] • [<a href="/premium/settings/advanced/" style="color: var(--claude-teal, #0891b2); text-decoration: none;">Advanced</a>]',
+            'dashboard': '[<a href="/premium/drops/new/" style="color: var(--claude-teal, #0891b2); text-decoration: none;">New Drop</a>] • [<a href="/premium/analytics/" style="color: var(--claude-teal, #0891b2); text-decoration: none;">Analytics</a>] • [<a href="/premium/settings/" style="color: var(--claude-teal, #0891b2); text-decoration: none;">Settings</a>]'
+        };
+        
+        const currentTip = tips[pageType] || tips['dashboard'];
+        const currentActions = actions[pageType] || actions['dashboard'];
+        
+        return \`<div style="margin-top: 40px; padding: 20px; background: var(--claude-soft, #f8fafc); border: 2px solid #e2e8f0; border-radius: 12px; font-family: 'Inter', sans-serif;">
+    <h3 style="color: var(--claude-teal, #0891b2); font-size: 14px; margin: 0 0 12px 0;">\${currentTip.title}</h3>
+    <div style="font-size: 13px; color: var(--claude-deep, #1e293b); line-height: 1.5;">
+        <div style="margin-bottom: 8px;">
+            <strong>Tip:</strong> \${currentTip.tip}
+        </div>
+        <div style="margin-bottom: 8px;">
+            <strong>Quick Actions:</strong> \${currentActions}
+        </div>
+        <div style="font-size: 11px; color: var(--claude-subtle, #64748b); margin-top: 12px;">
+            \${pageType.charAt(0).toUpperCase() + pageType.slice(1)} section • <a href="/account/customise/" style="color: var(--claude-subtle, #64748b);">Customize Dashboard</a>
+        </div>
+    </div>
+</div>\`;
+    }
+    
+    function getDarkClaudeFooter(pageType) {
+        const chaos = {
+            'drops': { level: 'CRITICAL', threat: 'CONTENT OVERLOAD', actions: '[<a href="/accounts/delete/" style="color: #ec4899; font-weight: 700;">DESTROY</a>] [<a href="/premium/drops/" style="color: #7c3aed; font-weight: 700;">CHAOS</a>] [<a href="/premium/drops/new/" style="color: #ff4500; font-weight: 700;">CREATE</a>]' },
+            'media': { level: 'MAXIMUM', threat: 'DATA CORRUPTION', actions: '[<a href="/premium/media/" style="color: #ec4899; font-weight: 700;">CORRUPT</a>] [<a href="/accounts/delete/" style="color: #7c3aed; font-weight: 700;">PURGE</a>] [<a href="/premium/media/" style="color: #ff4500; font-weight: 700;">UPLOAD</a>]' },
+            'analytics': { level: 'EXTREME', threat: 'PRIVACY BREACH', actions: '[<a href="/premium/analytics/" style="color: #ec4899; font-weight: 700;">SPY</a>] [<a href="/accounts/delete/" style="color: #7c3aed; font-weight: 700;">DELETE</a>] [<a href="/account/logout/" style="color: #ff4500; font-weight: 700;">ESCAPE</a>]' },
+            'settings': { level: 'HOSTILE', threat: 'SYSTEM OVERRIDE', actions: '[<a href="/premium/settings/" style="color: #ec4899; font-weight: 700;">CORRUPT</a>] [<a href="/accounts/delete/" style="color: #7c3aed; font-weight: 700;">NUKE</a>] [<a href="/account/logout/" style="color: #ff4500; font-weight: 700;">FLEE</a>]' },
+            'themes': { level: 'CHAOTIC', threat: 'VISUAL MAYHEM', actions: '[<a href="/premium/themes/" style="color: #ec4899; font-weight: 700;">DISTORT</a>] [<a href="/account/customise/" style="color: #7c3aed; font-weight: 700;">HACK</a>] [<a href="/premium/settings/" style="color: #ff4500; font-weight: 700;">BREAK</a>]' },
+            'dashboard': { level: 'MAXIMUM', threat: 'TOTAL CHAOS', actions: '[<a href="/accounts/delete/" style="color: #ec4899; font-weight: 700;">DESTROY</a>] [<a href="/account/logout/" style="color: #7c3aed; font-weight: 700;">ESCAPE</a>] [<a href="/premium/drops/" style="color: #ff4500; font-weight: 700;">CHAOS</a>]' }
+        };
+        
+        const errors = [
+            'ERROR 404: SANITY NOT FOUND',
+            'WARNING: REALITY.EXE CORRUPTED', 
+            'CRITICAL: LOGIC.SYS MISSING',
+            'ALERT: CHAOS.DLL LOADED',
+            'FATAL: HOPE.BAT TERMINATED'
+        ];
+        
+        const currentChaos = chaos[pageType] || chaos['dashboard'];
+        const randomError = errors[Math.floor(Math.random() * errors.length)];
+        
+        return \`<div style="margin-top: 40px; padding: 20px; background: #0a0a0a; border: 3px solid #dc2626; box-shadow: 5px 5px 0px #16a34a; font-family: 'Courier Prime', monospace;">
+    <div style="color: #ff4500; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 12px; margin-bottom: 10px;">
+        ⚠️ SYSTEM STATUS: HOSTILE MODE ACTIVE ⚠️
+    </div>
+    <div style="color: #facc15; font-size: 11px; line-height: 1.4;">
+        <div style="margin: 6px 0;">CHAOS LEVEL: <span style="color: #dc2626; font-weight: 700;">\${currentChaos.level}</span></div>
+        <div style="margin: 6px 0;">THREAT: <span style="color: #16a34a; font-weight: 700;">\${currentChaos.threat}</span></div>
+        <div style="margin: 6px 0;">
+            DESTRUCTIVE ACTIONS: \${currentChaos.actions}
+        </div>
+    </div>
+    <div style="color: #dc2626; font-size: 10px; margin-top: 12px; text-shadow: 1px 1px 0px #000000;">
+        ▓▓▓ \${randomError} ▓▓▓
+    </div>
+</div>\`;
+    }
+
+    const landingPresets = {
+        'default': '',
+        
+        'msdos': `/* MS-DOS Landing Page Theme */
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital@0;1&display=swap');
+
+body {
+    background-color: #000084 !important;
+    color: #B7B7B7 !important;
+    font-family: 'Space Mono', monospace !important;
+    font-size: 0.9em !important;
+}
+
+h2, h3 {
+    color: #000000 !important;
+    background: #00AAAA !important;
+    padding: 0.4em 0.6em !important;
+    font-family: 'Space Mono', monospace !important;
+    font-weight: 500 !important;
+}
+
+nav a {
+    color: #B7B7B7 !important;
+    background: #000060 !important;
+    padding: 8px 12px !important;
+    margin: 4px !important;
+    border: 2px solid #00AAAA !important;
+    text-decoration: none !important;
+    font-family: 'Space Mono', monospace !important;
+    display: inline-block !important;
+}
+
+nav a:hover {
+    background: #00AAAA !important;
+    color: #000000 !important;
+}
+
+ul {
+    background: #000060 !important;
+    border: 2px solid #00AAAA !important;
+    padding: 20px !important;
+    list-style: none !important;
+}
+
+ul li {
+    color: #B7B7B7 !important;
+    margin: 8px 0 !important;
+}
+
+ul li::before {
+    content: "> ";
+    color: #00AAAA !important;
+    font-weight: bold;
+}`,
+
+        'claude': `/* Claude Landing Page Theme */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+:root {
+    --claude-blue: #2563eb;
+    --claude-teal: #0891b2;  
+    --claude-orange: #ea580c;
+    --claude-warm: #f97316;
+    --claude-soft: #f8fafc;
+    --claude-subtle: #64748b;
+    --claude-deep: #1e293b;
+    --claude-light: #ffffff;
+}
+
+body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    background: linear-gradient(135deg, var(--claude-soft) 0%, var(--claude-light) 100%) !important;
+    color: var(--claude-deep) !important;
+    line-height: 1.6 !important;
+}
+
+h2, h3 {
+    font-family: "Inter", sans-serif !important;
+    color: var(--claude-deep) !important;
+    font-weight: 600 !important;
+    margin-bottom: 1rem !important;
+}
+
+h2 {
+    color: var(--claude-teal) !important;
+    font-size: 2.25rem !important;
+}
+
+h3 {
+    color: var(--claude-blue) !important;
+    font-size: 1.5rem !important;
+}
+
+nav {
+    display: flex !important;
+    gap: 12px !important;
+    flex-wrap: wrap !important;
+    margin: 24px 0 !important;
+}
+
+nav a {
+    background: var(--claude-teal) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 10px 16px !important;
+    font-family: "Inter", sans-serif !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+    display: inline-block !important;
+}
+
+nav a:hover {
+    background: var(--claude-blue) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 8px rgba(8, 145, 178, 0.3) !important;
+}
+
+ul {
+    background: white !important;
+    border: 2px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    padding: 24px !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07) !important;
+}
+
+ul li {
+    color: var(--claude-deep) !important;
+    margin: 12px 0 !important;
+    padding-left: 8px !important;
+}
+
+ul li::before {
+    content: "✓ ";
+    color: var(--claude-teal) !important;
+    font-weight: bold !important;
+    margin-right: 8px !important;
+}`,
+
+        'darkClaude': `/* Dark Claude Landing Page Theme - Hostile Chaos */
+@import url("https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap");
+
+:root {
+    --blood-red: #dc2626;
+    --toxic-green: #16a34a;
+    --void-black: #000000;
+    --harsh-white: #ffffff;
+    --cyber-orange: #ff4500;
+    --warning-yellow: #facc15;
+    --corrupted-purple: #7c3aed;
+    --glitch-pink: #ec4899;
+}
+
+body {
+    font-family: "Courier Prime", "JetBrains Mono", monospace !important;
+    background: linear-gradient(45deg, var(--void-black) 0%, #0a0a0a 50%, var(--void-black) 100%) !important;
+    color: var(--harsh-white) !important;
+    line-height: 1.4 !important;
+    font-size: 0.95rem !important;
+    animation: glitch 10s infinite !important;
+}
+
+@keyframes glitch {
+    0%, 90%, 100% { transform: translate(0); }
+    91% { transform: translate(-2px, 2px); }
+    92% { transform: translate(2px, -2px); }
+    93% { transform: translate(-2px, -2px); }
+    94% { transform: translate(2px, 2px); }
+    95% { transform: translate(-2px, 0); }
+}
+
+h2, h3 {
+    font-family: "Impact", "Arial Black", sans-serif !important;
+    color: var(--blood-red) !important;
+    font-weight: 700 !important;
+    text-shadow: 2px 2px 0px var(--toxic-green) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    margin-bottom: 0.67rem !important;
+}
+
+h2 {
+    color: var(--cyber-orange) !important;
+    font-size: 2rem !important;
+    text-shadow: 3px 3px 0px var(--blood-red) !important;
+    animation: pulse 2s infinite !important;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+h3 {
+    color: var(--warning-yellow) !important;
+    font-size: 1.2rem !important;
+}
+
+nav {
+    display: flex !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+    margin: 24px 0 !important;
+}
+
+nav a {
+    background: var(--blood-red) !important;
+    color: var(--harsh-white) !important;
+    border: 3px solid var(--toxic-green) !important;
+    padding: 8px 16px !important;
+    font-family: "Impact", sans-serif !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    text-decoration: none !important;
+    text-shadow: 1px 1px 0px var(--void-black) !important;
+    display: inline-block !important;
+    transition: all 0.1s ease !important;
+}
+
+nav a:hover {
+    background: var(--cyber-orange) !important;
+    border-color: var(--warning-yellow) !important;
+    color: var(--void-black) !important;
+    text-shadow: none !important;
+    transform: rotate(-1deg) !important;
+}
+
+ul {
+    background: #0a0a0a !important;
+    border: 3px solid var(--blood-red) !important;
+    box-shadow: 5px 5px 0px var(--toxic-green) !important;
+    padding: 20px !important;
+    list-style: none !important;
+    transform: rotate(0.5deg) !important;
+}
+
+ul li {
+    color: var(--harsh-white) !important;
+    margin: 10px 0 !important;
+    font-weight: 700 !important;
+}
+
+ul li::before {
+    content: "▓ ";
+    color: var(--glitch-pink) !important;
+    font-weight: bold !important;
+    margin-right: 8px !important;
+    animation: blink 1.5s infinite !important;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}`
+    };
+
+    const footerPresets = {
+        'default': '',
+        'msdos': '', // Will be populated dynamically
+        'claude': '', // Will be populated dynamically  
+        'darkClaude': '' // Will be populated dynamically
+    };
+    
+    if (stylesTextarea && stylePresets[preset] !== undefined) {
+        stylesTextarea.value = stylePresets[preset];
+    }
+    
+    if (footerTextarea) {
+        if (preset === 'default') {
+            footerTextarea.value = '';
+        } else {
+            footerTextarea.value = getDynamicFooterContent(preset);
+        }
+    }
+    
+    if (landingTextarea && landingPresets[preset] !== undefined) {
+        landingTextarea.value = landingPresets[preset];
+    }
+    
+    // Special effects for Dark Claude
+    if (preset === 'darkClaude') {
+        setTimeout(() => initDarkClaudeEffects(), 100);
+    }
+    
+    if ((stylesTextarea && stylePresets[preset] !== undefined) || 
+        (footerTextarea) || 
+        (landingTextarea && landingPresets[preset] !== undefined)) {
+        // Show confirmation
+        const button = event.target;
+        const originalText = button.innerHTML;
+        button.innerHTML = '<strong>Applied!</strong><br><small style="color: #666;">Dashboard, footer & landing updated</small>';
+        button.style.borderColor = '#4ade80';
+        button.style.backgroundColor = '#f0fdf4';
+        
+        setTimeout(() => {
+            button.innerHTML = originalText;
+            button.style.borderColor = '#ddd';
+            button.style.backgroundColor = 'white';
+        }, 2000);
+    }
+}
+
+function initDarkClaudeEffects() {
+    if (!window.darkClaudeInitialized) {
+        window.darkClaudeInitialized = true;
+        
+        setInterval(() => {
+            const elements = document.querySelectorAll('h1, h2, h3');
+            elements.forEach(el => {
+                if (Math.random() < 0.05) {
+                    const original = el.textContent;
+                    el.textContent = '▓▓▓ GLITCH ▓▓▓';
+                    setTimeout(() => el.textContent = original, 200);
+                }
+            });
+        }, 3000);
+    }
+}
+</script>
 {% endblock %}

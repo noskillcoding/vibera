@@ -33,9 +33,16 @@ class DashboardCustomisationForm(forms.ModelForm):
         help_text="Add scripts and other footer content to your dashboard."
     )
 
+    landing_styles = forms.CharField(
+        widget=forms.Textarea(),
+        label="Landing page styles",
+        required=False,
+        help_text="Customize the appearance of your personal landing page with CSS."
+    )
+
     class Meta:
         model = UserSettings
-        fields = ('dashboard_styles', 'dashboard_footer')
+        fields = ('dashboard_styles', 'dashboard_footer', 'landing_styles')
 
 
 class NavForm(forms.ModelForm):
