@@ -460,12 +460,21 @@ body {
     font-size: 0.9em !important;
 }
 
-h2, h3 {
+h2, h3, h4 {
     color: #000000 !important;
     background: #00AAAA !important;
     padding: 0.4em 0.6em !important;
     font-family: 'Space Mono', monospace !important;
     font-weight: 500 !important;
+    margin-bottom: 1rem !important;
+}
+
+h2 {
+    font-size: 1.34em !important;
+}
+
+h4 {
+    font-size: 1.1em !important;
 }
 
 nav a {
@@ -484,11 +493,17 @@ nav a:hover {
     color: #000000 !important;
 }
 
+p {
+    color: #B7B7B7 !important;
+    margin: 16px 0 !important;
+}
+
 ul {
     background: #000060 !important;
     border: 2px solid #00AAAA !important;
     padding: 20px !important;
     list-style: none !important;
+    margin: 16px 0 !important;
 }
 
 ul li {
@@ -500,6 +515,16 @@ ul li::before {
     content: "> ";
     color: #00AAAA !important;
     font-weight: bold;
+}
+
+a {
+    color: #00AAAA !important;
+}
+
+a:hover {
+    color: #B7B7B7 !important;
+    background: #00AAAA !important;
+    padding: 2px 4px !important;
 }`,
 
         'claude': `/* Claude Landing Page Theme */
@@ -523,7 +548,7 @@ body {
     line-height: 1.6 !important;
 }
 
-h2, h3 {
+h2, h3, h4 {
     font-family: "Inter", sans-serif !important;
     color: var(--claude-deep) !important;
     font-weight: 600 !important;
@@ -532,12 +557,18 @@ h2, h3 {
 
 h2 {
     color: var(--claude-teal) !important;
-    font-size: 2.25rem !important;
+    font-size: 1.34em !important;
 }
 
 h3 {
     color: var(--claude-blue) !important;
-    font-size: 1.5rem !important;
+    font-size: 1.25rem !important;
+}
+
+h4 {
+    color: var(--claude-deep) !important;
+    font-size: 1.1rem !important;
+    font-weight: 500 !important;
 }
 
 nav {
@@ -566,12 +597,19 @@ nav a:hover {
     box-shadow: 0 4px 8px rgba(8, 145, 178, 0.3) !important;
 }
 
+p {
+    color: var(--claude-deep) !important;
+    margin: 16px 0 !important;
+    font-weight: 400 !important;
+}
+
 ul {
     background: white !important;
     border: 2px solid #e2e8f0 !important;
     border-radius: 12px !important;
     padding: 24px !important;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07) !important;
+    margin: 16px 0 !important;
 }
 
 ul li {
@@ -585,6 +623,16 @@ ul li::before {
     color: var(--claude-teal) !important;
     font-weight: bold !important;
     margin-right: 8px !important;
+}
+
+a {
+    color: var(--claude-teal) !important;
+    text-decoration: none !important;
+}
+
+a:hover {
+    color: var(--claude-blue) !important;
+    text-decoration: underline !important;
 }`,
 
         'darkClaude': `/* Dark Claude Landing Page Theme - Hostile Chaos */
@@ -619,7 +667,7 @@ body {
     95% { transform: translate(-2px, 0); }
 }
 
-h2, h3 {
+h2, h3, h4 {
     font-family: "Impact", "Arial Black", sans-serif !important;
     color: var(--blood-red) !important;
     font-weight: 700 !important;
@@ -631,7 +679,7 @@ h2, h3 {
 
 h2 {
     color: var(--cyber-orange) !important;
-    font-size: 2rem !important;
+    font-size: 1.34em !important;
     text-shadow: 3px 3px 0px var(--blood-red) !important;
     animation: pulse 2s infinite !important;
 }
@@ -643,7 +691,12 @@ h2 {
 
 h3 {
     color: var(--warning-yellow) !important;
-    font-size: 1.2rem !important;
+    font-size: 1.25rem !important;
+}
+
+h4 {
+    color: var(--glitch-pink) !important;
+    font-size: 1.1rem !important;
 }
 
 nav {
@@ -675,6 +728,12 @@ nav a:hover {
     transform: rotate(-1deg) !important;
 }
 
+p {
+    color: var(--harsh-white) !important;
+    margin: 16px 0 !important;
+    font-weight: 400 !important;
+}
+
 ul {
     background: #0a0a0a !important;
     border: 3px solid var(--blood-red) !important;
@@ -682,6 +741,7 @@ ul {
     padding: 20px !important;
     list-style: none !important;
     transform: rotate(0.5deg) !important;
+    margin: 16px 0 !important;
 }
 
 ul li {
@@ -701,6 +761,19 @@ ul li::before {
 @keyframes blink {
     0%, 50% { opacity: 1; }
     51%, 100% { opacity: 0; }
+}
+
+a {
+    color: var(--warning-yellow) !important;
+    text-decoration: underline !important;
+    font-weight: 700 !important;
+}
+
+a:hover {
+    color: var(--glitch-pink) !important;
+    background: var(--blood-red) !important;
+    padding: 2px 4px !important;
+    text-shadow: 1px 1px 0px var(--void-black) !important;
 }`
     };
 

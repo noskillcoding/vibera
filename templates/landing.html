@@ -1,25 +1,46 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block seo %}
-{% include 'snippets/seo_tags.html' with site_name='ʕ•ᴥ•ʔ Bear Blog' type="website" title='ʕ•ᴥ•ʔ Bear Blog' url='https://bearblog.dev' description='Free, no-nonsense, super-fast blogging' image="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png" %}
-{% endblock %}
-
-{% block custom_styles %}
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+  
+  <title>Vibera</title>
+  
+  <link rel="icon" href="/logo.png">
+  <link rel="apple-touch-icon" href="/logo.png">
+  
+  <style>
+    {% include 'styles/blog/default.css' %}
+    {% include 'styles/dashboard.css' %}
     {% if user.is_authenticated and user.settings.landing_styles %}
-    <style>
-        {{ user.settings.landing_styles | safe }}
-    </style>
+    {{ user.settings.landing_styles | safe }}
     {% endif %}
-{% endblock %}
+  </style>
+</head>
 
-{% block nav %}
-{% endblock %}
-
-{% block content %}
+<body onload="(function() { document.cookie = `timezone=${Intl.DateTimeFormat().resolvedOptions().timeZone};path=/`; })()">
+  {% if 'lh.co' in request.get_host %}
+  <p style="background-color: wheat; position: absolute; top:-15px; right:0; left:0; text-align: center;">
+    Development server: {{ request.get_host }}
+  </p>
+  {% endif %}
+  
+  <header>
+    <a class="title" href="/">
+      <h1>
+        <span class="bear">∞ʕ◎ᴥ◎ʔ∞</span> Vibera
+      </h1>
+    </a>
+    <nav>
+    </nav>
+  </header>
+  <main>
+    
 <h2 style="font-size: 1.34em">Like Bearblog, but for your vibe-coded stuff</h2>
 <h3>Don't make money - make waves</h3>
 <nav>
-    {% if  user.is_authenticated %}
+    {% if user.is_authenticated %}
     <a href="/dashboard/">Dashboard</a>
     {% else %}
     <a href="{% url 'signup_flow' %}">Sign up</a>
@@ -43,4 +64,9 @@
    <a class="bear flex" href="https://herman.bearblog.dev/praise-for-bear/" target="_blank" style="text-decoration: none; color: inherit;"></a>
 </h3>
 
-{% endblock %}
+  </main>
+  <footer style="padding:25px 0;">
+    {% include 'snippets/dashboard_footer.html' %}
+  </footer>
+</body>
+</html>
