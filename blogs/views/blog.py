@@ -163,7 +163,7 @@ def post(request, slug):
             return redirect('post', slug=post.slug)
         else:
             # Check for a custom blogreel or /blog path and render the blog page
-            if slug == blog.blog_path or slug == 'blog':
+            if slug == blog.blog_path or slug == 'blog' or slug == 'feed':
                 return posts(request, blog)
 
             return render(request, '404.html', {'blog': blog}, status=404)

@@ -107,7 +107,7 @@ urlpatterns = [
     path('confirm-subscription/', emailer.confirm_subscription, name='confirm_subscription'),
     
     # Feeds + aliases
-    path("feed/", feed.feed),
+    path("rssfeed/", feed.feed),
     path("atom/", feed.feed),
     path("rss/", feed.feed),
     
