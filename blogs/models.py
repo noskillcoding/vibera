@@ -55,7 +55,7 @@ class Blog(models.Model):
     meta_image = models.CharField(max_length=200, blank=True)
     lang = models.CharField(max_length=10, default='en', blank=True, db_index=True)
     meta_tag = models.CharField(max_length=500, blank=True)
-    blog_path = models.CharField(max_length=200, default="blog")
+    blog_path = models.CharField(max_length=200, default="space")
     header_directive = models.TextField(blank=True)
     footer_directive = models.TextField(blank=True)
     all_tags = models.TextField(default='[]')

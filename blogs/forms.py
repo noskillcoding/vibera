@@ -101,6 +101,13 @@ class AdvancedSettingsForm(forms.ModelForm):
         help_text="The structure of a meta tag is strictly &lt;meta name='' property='' content='' /&gt"
     )
 
+    blog_path = forms.CharField(
+        label="Space path",
+        max_length=200,
+        required=False,
+        help_text="The path for your drops list page (e.g., 'space', 'drops', 'projects')"
+    )
+
     robots_txt = forms.CharField(
         widget=forms.Textarea(),
         label="robots.txt content",
