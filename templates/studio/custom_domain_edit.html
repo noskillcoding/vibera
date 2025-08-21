@@ -11,6 +11,8 @@ Custom domain | Bear Blog
     {{ request.user.settings.dashboard_styles | safe }}
 {% endblock %}
 
+{% block nav %}{% include '../snippets/dashboard_nav.html' %}{% endblock %}
+
 {% block content %}
 <main>
     <h1>Custom domain</h1>
@@ -18,7 +20,6 @@ Custom domain | Bear Blog
     <form method="POST" class="post-form full-width">
         {% csrf_token %}
         <p style="line-height: 0">
-            <button onclick="event.preventDefault(); window.location = '/{{ blog.subdomain}}/settings/'">&#8592; Back</button>
             <button type="submit">Save</button>
             <button onclick="event.preventDefault(); window.open('{{ blog.dynamic_useful_domain }}');">View</button>
         </p>

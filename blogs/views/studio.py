@@ -688,4 +688,6 @@ def dashboard_customisation(request):
     else:
         form = DashboardCustomisationForm(instance=request.user.settings)
 
-    return render(request, 'dashboard/dashboard_customisation.html', {'form': form})
+    return render(request, 'dashboard/dashboard_customisation.html', {
+        'form': form
+    })

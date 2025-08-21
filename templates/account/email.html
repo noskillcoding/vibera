@@ -10,11 +10,7 @@
 
 {% block head_title %}{% trans "Account" %}{% endblock %}
 
-{% block nav %}
-<nav>
-  <a href="/account/">Back</a>
-</nav>
-{% endblock %}
+{% block nav %}{% include '../snippets/dashboard_nav.html' %}{% endblock %}
 
 {% block content %}
     <h1>{% trans "E-mail Addresses" %}</h1>
