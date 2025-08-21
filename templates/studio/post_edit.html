@@ -102,7 +102,7 @@ New drop | Vibera
     {% if post.is_page or is_page %}
         <!-- Page Description -->
         <div class="page-description" style="margin-bottom: 20px; padding: 15px; background: #f0f8ff; border: 1px solid #b0d4f1; border-radius: 5px; font-size: 14px;">
-            <strong>Pages</strong> are static content for your site like "About", "Contact", or other standalone content. Unlike projects, pages don't appear in discovery feeds and are accessed via navigation menus.
+            <strong>Pages</strong> are static content for your site like "About", "Contact", or other standalone content. Unlike drops, pages don't appear in discovery feeds and are accessed via navigation menus.
         </div>
 
         <!-- Page Title Section -->
@@ -139,11 +139,11 @@ New drop | Vibera
             </div>
         </div>
 
-        <!-- Project Title Section -->
+        <!-- Drop Title Section -->
         <div style="margin-bottom: 15px;">
-            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Project Title</label>
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Drop Title</label>
             <input type="text" id="title-input" 
-                   placeholder="Enter your project title..."
+                   placeholder="Enter your drop title..."
                    style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; font-size: 16px; box-sizing: border-box;"
                    value="{% if post.title %}{{ post.title }}{% endif %}">
         </div>
@@ -152,7 +152,7 @@ New drop | Vibera
         <div style="margin-bottom: 15px;">
             <label style="display: block; font-weight: bold; margin-bottom: 5px;">Short Description (for discovery feed)</label>
             <input type="text" id="short-description-input" maxlength="100" 
-                   placeholder="A brief description of your project (max 100 characters)..."
+                   placeholder="A brief description (max 100 characters)..."
                    style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; box-sizing: border-box;"
                    value="{% if post.short_description %}{{ post.short_description }}{% endif %}">
             <div id="char-counter" style="font-size: 12px; color: #666; text-align: right; margin-top: 2px;">
@@ -164,7 +164,7 @@ New drop | Vibera
             name="body_content"
             id="body_content"
             style="width: 100%; min-height: 200px; padding: 8px; border: 1px solid #ddd; border-radius: 3px; resize: vertical; box-sizing: border-box; font-family: inherit;"
-            placeholder="Describe your project..."
+            placeholder="Describe your stuff..."
         >{% if post %}{{ post.content }}{% else %}{{ template_body }}{% endif %}</textarea>
     {% endif %}
 
@@ -207,7 +207,7 @@ New drop | Vibera
                     <input type="checkbox" id="comments-checkbox" 
                            style="margin-right: 8px;" 
                            {% if post.comments_enabled != False %}checked{% endif %}>
-                    Enable comments on this project
+                    Enable comments
                 </label>
             </div>
         </div>

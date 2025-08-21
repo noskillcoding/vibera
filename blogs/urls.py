@@ -73,11 +73,11 @@ urlpatterns = [
 
     path('<id>/dashboard/opt-in-review/', dashboard.opt_in_review, name='opt_in_review'),
 
-    path('<id>/dashboard/posts/', dashboard.posts_edit, name='posts_edit'),
+    path('<id>/dashboard/drops/', dashboard.posts_edit, name='posts_edit'),
     path('<id>/dashboard/pages/', dashboard.pages_edit, name='pages_edit'),
-    path('<id>/dashboard/posts/new/', studio.post, name="post_new"),
-    path('<id>/dashboard/posts/<uid>/', studio.post, name="post_edit"),
-    path('<id>/dashboard/posts/<uid>/delete/', dashboard.post_delete, name='post_delete'),
+    path('<id>/dashboard/drops/new/', studio.post, name="post_new"),
+    path('<id>/dashboard/drops/<uid>/', studio.post, name="post_edit"),
+    path('<id>/dashboard/drops/<uid>/delete/', dashboard.post_delete, name='post_delete'),
     path('<id>/dashboard/preview/', studio.preview, name="post_preview"),
 
     path('<id>/dashboard/post-template/', studio.post_template, name="post_template"),
