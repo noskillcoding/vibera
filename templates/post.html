@@ -101,7 +101,7 @@
             </div>
         {% endif %}
 
-        <!-- Media Gallery for Posts -->
+        <!-- Media Gallery for Drops -->
         {% if post.media_urls %}
             <div class="media-gallery" style="margin: 20px 0; display: flex; flex-wrap: wrap; gap: 10px;">
                 {% for media_url in post.media_urls %}
@@ -138,7 +138,7 @@
     {% endif %}
 
     {% if not preview and not post.is_page %}
-        <!-- Tags, Tools, and GitHub Section for Posts -->
+        <!-- Tags, Tools, and GitHub Section for Drops -->
         <div style="margin: 30px 0; padding: 20px 0; border-top: 1px solid #eee;">
             <!-- Tags -->
             {% if post.tags|length > 0 %}
@@ -204,7 +204,7 @@
             {% include 'snippets/upvote_form.html' with post=post upvoted=upvoted %}
         {% endif %}
         
-        <!-- Comments Section for Posts (not Pages) -->
+        <!-- Comments Section for Drops (not Pages) -->
         {% if post.comments_enabled and not post.is_page %}
             {% include 'snippets/comments_section.html' with post=post %}
         {% endif %}

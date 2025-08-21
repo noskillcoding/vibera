@@ -49,7 +49,7 @@ class Blog(models.Model):
     domain = models.CharField(max_length=128, blank=True, null=True, db_index=True)
     auth_token = models.CharField(max_length=128, blank=True)
 
-    nav = models.TextField(default="[Home](/) [Blog](/blog/)", blank=True)
+    nav = models.TextField(default="[Home](/) [Feed](/feed/)", blank=True)
     content = models.TextField(default="Hello World!", blank=True)
     meta_description = models.CharField(max_length=200, blank=True)
     meta_image = models.CharField(max_length=200, blank=True)

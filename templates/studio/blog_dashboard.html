@@ -18,11 +18,11 @@
 </p>
 
 <p>
-    <a href="{% url 'nav' id=blog.subdomain %}">Nav</a> - Customize your site's navigation menu
+    <a href="{% url 'nav' id=blog.subdomain %}">Nav</a> - Customize your space's navigation menu
 </p>
 
 <p>
-    <a href="{% url 'posts_edit' id=blog.subdomain %}">Posts</a> - Create and manage your project showcases
+    <a href="{% url 'posts_edit' id=blog.subdomain %}">Drops</a> - Create and manage your stuff
 </p>
 
 <p>
@@ -30,7 +30,7 @@
 </p>
 
 <p>
-    <a href="{% url 'styles' id=blog.subdomain %}">Themes</a> - Customize your site's appearance and styling
+    <a href="{% url 'styles' id=blog.subdomain %}">Themes</a> - Customize your space's appearance and styling
 </p>
 
 <p>
@@ -38,7 +38,7 @@
 </p>
 
 <p>
-    <a href="{% url 'user_account_settings' %}">Account</a> - Manage your account, password, email, and subscription
+    <a href="{% url 'user_account_settings' %}">Account</a> - Manage your account, password, and email
 </p>
 
 {% if blog.analytics_active %}
@@ -48,7 +48,7 @@
 {% endif %}
 
 <p>
-    <a href="{% url 'settings' id=blog.subdomain %}">Settings</a> - Configure your site settings and subdomain
+    <a href="{% url 'settings' id=blog.subdomain %}">Settings</a> - Configure your space settings and subdomain
 </p>
 
 {{ request.user.settings.dashboard_footer | safe }}
