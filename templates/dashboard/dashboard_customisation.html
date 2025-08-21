@@ -356,17 +356,17 @@ input:focus, textarea:focus, select:focus {
             'dashboard': 'control panel'
         };
         
-        return \`<div style="margin-top: 40px; padding: 15px; background: #000060; border: 2px solid #00AAAA; font-family: 'Space Mono', monospace; font-size: 12px; color: #B7B7B7;">
-    <div>C:\\\\VIBERA> <span style="color: #00AAAA;">\${status[pageType] || 'system status'}</span></div>
+        return `<div style="margin-top: 40px; padding: 15px; background: #000060; border: 2px solid #00AAAA; font-family: 'Space Mono', monospace; font-size: 12px; color: #B7B7B7;">
+    <div>C:\\\\VIBERA> <span style="color: #00AAAA;">${status[pageType] || 'system status'}</span></div>
     <div style="margin: 8px 0;">
-        Memory: 640K OK | Active: \${pageType.toUpperCase()} | Storage: ∞ MB
+        Memory: 640K OK | Active: ${pageType.toUpperCase()} | Storage: ∞ MB
     </div>
     <div style="margin: 8px 0;">
         <span style="color: #00AAAA;">Quick Commands:</span>
-        \${commands[pageType] || commands['dashboard']}
+        ${commands[pageType] || commands['dashboard']}
     </div>
     <div>Ready for input_</div>
-</div>\`;
+</div>`;
     }
     
     function getClaudeFooter(pageType) {
@@ -393,20 +393,20 @@ input:focus, textarea:focus, select:focus {
         const currentTip = tips[pageType] || tips['dashboard'];
         const currentActions = actions[pageType] || actions['dashboard'];
         
-        return \`<div style="margin-top: 40px; padding: 20px; background: var(--claude-soft, #f8fafc); border: 2px solid #e2e8f0; border-radius: 12px; font-family: 'Inter', sans-serif;">
-    <h3 style="color: var(--claude-teal, #0891b2); font-size: 14px; margin: 0 0 12px 0;">\${currentTip.title}</h3>
+        return `<div style="margin-top: 40px; padding: 20px; background: var(--claude-soft, #f8fafc); border: 2px solid #e2e8f0; border-radius: 12px; font-family: 'Inter', sans-serif;">
+    <h3 style="color: var(--claude-teal, #0891b2); font-size: 14px; margin: 0 0 12px 0;">${currentTip.title}</h3>
     <div style="font-size: 13px; color: var(--claude-deep, #1e293b); line-height: 1.5;">
         <div style="margin-bottom: 8px;">
-            <strong>Tip:</strong> \${currentTip.tip}
+            <strong>Tip:</strong> ${currentTip.tip}
         </div>
         <div style="margin-bottom: 8px;">
-            <strong>Quick Actions:</strong> \${currentActions}
+            <strong>Quick Actions:</strong> ${currentActions}
         </div>
         <div style="font-size: 11px; color: var(--claude-subtle, #64748b); margin-top: 12px;">
-            \${pageType.charAt(0).toUpperCase() + pageType.slice(1)} section • <a href="/account/customise/" style="color: var(--claude-subtle, #64748b);">Customize Dashboard</a>
+            ${pageType.charAt(0).toUpperCase() + pageType.slice(1)} section • <a href="/account/customise/" style="color: var(--claude-subtle, #64748b);">Customize Dashboard</a>
         </div>
     </div>
-</div>\`;
+</div>`;
     }
     
     function getDarkClaudeFooter(pageType) {
@@ -430,21 +430,21 @@ input:focus, textarea:focus, select:focus {
         const currentChaos = chaos[pageType] || chaos['dashboard'];
         const randomError = errors[Math.floor(Math.random() * errors.length)];
         
-        return \`<div style="margin-top: 40px; padding: 20px; background: #0a0a0a; border: 3px solid #dc2626; box-shadow: 5px 5px 0px #16a34a; font-family: 'Courier Prime', monospace;">
+        return `<div style="margin-top: 40px; padding: 20px; background: #0a0a0a; border: 3px solid #dc2626; box-shadow: 5px 5px 0px #16a34a; font-family: 'Courier Prime', monospace;">
     <div style="color: #ff4500; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 12px; margin-bottom: 10px;">
         ⚠️ SYSTEM STATUS: HOSTILE MODE ACTIVE ⚠️
     </div>
     <div style="color: #facc15; font-size: 11px; line-height: 1.4;">
-        <div style="margin: 6px 0;">CHAOS LEVEL: <span style="color: #dc2626; font-weight: 700;">\${currentChaos.level}</span></div>
-        <div style="margin: 6px 0;">THREAT: <span style="color: #16a34a; font-weight: 700;">\${currentChaos.threat}</span></div>
+        <div style="margin: 6px 0;">CHAOS LEVEL: <span style="color: #dc2626; font-weight: 700;">${currentChaos.level}</span></div>
+        <div style="margin: 6px 0;">THREAT: <span style="color: #16a34a; font-weight: 700;">${currentChaos.threat}</span></div>
         <div style="margin: 6px 0;">
-            DESTRUCTIVE ACTIONS: \${currentChaos.actions}
+            DESTRUCTIVE ACTIONS: ${currentChaos.actions}
         </div>
     </div>
     <div style="color: #dc2626; font-size: 10px; margin-top: 12px; text-shadow: 1px 1px 0px #000000;">
-        ▓▓▓ \${randomError} ▓▓▓
+        ▓▓▓ ${randomError} ▓▓▓
     </div>
-</div>\`;
+</div>`;
     }
 
     const landingPresets = {
