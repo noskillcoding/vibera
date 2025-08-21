@@ -67,22 +67,6 @@
         </p>
         {% endif %}
         
-        <hr style="margin: 30px 0;">
-        
-        <h2>How Your Name Appears</h2>
-        <p style="color: #666; line-height: 1.5;">
-            When posting comments or reports, you can choose how your name appears:
-            <br><br>
-            {% if user_settings.nickname %}
-            • <strong>Use nickname:</strong> {{ user_settings.nickname }}<br>
-            {% endif %}
-            • <strong>Use email:</strong> {{ request.user.email }}<br>
-            • <strong>Anonymous:</strong> Anonymous (comments only)<br>
-            <br>
-            {% if not user_settings.nickname %}
-            <em>Set a nickname above to use it in comments and reports instead of your email.</em>
-            {% endif %}
-        </p>
     </form>
 </div>
 

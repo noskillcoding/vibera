@@ -26,10 +26,10 @@
     <li style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; padding:8px 0; border-bottom:1px solid #eee;">
         <a href="{% url 'dashboard' id=blog.subdomain %}" style="flex:1; min-width:150px;">{{ blog.title }}</a>
         <small style="white-space:nowrap;">
-            <a href="{% url 'dashboard' id=blog.subdomain %}posts/">Drops</a>
-            | <a href="{% url 'dashboard' id=blog.subdomain %}pages/">Pages</a>
-            | <a href="{% url 'dashboard' id=blog.subdomain %}analytics/">Analytics</a>
-            | <a href="{% url 'dashboard' id=blog.subdomain %}settings/">Settings</a>
+            <a href="{% url 'posts_edit' id=blog.subdomain %}">Drops</a>
+            | <a href="{% url 'pages_edit' id=blog.subdomain %}">Pages</a>
+            | <a href="{% url 'analytics' id=blog.subdomain %}">Analytics</a>
+            | <a href="{% url 'settings' id=blog.subdomain %}">Settings</a>
         </small>
     </li>
 {% endfor %}

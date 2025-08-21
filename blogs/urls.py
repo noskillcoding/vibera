@@ -44,43 +44,43 @@ urlpatterns = [
 
     # User dashboard
     path('accounts/delete/', dashboard.delete_user, name='user_delete'),
-    path('accounts/settings/', studio.user_account_settings, name='user_account_settings'),
+    path('account/', studio.user_account_settings, name='user_account_settings'),
     path('signup/', signup_flow.signup, name="signup_flow"),
 
     path('dashboard/', studio.list, name="account"),
     path('dashboard/upgrade/', dashboard.upgrade, name='upgrade'),
-    path('dashboard/customise/', studio.dashboard_customisation, name="dashboard_customisation"),
+    path('account/customise/', studio.dashboard_customisation, name="dashboard_customisation"),
 
     path('<id>/dashboard/', studio.blog_dashboard, name="dashboard"),
     path('<id>/home/', studio.studio, name="blog_home"),
     path('<id>/delete/', dashboard.blog_delete, name="blog_delete"),
-    path('<id>/dashboard/nav/', dashboard.nav, name='nav'),
-    path('<id>/dashboard/styles/', dashboard.styles, name='styles'),
-    path('<id>/dashboard/settings/', dashboard.settings, name='settings'),
-    path('<id>/dashboard/custom-domain/', studio.custom_domain_edit, name='custom_domain_edit'),
-    path('<id>/dashboard/settings/advanced/', studio.advanced_settings, name='advanced_settings'),
-    path('<id>/dashboard/directives/', studio.directive_edit, name="directive_edit"),
-    path('<id>/dashboard/email-list/', emailer.email_list, name='email_list'),
+    path('<id>/nav/', dashboard.nav, name='nav'),
+    path('<id>/themes/', dashboard.styles, name='styles'),
+    path('<id>/settings/', dashboard.settings, name='settings'),
+    path('<id>/settings/custom-domain/', studio.custom_domain_edit, name='custom_domain_edit'),
+    path('<id>/settings/advanced/', studio.advanced_settings, name='advanced_settings'),
+    path('<id>/settings/directives/', studio.directive_edit, name="directive_edit"),
+    path('<id>/email/', emailer.email_list, name='email_list'),
 
     # Media
-    path('<id>/dashboard/media/', media.media_center, name='media_center'),
-    path('<id>/dashboard/media/delete-selected/', media.delete_selected_media, name='delete_selected_media'),
-    path('<id>/dashboard/upload-image/', media.upload_image, name='upload_image'),
+    path('<id>/media/', media.media_center, name='media_center'),
+    path('<id>/media/delete-selected/', media.delete_selected_media, name='delete_selected_media'),
+    path('<id>/media/upload/', media.upload_image, name='upload_image'),
     path('media/<str:img>/', media.image_proxy, name="image-proxy"),
 
-    path('<id>/dashboard/analytics/', analytics.analytics, name='analytics'),
-    path('<id>/dashboard/analytics-upgraded/', analytics.analytics_upgraded, name="analytics_upgraded"),
+    path('<id>/analytics/', analytics.analytics, name='analytics'),
+    path('<id>/analytics/upgraded/', analytics.analytics_upgraded, name="analytics_upgraded"),
 
-    path('<id>/dashboard/opt-in-review/', dashboard.opt_in_review, name='opt_in_review'),
+    path('<id>/settings/opt-in-review/', dashboard.opt_in_review, name='opt_in_review'),
 
-    path('<id>/dashboard/drops/', dashboard.posts_edit, name='posts_edit'),
-    path('<id>/dashboard/pages/', dashboard.pages_edit, name='pages_edit'),
-    path('<id>/dashboard/drops/new/', studio.post, name="post_new"),
-    path('<id>/dashboard/drops/<uid>/', studio.post, name="post_edit"),
-    path('<id>/dashboard/drops/<uid>/delete/', dashboard.post_delete, name='post_delete'),
-    path('<id>/dashboard/preview/', studio.preview, name="post_preview"),
+    path('<id>/drops/', dashboard.posts_edit, name='posts_edit'),
+    path('<id>/pages/', dashboard.pages_edit, name='pages_edit'),
+    path('<id>/drops/new/', studio.post, name="post_new"),
+    path('<id>/drops/<uid>/', studio.post, name="post_edit"),
+    path('<id>/drops/<uid>/delete/', dashboard.post_delete, name='post_delete'),
+    path('<id>/drops/preview/', studio.preview, name="post_preview"),
 
-    path('<id>/dashboard/post-template/', studio.post_template, name="post_template"),
+    path('<id>/drops/template/', studio.post_template, name="post_template"),
 
     # Webhook
     path('lemon-webhook/', subscriptions.lemon_webhook, name='lemon_webhook'),

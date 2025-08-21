@@ -86,7 +86,7 @@
 		const previewForm = document.createElement('form')
 		previewForm.target = "print_popup"
 		previewForm.method = "POST"
-		previewForm.action = "/{{ blog.subdomain }}/dashboard/preview/?type={% if post %}post{% else %}homepage{% endif %}"
+		previewForm.action = "{% url 'post_preview' id=blog.subdomain %}?type={% if post %}post{% else %}homepage{% endif %}"
 
 		const headerContent = document.createElement("input");
 		headerContent.type = "hidden"
@@ -113,7 +113,7 @@
 
 	function deletePost() {
 		if (confirm('Are you sure?')) {
-			$form.action = '/{{ blog.subdomain }}/dashboard/posts/{{ post.uid }}/delete/';
+			$form.action = '{% url "post_delete" id=blog.subdomain uid=post.uid %}';
 			$form.submit()
 		}
 	}
@@ -485,7 +485,7 @@
 	$uploadButton.onclick = event => {
 	    event.preventDefault()
 		if (confirm("You've discovered a Pro feature ʕ•ᴥ•ʔﾉ♡\n\nUpgrade to unlock it and support the Tiny Internet!")) {
-	    	window.open('/dashboard/upgrade/')
+	    	window.open('{% url \"upgrade\" %}')
 		}
 	}
 
