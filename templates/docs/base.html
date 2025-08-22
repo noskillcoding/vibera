@@ -4,88 +4,172 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
     
-    <title>{% block title %}Vibera Docs{% endblock %}</title>
+    <title>{% block title %}∞ʕ◎ᴥ◎ʔ∞ Vibera docs{% endblock %}</title>
     
     <link rel="icon" href="/logo.png">
     <link rel="apple-touch-icon" href="/logo.png">
     
     <style>
-        {% include 'styles/blog/default.css' %}
-        {% include 'styles/dashboard.css' %}
-        
-        /* Docs-specific styling */
-        body {
-            max-width: 900px;
-        }
-        
-        .docs-nav {
-            background: #f8fafc;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-        
-        .docs-nav a {
-            display: inline-block;
-            margin: 0 15px 10px 0;
-            padding: 8px 12px;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            text-decoration: none;
-            color: #333;
-        }
-        
-        .docs-nav a:hover {
-            background: #f0f0f0;
-        }
-        
-        .docs-nav a.active {
-            background: #3273dc;
-            color: white;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            .docs-nav {
-                background: #2d3748;
-                border-color: #4a5568;
-            }
-            
-            .docs-nav a {
-                background: #4a5568;
-                border-color: #718096;
-                color: #e2e8f0;
-            }
-            
-            .docs-nav a:hover {
-                background: #718096;
-            }
-        }
+:root {
+    --width: 720px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color:  #8b6fcb;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #01242e;
+        --heading-color: #eee;
+        --text-color: #ddd;
+        --link-color: #8cc2dd;
+        --visited-color:  #8b6fcb;
+        --code-background-color: #000;
+        --code-color: #ddd;
+        --blockquote-color: #ccc;
+    }
+}
+
+body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+}
+
+a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline; 
+}
+
+nav a {
+    margin-right: 8px;
+}
+
+strong, b {
+    color: var(--heading-color);
+}
+
+button {
+    margin: 0;
+    cursor: pointer;
+}
+
+main {
+    line-height: 1.6;
+}
+
+table {
+    width: 100%;
+}
+
+hr {
+    border: 0;
+    border-top: 1px dashed;
+}
+
+img {
+    max-width: 100%;
+}
+
+code {
+    font-family: monospace;
+    padding: 2px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+}
+
+blockquote {
+    border-left: 1px solid #999;
+    color: var(--code-color);
+    padding-left: 20px;
+    font-style: italic;
+}
+
+table, th, td {
+  border: 1px dashed black;
+  border-collapse: collapse;
+  padding: 2px 4px;
+}
+
+time {
+  display: none;
+}
+
+footer {
+    padding: 25px 0;
+    text-align: center;
+}
+
+.title:hover {
+    text-decoration: none;
+}
+
+.title h1 {
+    font-size: 1.5em;
+}
+
+.inline {
+    width: auto !important;
+}
+
+.highlight, .code {
+    padding: 1px 15px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: scroll;
+}
     </style>
 </head>
 
-<body>
+<body class="home" onload="(function() { document.cookie = `timezone=${Intl.DateTimeFormat().resolvedOptions().timeZone};path=/`; })()">
     <header>
-        <h1><a href="/" style="text-decoration: none; color: inherit;">📚 Vibera Docs</a></h1>
-        
-        <div class="docs-nav">
-            <a href="/" {% if request.resolver_match.url_name == 'docs_home' %}class="active"{% endif %}>Documentation</a>
-            <a href="/privacy-policy/" {% if request.resolver_match.url_name == 'docs_privacy' %}class="active"{% endif %}>Privacy Policy</a>
-            <a href="/terms-of-service/" {% if request.resolver_match.url_name == 'docs_terms' %}class="active"{% endif %}>Terms of Service</a>
-            <a href="/roadmap/" {% if request.resolver_match.url_name == 'docs_roadmap' %}class="active"{% endif %}>Roadmap</a>
-        </div>
+        <a class="title" href="/">
+            <h1>
+                ∞ʕ◎ᴥ◎ʔ∞ Vibera docs
+            </h1>
+        </a>
+        <nav>
+            <p><a href='https://vibera.dev'>Home</a></p>
+        </nav>
     </header>
-    
     <main>
         {% block content %}
         {% endblock %}
     </main>
-    
-    <footer style="padding: 25px 0; border-top: 1px solid #eee; margin-top: 40px;">
-        <p style="text-align: center; color: #666; font-size: 14px;">
-            © 2024 Vibera • <a href="https://vibera.dev">Back to Main Site</a>
-        </p>
+    <footer style="padding:25px 0;">
+        <span>
+            Powered by <a href="https://vibera.dev">vibera ∞ʕ◎ᴥ◎ʔ∞</a>
+        </span>
     </footer>
 </body>
 </html>
