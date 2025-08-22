@@ -9,6 +9,28 @@
     display: inline-block;
 }
 
+.bear-sync {
+    position: relative;
+}
+
+.bear-sync::before {
+    content: "∞ʕ◎ᴥ◎ʔ∞";
+    animation: blink-slow 25s infinite;
+    color: var(--heading-color);
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.bear-sync {
+    color: transparent;
+}
+
+.header-bears:hover .bear-sync::before {
+    animation: none;
+    content: "∞ʕ◉ᴥ◉ʔ∞";
+}
+
 .flex::before {
     content: "∞ʕ◎ᴥ◎ʔ∞";
     animation: blink 10s infinite;
@@ -28,6 +50,11 @@
 @keyframes blink {
     0%, 96% { content: "∞ʕ◎ᴥ◎ʔ∞"; }
     97%, 100% { content: "∞ʕ-ᴥ-ʔ∞"; }
+}
+
+@keyframes blink-slow {
+    0%, 98% { content: "∞ʕ◎ᴥ◎ʔ∞"; }
+    98.1%, 100% { content: "∞ʕ-ᴥ-ʔ∞"; }
 }
 
 a.account:hover {
