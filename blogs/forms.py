@@ -40,9 +40,16 @@ class DashboardCustomisationForm(forms.ModelForm):
         help_text="Customize the appearance of your personal landing page with CSS."
     )
 
+    discover_styles = forms.CharField(
+        widget=forms.Textarea(),
+        label="Discovery feed styles",
+        required=False,
+        help_text="Customize the appearance of your discovery feed with CSS."
+    )
+
     class Meta:
         model = UserSettings
-        fields = ('dashboard_styles', 'dashboard_footer', 'landing_styles')
+        fields = ('dashboard_styles', 'dashboard_footer', 'landing_styles', 'discover_styles')
 
 
 class NavForm(forms.ModelForm):

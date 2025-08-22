@@ -2,6 +2,14 @@
 
 {% block title %}{% if newest %}Most recent{% else %}Trending{% endif %} | Bear Blog{% endblock %}
 
+{% block custom_styles %}
+    {% include 'styles/blog/default.css' %}
+    {% include 'styles/dashboard.css' %}
+    {% if user.is_authenticated and user.settings.discover_styles %}
+    {{ user.settings.discover_styles | safe }}
+    {% endif %}
+{% endblock %}
+
 {% block seo %}
 <meta name="robots" content="nofollow">
 {% include 'snippets/seo_tags.html' with site_name='ʕ•ᴥ•ʔ Bear Blog' type="website" title='Discovery feed' url='https://bearblog.dev/discover' description='Discover articles and blogs on Bear' image="https://bear-images.sfo2.cdn.digitaloceanspaces.com/herman-1683556668-0.png" %}
