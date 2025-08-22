@@ -1,0 +1,105 @@
+{% extends 'docs/base.html' %}
+
+{% block title %}Custom domains - vibera docs{% endblock %}
+
+{% block content %}
+<h1>Custom domains</h1>
+
+<p>
+    <i>
+        <time datetime="2025-08-22T00:00Z">
+            22 Aug, 2025
+        </time>
+    </i>
+</p>
+
+<p>Linking a custom domain to your space is done in 3 simple steps.</p>
+
+<h2 id="the-3-steps-to-linking-your-custom-domain">The 3 steps to linking your custom domain</h2>
+<ol>
+<li><a href='#add-a-domain-to-your-space'>Add a domain to your space</a></li>
+<li><a href='#create-the-dns-records'>Create the DNS records</a></li>
+<li><a href='#validate-your-domain'>Validate your domain</a></li>
+</ol>
+
+<h2 id="add-a-domain-to-your-space">Add a domain to your space</h2>
+<p>Custom domain setup can be found in your space's dashboard under <strong>Settings > Custom domain</strong>.</p>
+<p>Set your custom domain and select <strong>Save</strong>.</p>
+<p>This will give you DNS records to create at your domain registrar.</p>
+
+<h2 id="create-the-dns-records">Create the DNS records</h2>
+<p>Once you have a domain registered with a domain registrar, create the following DNS records in your DNS editor:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Type</th>
+  <th>Name</th>
+  <th>Content</th>
+  <th>TTL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>CNAME</td>
+  <td><strong>@</strong></td>
+  <td>domain-proxy.vibera.dev</td>
+  <td>3600</td>
+</tr>
+<tr>
+  <td>CNAME</td>
+  <td><strong>www</strong></td>
+  <td>domain-proxy.vibera.dev</td>
+  <td>3600</td>
+</tr>
+</tbody>
+</table>
+
+<p><em>If you want the space on a subdomain (eg: https://projects.example.com), substitute the <strong>@</strong> for <strong>projects</strong>.</em></p>
+<p><em>If you are using Cloudflare, ensure the proxy (the orange cloud) is either turned <strong>off</strong>, or your SSL/TLS mode is set to <strong>Full (Strict)</strong>.</em></p>
+
+<h2 id="problems-setting-a-root-cname">Problems setting a root CNAME</h2>
+<p>If you're having an issue setting a <strong>CNAME</strong> record for <strong>@</strong> (some DNS providers have this issue) you can instead set up the following <strong>A</strong> record:</p>
+
+<table>
+<thead>
+<tr>
+  <th>Type</th>
+  <th>Name</th>
+  <th>Content</th>
+  <th>TTL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>A</td>
+  <td><strong>@</strong></td>
+  <td>159.223.204.176</td>
+  <td>3600</td>
+</tr>
+<tr>
+  <td>A</td>
+  <td><strong>www</strong></td>
+  <td>159.223.204.176</td>
+  <td>3600</td>
+</tr>
+</tbody>
+</table>
+
+<p><em>It is preferable to use a <strong>CNAME</strong> record if your provider supports it, as it is dynamic and handles both IPv4 and IPv6 under the hood.</em></p>
+
+<h2 id="validate-your-domain">Validate your domain</h2>
+<p>Go to your custom domain. It should load your space. <em>If you receive an SSL error on your first load, reload the page. It is likely that your SSL certificate is being issued.</em></p>
+
+<p><strong>Note that DNS records can sometimes take a few minutes to propagate. You can check your DNS record propagation with <a href='https://dnschecker.org'>DNS Checker</a></strong></p>
+
+<p><em>If you are having serious problems setting up your DNS records, you can contact <a href='mailto:lowskillcoding@gmail.com'>lowskillcoding@gmail.com</a> with a screenshot of your records and a description of the problem. But better ask Claude, he understands things more than me.</em></p>
+
+<h2 id="vibera-specific-changes">vibera-specific changes</h2>
+<p><em>Changes from original Bear implementation:</em></p>
+<ul>
+<li>Domain proxy points to <code>domain-proxy.vibera.dev</code> instead of bearblog.dev</li>
+<li>Terminology updated for spaces instead of blogs</li>
+<li>Contact email updated to lowskillcoding@gmail.com</li>
+</ul>
+{% endblock %}

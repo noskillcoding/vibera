@@ -1,0 +1,76 @@
+{% extends 'docs/base.html' %}
+
+{% block title %}Email newsletters - vibera docs{% endblock %}
+
+{% block content %}
+<h1>Email newsletters</h1>
+
+<p>
+    <i>
+        <time datetime="2025-08-22T00:00Z">
+            22 Aug, 2025
+        </time>
+    </i>
+</p>
+
+<p>The email list tool allows spaces to create an email newsletter list. However, Vibera does not send emails when you post new drops on your space. <strong>You will need to send emails to your subscribers manually (outlined below).</strong></p>
+
+<h2 id="sending-emails">Sending emails</h2>
+
+<h3 id="for-more-than-150-subscribers">For more than 150 subscribers</h3>
+<p>If you have a larger number of subscribers and want to improve your newsletter, consider using email services like <a href='https://emailoctopus.com/?ali=00d97cb0-f3ad-11eb-96e5-06b4694bee2a'>EmailOctopus</a> or <a href='https://buttondown.email/refer/hfbmartinus'>Buttondown</a>. You can import your existing email list from vibera.</p>
+
+<p>It is recommended that if you're using an external email service that you add the service's subscribe form embed to the content or footer of your space as opposed to the vibera subscriber signup embed.</p>
+
+<h3 id="for-fewer-than-150-subscribers">For fewer than 150 subscribers</h3>
+<p>If you have fewer than 150 subscribers, you can send emails from your personal email address. Add all the subscribers to the <strong>BCC field</strong> in the email. Make sure to only use the <strong>BCC</strong> field and not <strong>CC</strong> or <strong>To</strong> fields.</p>
+
+<h2 id="add-subscriber-signup">Add subscriber signup</h2>
+<p>Include the following snippet in your drops, navbar, or home page:</p>
+
+<div class="highlight"><pre><span></span>Subscribe to my space via [<span class="nt">email</span>](<span class="na">/subscribe/</span>) or [<span class="nt">RSS feed</span>](<span class="na">/feed/atom/</span>).
+</pre></div>
+
+<p><strong>Subscribe to my space via <a href='/subscribe/'>email</a> or <a href='/feed/atom/'>RSS feed</a>.</strong></p>
+
+<p>Or include the actual form in your content:</p>
+
+<div class="highlight"><pre><span></span><span class="gu">#### Subscribe to my space</span>
+
+{{ email_signup }}
+</pre></div>
+
+<h4 id="subscribe-to-my-space">Subscribe to my space</h4>
+
+<p><form class="email-signup" action="/email-subscribe/" method="post">
+    <input type="text" name="name" autocomplete="off" autocorrect='off' style="display: none;">
+    <input type="text" name="confirm" autocomplete="off" autocorrect='off' style="display: none;">
+    <input type="email" placeholder="Email address..." name="email" required autocomplete="off" autocorrect='off' style="background-color: #eceff4; padding: 5px;">
+    <br>
+    <input type="submit" value="Subscribe">
+</form>
+<script>
+    const signupForm = document.querySelector('.email-signup')
+    const confirm = signupForm.querySelector('input[name="confirm"]')
+    setTimeout(() => {
+        confirm.value = "829389c2a9f0402";
+    }, 1000);
+    
+    signupForm.querySelector('input[name="email"]').addEventListener('input', () => {
+        if(!confirm.value.includes("b8a3600e52f2ad4e1")) {
+            confirm.value += "b8a3600e52f2ad4e1";
+        }
+    });
+
+    signupForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        fetch(signupForm.action, {
+            method: signupForm.method,
+            body:  new FormData(signupForm),
+        }).then((response) => response.text()).then(response => {
+            signupForm.innerHTML = `<i>${response}</i>`
+        });
+        signupForm.innerHTML = "<i>Submitting...</i>"
+    });
+</script></p>
+{% endblock %}

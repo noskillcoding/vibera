@@ -1,0 +1,38 @@
+{% extends 'docs/base.html' %}
+
+{% block title %}Analytics - vibera docs{% endblock %}
+
+{% block content %}
+<h1>Analytics</h1>
+
+<p>
+    <i>
+        <time datetime="2025-08-22T00:00Z">
+            22 Aug, 2025
+        </time>
+    </i>
+</p>
+
+<p>Analytics can be found on your dashboard. This shows all of the human views your drops and pages have received. Views are only counted if a viewer has hovered or scrolled on the drop. This weeds out bots and scrapers which generally don't perform either of these actions.</p>
+
+<h2 id="views-vs-unique-visitors">Views vs Unique visitors</h2>
+<p>Views refer to unique views (unique drop and viewer), whereas unique visitors is the number of people who have been on your space, regardless of how many drops they have viewed. Vibera analytics is slightly different from other tools in that we don't track more than one view per drop per viewer per day, since if someone reloads the page a bunch we wouldn't want this counting as multiple views.</p>
+
+<h2 id="analytics-features">Analytics features</h2>
+<p>All vibera spaces come with full analytics access, including:</p>
+<ul>
+<li>Viewers currently on site</li>
+<li>Filter by pages</li>
+<li>Filter by referrers</li>
+<li>Location of viewer</li>
+<li>Device of viewer</li>
+<li>OS of viewer</li>
+<li>Export all analytics information as a CSV</li>
+</ul>
+
+<h2 id="fathom-analytics">Fathom analytics</h2>
+<p>If you need even more in-depth analytics, such as minute-by-minute logs, time-on-site, bounce-rate, granular referrers, etc, then <a href='https://usefathom.com/ref/GMAGWL'>Fathom</a> analytics is a great, privacy-respecting analytics provider. Once you've signed up (get $10 off with the above link), simply add the site ID in the form in <strong>Analytics settings</strong> on the vibera analytics page and it should JustWork™.</p>
+
+<h2 id="a-note-about-google-analytics">A note about Google Analytics</h2>
+<p>Vibera does not (nor will ever) support Google Analytics. They have shown time-and-time-again that they cannot be trusted with user data and are the epitome of non-privacy friendly. Fathom does a pretty comprehensive <a href='https://usefathom.com/google-analytics-alternative'>writeup</a> about this.</p>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'docs/base.html' %}
+
+{% block title %}RSS & Atom feeds - vibera docs{% endblock %}
+
+{% block content %}
+<h1>RSS & Atom feeds</h1>
+
+<p>
+    <i>
+        <time datetime="2025-08-22T00:00Z">
+            22 Aug, 2025
+        </time>
+    </i>
+</p>
+
+<p>Each space has an RSS and Atom feed for use in RSS readers.</p>
+
+<p><strong>Note:</strong> The <code>/feed/</code> URL shows your drops list page in the browser. For actual RSS/Atom feeds, use the specific feed URLs below.</p>
+
+<h3 id="atom-feed">Atom feed</h3>
+<div class="highlight"><pre><span></span>https://&lt;your-space&gt;.vibera.dev/feed/atom/
+</pre></div>
+<p>Eg: <a href='https://vibera.vibera.dev/feed/atom/'>https://vibera.vibera.dev/feed/atom/</a></p>
+
+<h3 id="rss-feed">RSS feed</h3>
+<div class="highlight"><pre><span></span>https://&lt;your-space&gt;.vibera.dev/feed/rss/
+</pre></div>
+<p>Eg: <a href='https://vibera.vibera.dev/feed/rss/'>https://vibera.vibera.dev/feed/rss/</a></p>
+
+<h3 id="alternative-feed-urls">Alternative feed URLs</h3>
+<p>The following URLs also work for compatibility:</p>
+<div class="highlight"><pre><span></span>https://&lt;your-space&gt;.vibera.dev/atom/
+https://&lt;your-space&gt;.vibera.dev/rss/
+https://&lt;your-space&gt;.vibera.dev/feed.xml
+https://&lt;your-space&gt;.vibera.dev/atom.xml
+https://&lt;your-space&gt;.vibera.dev/rss.xml
+</pre></div>
+
+<h3 id="tag-specific-feeds">Tag specific feeds</h3>
+<p>Feeds filtered by a tag can be accessed with the query parameter <code>q</code></p>
+<div class="highlight"><pre><span></span>https://&lt;your-space&gt;.vibera.dev/feed/atom/?q=&lt;tag-name&gt;
+https://&lt;your-space&gt;.vibera.dev/feed/rss/?q=&lt;tag-name&gt;
+</pre></div>
+<p>Eg: <a href='http://vibera.vibera.dev/feed/atom/?q=web-development'>http://vibera.vibera.dev/feed/atom/?q=web-development</a></p>
+
+{% endblock %}

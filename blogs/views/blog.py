@@ -160,13 +160,19 @@ def docs_router(request, slug):
     if request.get_host() not in ['docs.lh.co', 'docs.vibera.dev']:
         return not_found(request)
     
-    from blogs.views.docs import privacy_policy, terms_of_service, roadmap, documentation
+    from blogs.views.docs import privacy_policy, terms_of_service, roadmap, documentation, changelog, custom_domains, rss_atom_feeds, analytics_docs, email_newsletters, anatomy_home_page
     
     # Route to appropriate docs view based on slug
     docs_routes = {
         'privacy-policy': privacy_policy,
         'terms-of-service': terms_of_service, 
         'roadmap': roadmap,
+        'changelog': changelog,
+        'docs/custom-domains': custom_domains,
+        'docs/rss-atom-feeds': rss_atom_feeds,
+        'docs/analytics': analytics_docs,
+        'docs/email-newsletters': email_newsletters,
+        'docs/anatomy-of-the-home-page': anatomy_home_page,
         '': documentation,  # Root docs path
     }
     

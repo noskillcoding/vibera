@@ -39,6 +39,42 @@ def roadmap(request):
 
 
 @docs_site_only
+def changelog(request):
+    """Changelog page"""
+    return render(request, 'docs/changelog.html')
+
+
+@docs_site_only
+def custom_domains(request):
+    """Custom domains page"""
+    return render(request, 'docs/custom_domains.html')
+
+
+@docs_site_only
+def rss_atom_feeds(request):
+    """RSS and Atom feeds page"""
+    return render(request, 'docs/rss_atom_feeds.html')
+
+
+@docs_site_only
+def analytics_docs(request):
+    """Analytics documentation page"""
+    return render(request, 'docs/analytics.html')
+
+
+@docs_site_only
+def email_newsletters(request):
+    """Email newsletters documentation page"""
+    return render(request, 'docs/email_newsletters.html')
+
+
+@docs_site_only
+def anatomy_home_page(request):
+    """Anatomy of the home page documentation"""
+    return render(request, 'docs/anatomy_home_page.html')
+
+
+@docs_site_only
 def home(request):
     """Docs homepage - redirects to main docs"""
     return documentation(request)
