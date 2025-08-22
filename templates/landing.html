@@ -25,6 +25,49 @@
     .title {
       display: inline-block;
     }
+    
+    /* Responsive drop showcase */
+    .drop-showcase {
+      display: flex;
+      gap: 12px;
+      margin: 32px 0;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    /* Ensure 4 cards fit on tablets and larger screens */
+    @media (max-width: 1024px) and (min-width: 769px) {
+      .drop-showcase {
+        gap: 10px;
+      }
+      .drop-card {
+        width: 170px !important;
+      }
+    }
+    
+    /* 2x2 grid on smaller tablets */
+    @media (max-width: 768px) and (min-width: 481px) {
+      .drop-showcase {
+        gap: 12px;
+        margin: 24px 0;
+      }
+      .drop-card {
+        width: 160px !important;
+      }
+    }
+    
+    /* Single column on mobile */
+    @media (max-width: 480px) {
+      .drop-showcase {
+        gap: 16px;
+        margin: 20px 0;
+        flex-direction: column;
+        align-items: center;
+      }
+      .drop-card {
+        width: 240px !important;
+      }
+    }
   </style>
 </head>
 
@@ -57,17 +100,61 @@
     {% endif %}
     <a href="/discover/">Discover</a>
 </nav>
-<ul>
-    <li>Looks great on <b>any</b> device</li>
-    <li>Tiny (~2.7kb), optimized, and awesome pages</li>
-    <li>No trackers, ads, or scripts</li>
-    <li>Seconds to sign up</li>
-    <li>Connect your custom domain</li>
-    <li>Free themes</li>
-    <li>RSS &amp; Atom feeds</li>
-    <li>Inspired by Bear <sup><a href="https://herman.bearblog.dev/manifesto/" target="_blank">*</a></sup></li>
-</ul>
-<p><a href="https://herman.bearblog.dev" target="_blank">View example blog</a></p>
+<!-- Drop Showcase -->
+<div class="drop-showcase">
+    {% for drop in showcase_drops %}
+    <div class="drop-card" style="width: 180px; {% if not drop %}opacity: 0.8;{% endif %}">
+        {% if drop %}
+        <!-- Real Drop -->
+        <a href="http://{{ drop.blog.subdomain }}.lh.co/{{ drop.slug }}" style="text-decoration: none; color: inherit; display: block;">
+            <div style="height: 140px; background: #f8f8f8; position: relative; overflow: hidden; margin-bottom: 8px;">
+                {% if drop.media_urls and drop.media_urls.0 %}
+                    {% with first_media=drop.media_urls.0 %}
+                        {% if first_media|slice:"-4:" == ".mp4" or first_media|slice:"-5:" == ".webm" or first_media|slice:"-4:" == ".mkv" %}
+                            <video style="width: 100%; height: 100%; object-fit: contain; background: white;" muted>
+                                <source src="{{ first_media }}" type="video/{% if first_media|slice:'-4:' == '.mp4' %}mp4{% elif first_media|slice:'-5:' == '.webm' %}webm{% else %}mp4{% endif %}">
+                                Your browser does not support the video tag.
+                            </video>
+                        {% else %}
+                            <img src="{{ first_media }}" alt="{{ drop.title }}" style="width: 100%; height: 100%; object-fit: contain; background: white;">
+                        {% endif %}
+                    {% endwith %}
+                {% else %}
+                    <div style="display: flex; align-items: center; justify-content: center; height: 100%; color: #ccc; font-size: 16px;">
+                        📦
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div>
+                <h4 style="margin: 0 0 4px 0; font-size: 15px; font-weight: 600; line-height: 1.3;">{{ drop.title|truncatechars:35 }}</h4>
+                
+                <p style="margin: 0 0 4px 0; font-size: 13px; color: #888;">
+                    by {{ drop.blog.subdomain }}
+                </p>
+                
+                {% if drop.short_description %}
+                <p style="margin: 0 0 4px 0; font-size: 13px; color: #666; line-height: 1.4;">{{ drop.short_description|truncatechars:70 }}</p>
+                {% endif %}
+                
+                <p style="margin: 0; font-size: 12px; color: #aaa;">{{ drop.published_date|timesince }} ago</p>
+            </div>
+        </a>
+        {% else %}
+        <!-- Placeholder -->
+        <div style="height: 140px; background: #f8f8f8; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 16px; margin-bottom: 8px;">
+            🚀
+        </div>
+        <div>
+            <h4 style="margin: 0 0 4px 0; font-size: 15px; font-weight: 600; color: #aaa; font-style: italic;">Coming Soon</h4>
+            <p style="margin: 0 0 4px 0; font-size: 13px; color: #bbb; font-style: italic;">by someone</p>
+            <p style="margin: 0 0 4px 0; font-size: 13px; color: #ccc; font-style: italic;">something</p>
+            <p style="margin: 0; font-size: 12px; color: #ccc; font-style: italic;">soon</p>
+        </div>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
 <h3>
    Show the world what you do when you don't do job
    <a class="bear flex" href="https://herman.bearblog.dev/praise-for-bear/" target="_blank" style="text-decoration: none; color: inherit;"></a>

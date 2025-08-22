@@ -8,9 +8,11 @@ from django.utils.text import slugify
 from blogs.models import Blog, Post, Upvote, Comment, DangerousReport
 from blogs.helpers import salt_and_hash, unmark
 from blogs.views.analytics import render_analytics
+from blogs.views.discover import get_base_query
 
 import os
 import tldextract
+import random
 
 def resolve_address(request):
     http_host = request.get_host()
@@ -68,7 +70,20 @@ def ping(request):
 def home(request):
     blog = resolve_address(request)
     if not blog:
-        return render(request, 'landing.html')
+        # Get trending drops for landing page showcase
+        trending_query = get_base_query(request.user)
+        trending_posts = list(trending_query.order_by("-score")[:20])  # Get top 20 for randomization
+        
+        # Randomly select up to 4 drops
+        showcase_drops = random.sample(trending_posts, min(4, len(trending_posts))) if trending_posts else []
+        
+        # Fill remaining slots with None to always have 4 slots
+        while len(showcase_drops) < 4:
+            showcase_drops.append(None)
+        
+        return render(request, 'landing.html', {
+            'showcase_drops': showcase_drops
+        })
 
     all_posts = blog.posts.filter(publish=True, published_date__lte=timezone.now(), is_page=False).order_by('-published_date')
 
