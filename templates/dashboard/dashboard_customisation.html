@@ -471,6 +471,16 @@ h1, h2, h3, h4 {
     margin-bottom: 1rem !important;
 }
 
+/* Fix bear styling for MS-DOS theme */
+.bear-sync::before {
+    color: #B7B7B7 !important;
+    background: transparent !important;
+}
+
+.header-bears:hover .bear-sync::before {
+    color: #B7B7B7 !important;
+}
+
 h1 {
     font-size: 1.5em !important;
 }
@@ -564,6 +574,16 @@ h1, h2, h3, h4 {
 h1 {
     color: var(--claude-teal) !important;
     font-size: 1.5rem !important;
+}
+
+/* Fix bear styling for Claude theme */
+.bear-sync::before {
+    color: var(--claude-teal) !important;
+    background: transparent !important;
+}
+
+.header-bears:hover .bear-sync::before {
+    color: var(--claude-blue) !important;
 }
 
 h2 {
@@ -692,6 +712,18 @@ h1 {
     color: var(--cyber-orange) !important;
     font-size: 1.5rem !important;
     text-shadow: 3px 3px 0px var(--blood-red) !important;
+}
+
+/* Fix bear styling for Dark Claude theme */
+.bear-sync::before {
+    color: var(--warning-yellow) !important;
+    background: transparent !important;
+    text-shadow: 1px 1px 0px var(--void-black) !important;
+}
+
+.header-bears:hover .bear-sync::before {
+    color: var(--glitch-pink) !important;
+    text-shadow: 0 0 10px var(--cyber-orange) !important;
 }
 
 h2 {
