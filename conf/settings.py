@@ -104,7 +104,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.request',
                 'blogs.context_processors.extra',
-                'blogs.context_processors.user_blog'
+                'blogs.context_processors.user_blog',
+                'blogs.context_processors.blog_space_variables'
             ],
         },
     },

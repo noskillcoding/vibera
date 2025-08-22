@@ -48,13 +48,15 @@ Hello, this is my solid space.
 
 <p>Space attributes can also be referenced in content by using the following parameters:</p>
 
-<div class="highlight"><pre><span></span>{% templatetag openvariable %} blog_title {% templatetag closevariable %}
-{% templatetag openvariable %} blog_description {% templatetag closevariable %} 
-{% templatetag openvariable %} blog_link {% templatetag closevariable %}
-{% templatetag openvariable %} blog_created_date {% templatetag closevariable %}
-{% templatetag openvariable %} blog_last_modified {% templatetag closevariable %} ago
-{% templatetag openvariable %} blog_last_posted {% templatetag closevariable %} ago
+<div class="highlight"><pre><span></span>{% templatetag openvariable %} space_title {% templatetag closevariable %}
+{% templatetag openvariable %} space_description {% templatetag closevariable %} 
+{% templatetag openvariable %} space_link {% templatetag closevariable %}
+{% templatetag openvariable %} space_created_date {% templatetag closevariable %}
+{% templatetag openvariable %} space_last_modified {% templatetag closevariable %} ago
+{% templatetag openvariable %} space_last_posted {% templatetag closevariable %} ago
 </pre></div>
+
+<p><em>Legacy variables (for backwards compatibility): {% templatetag openvariable %} blog_title {% templatetag closevariable %}, {% templatetag openvariable %} blog_description {% templatetag closevariable %}, {% templatetag openvariable %} blog_link {% templatetag closevariable %}, etc.</em></p>
 
 <p>A tag list with links to filters can be added to content using:</p>
 
@@ -65,4 +67,16 @@ Hello, this is my solid space.
 
 <div class="highlight"><pre><span></span>{% templatetag openvariable %} email-signup {% templatetag closevariable %}
 </pre></div>
+
+<h2 id="drop-specific-variables">Drop-specific variables</h2>
+<p>When on a drop page, additional drop-specific variables are available:</p>
+
+<div class="highlight"><pre><span></span>{% templatetag openvariable %} drop_title {% templatetag closevariable %}
+{% templatetag openvariable %} drop_description {% templatetag closevariable %}
+{% templatetag openvariable %} drop_link {% templatetag closevariable %}
+{% templatetag openvariable %} drop_published_date {% templatetag closevariable %}
+{% templatetag openvariable %} drop_last_modified {% templatetag closevariable %} ago
+</pre></div>
+
+<p><em>Legacy variables (for backwards compatibility): {% templatetag openvariable %} post_title {% templatetag closevariable %}, {% templatetag openvariable %} post_description {% templatetag closevariable %}, {% templatetag openvariable %} post_link {% templatetag closevariable %}, etc.</em></p>
 {% endblock %}

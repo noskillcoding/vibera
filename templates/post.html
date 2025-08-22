@@ -2,7 +2,7 @@
 {% load pygmentify_tags %}
 {% load custom_tags %}
 
-{% block page_type %}{% if post.is_page %}page{% else %}post{% endif %} {{ post.class_name }}{% endblock %}
+{% block page_type %}{% if post.is_page %}page{% else %}post drop{% endif %} {{ post.class_name }}{% endblock %}
 
 {% block lang %}{{ blog.lang }}{% endblock %}
 

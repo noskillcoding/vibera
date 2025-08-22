@@ -67,7 +67,13 @@
 
 <p>Using <code>description</code>, <code>image</code>, or <code>content</code> is only recommended for people who are comfortable with using CSS. The following CSS will do 90% of the work in styling the content, the rest is up to you:</p>
 
-<div class="highlight"><pre><span></span>ul.embedded.blog-posts li {
+<div class="highlight"><pre><span></span>ul.embedded.space-posts li {
+    display: flex;
+    flex-flow: row wrap;
+}
+
+/* Or using legacy class names: */
+ul.embedded.blog-posts li {
     display: flex;
     flex-flow: row wrap;
 }

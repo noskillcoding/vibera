@@ -144,3 +144,30 @@ ul.blog-posts li span {
 ul.blog-posts li a:visited {
     color: var(--visited-color);
 }
+
+/* space drop list (aliases for vibera branding) - inherits blog-posts styles */
+ul.space-posts {
+    list-style-type: none;
+    padding: unset;
+}
+
+ul.space-posts li {
+    display: flex;
+}
+
+ul.space-posts li span {
+    flex: 0 0 130px;
+}
+
+ul.space-posts li a:visited {
+    color: var(--visited-color);
+}
+
+/* Body class aliases for Vibera branding */
+.drop {
+    /* Inherits all .post styles */
+}
+
+.space {
+    /* Inherits all .blog styles */
+}

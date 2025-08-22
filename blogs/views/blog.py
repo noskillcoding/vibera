@@ -252,6 +252,10 @@ def post(request, slug):
             deleted=False
         ).order_by('-created_at').first()
 
+    # Calculate post relative dates
+    now = timezone.now()
+    post_last_modified_days = (now - post.last_modified).days if post.last_modified else None
+    
     context = {
         'blog': blog,
         'post': post,
@@ -262,6 +266,20 @@ def post(request, slug):
         'upvoted': upvoted,
         'user_has_reported': post.user_has_active_report(request.user),
         'user_latest_report': user_latest_report,
+        
+        # Legacy post_* variables (for Bear compatibility and docs)
+        'post_title': post.title,
+        'post_description': meta_description,
+        'post_link': full_path,
+        'post_published_date': post.published_date,
+        'post_last_modified': f"{post_last_modified_days} days" if post_last_modified_days is not None else "unknown",
+        
+        # New drop_* variables (for Vibera branding)
+        'drop_title': post.title,
+        'drop_description': meta_description,
+        'drop_link': full_path,
+        'drop_published_date': post.published_date,
+        'drop_last_modified': f"{post_last_modified_days} days" if post_last_modified_days is not None else "unknown",
     }
 
     response = render(request, 'post.html', context)
