@@ -1,0 +1,75 @@
+{% extends 'docs/base.html' %}
+
+{% block title %}Themes and styling - vibera docs{% endblock %}
+
+{% block content %}
+<h1>Themes and styling</h1>
+
+<p>
+    <i>
+        <time datetime="2025-08-22T00:00Z">
+            22 Aug, 2025
+        </time>
+    </i>
+</p>
+
+<p>Vibera has built-in style editor - so you can customize pretty much everything.</p>
+
+<h2 id="themes">Themes</h2>
+<p>There are a handful of pre-built themes to choose from in the dashboard under the Themes section. These can be used as-is, but also make a good jumping off point for creating custom styles.</p>
+
+<p>You can also choose any <a href='https://cssbed.com'>no-class css theme</a> as a starting point and include it in the <strong>Edit theme CSS</strong> field using <code>@import https://link-to-theme.css;</code> (custom fonts can be imported in the same way).</p>
+
+<h2 id="custom-styles">Custom styles</h2>
+<p>Vibera's themes can be customised using <a href='https://www.w3schools.com/Css/'>pure CSS</a> in the <strong>Edit theme CSS</strong> field. The structure of the theme CSS is set up to easily modify the basics such as font, colour, scale, etc (both for light mode and dark mode, as specified by the <code>@media (prefers-color-scheme: dark)</code> rule).</p>
+
+<h2 id="dashboard-customization">Dashboard customization</h2>
+<p>Vibera offers additional styling options for different parts of the platform:</p>
+<ul>
+<li><strong>Dashboard styles</strong> - Custom CSS for your personal dashboard</li>
+<li><strong>Dashboard footer</strong> - Custom content for dashboard footer</li>
+<li><strong>Landing page styles</strong> - Custom CSS for the main vibera landing page</li>
+<li><strong>Discovery feed styles</strong> - Custom CSS for the discovery feed</li>
+</ul>
+
+<p>These can be configured in <strong>Account > Customise dashboard</strong>.</p>
+
+<h2 id="vibera-classes">Vibera classes</h2>
+<p>Vibera has several classes which can be used as CSS selectors to customise specific pages or elements.</p>
+
+<h4 id="pages">Pages</h4>
+<ul>
+<li>The root of the <strong>homepage</strong>: <code>.home {}</code></li>
+<li>The root of <strong>any drop</strong>: <code>.post {}</code></li>
+<li>The root of <strong>any page</strong>: <code>.page {}</code>
+<ul>
+<li><em>If page and drop styles are the same, both can be selected using <code>.page .post {}</code></em></li>
+</ul>
+</li>
+<li>The root of the <strong>space list page</strong>: <code>.blog {}</code></li>
+<li>The root of the <strong>email subscription page</strong>: <code>.subscribe {}</code></li>
+<li>The root of the <strong>404 not found page</strong>: <code>.not-found {}</code></li>
+</ul>
+
+<h4 id="custom-class-names">Custom class names</h4>
+<p>Each drop has the header option <code>class_name</code> which adds a class to the root of the drop to allow custom styling for that particular page.</p>
+
+<p>Eg:</p>
+<div class="highlight"><pre><span></span>class_name: vibez
+</pre></div>
+
+<h4 id="elements">Elements</h4>
+<ul>
+<li>The anchor tag for the <strong>title of the space</strong>: <code>.title h1 {}</code></li>
+<li>The <strong>ul</strong> of the drops on the space: <code>.blog-posts {}</code></li>
+<li>The <strong>navigation header</strong>: <code>nav</code></li>
+<li>The <strong>codeblocks/highlights</strong>: <code>.highlight, .code {}</code></li>
+<li>The <strong>drop showcase cards</strong>: <code>.drop-card {}</code></li>
+<li>The <strong>drop showcase container</strong>: <code>.drop-showcase {}</code></li>
+</ul>
+
+<h2 id="notes">Notes</h2>
+<p>All parts of the front-end space are selectable and style-able using simple CSS selectors.</p>
+
+<p>The "Powered by vibera" footer can be customized or hidden if desired, as all vibera users have full customization access.</p>
+{% endblock %}

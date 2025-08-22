@@ -1,0 +1,69 @@
+{% extends 'docs/base.html' %}
+
+{% block title %}Navigation - vibera docs{% endblock %}
+
+{% block content %}
+<h1>Navigation</h1>
+
+<p>
+    <i>
+        <time datetime="2025-08-22T00:00Z">
+            22 Aug, 2025
+        </time>
+    </i>
+</p>
+
+<p>The navigation section uses standard <a href='/docs/markdown-notation/'>markdown</a> for handling links.</p>
+
+<p>The following is a set of 2 links, the first linking to the root <code>/</code> and the second linking to the feed:</p>
+
+<p><em>To have the drops list as your homepage, leave the content (everything below the <code>___</code>) of your homepage empty.</em></p>
+
+<div class="highlight"><pre><span></span>[Home](/) [Feed](/feed/)
+</pre></div>
+
+<p><a href='https://vibera.vibera.dev/'>Home</a> <a href='https://vibera.vibera.dev/feed/'>Feed</a></p>
+
+<hr />
+
+<p>To add a page as a link, set up the page in <strong>Drops</strong> and use the <code>link</code> as the link address:</p>
+
+<div class="highlight"><pre><span></span>[Home](/) [Projects](/projects/)
+</pre></div>
+
+<p><a href='https://vibera.vibera.dev/'>Home</a> <a href='https://vibera.vibera.dev/projects/'>Projects</a></p>
+
+<hr />
+
+<p>To link to your drops list page, you can use the space path:</p>
+
+<div class="highlight"><pre><span></span>[Home](/) [Space](/space/)
+</pre></div>
+
+<p><a href='https://vibera.vibera.dev/'>Home</a> <a href='https://vibera.vibera.dev/space/'>Space</a></p>
+
+<hr />
+
+<p>Adding external links works similarly:</p>
+
+<div class="highlight"><pre><span></span>[Home](/) [Example](https://example.com)
+</pre></div>
+
+<p><a href='https://vibera.vibera.dev/'>Home</a> <a href='https://example.com'>Example</a></p>
+
+<hr />
+
+<p>And finally, using custom vibera markdown syntax for adding external links:</p>
+
+<div class="highlight"><pre><span></span>[Home](/) [Example](tab:https://example.com)
+</pre></div>
+
+<p><a href='https://vibera.vibera.dev/'>Home</a> <a href='https://example.com' target='_blank'>Example</a></p>
+
+<hr />
+
+<p>For linking to content on the same page (internal linking) you can specify the <strong>id</strong> of a heading or subheading as a hash-value. Eg: <strong># Subsection 2</strong> will automatically have an id of <strong>subsection-2</strong>. This can be linked to like this:</p>
+
+<div class="highlight"><pre><span></span>[Subsection 2 link](#subsection-2)
+</pre></div>
+{% endblock %}

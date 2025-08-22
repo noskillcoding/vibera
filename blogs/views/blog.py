@@ -160,7 +160,7 @@ def docs_router(request, slug):
     if request.get_host() not in ['docs.lh.co', 'docs.vibera.dev']:
         return not_found(request)
     
-    from blogs.views.docs import privacy_policy, terms_of_service, roadmap, documentation, changelog, custom_domains, rss_atom_feeds, analytics_docs, email_newsletters, anatomy_home_page
+    from blogs.views.docs import privacy_policy, terms_of_service, roadmap, documentation, changelog, custom_domains, rss_atom_feeds, analytics_docs, email_newsletters, anatomy_home_page, navigation, styling, custom_project_lists, comments_and_community, media_uploads, github_integration, tags_and_tools, neat_vibera_features
     
     # Route to appropriate docs view based on slug
     docs_routes = {
@@ -173,6 +173,14 @@ def docs_router(request, slug):
         'docs/analytics': analytics_docs,
         'docs/email-newsletters': email_newsletters,
         'docs/anatomy-of-the-home-page': anatomy_home_page,
+        'docs/navigation': navigation,
+        'docs/styling': styling,
+        'docs/custom-project-lists': custom_project_lists,
+        'docs/comments-and-community': comments_and_community,
+        'docs/media-uploads': media_uploads,
+        'docs/github-integration': github_integration,
+        'docs/tags-and-tools': tags_and_tools,
+        'docs/neat-vibera-features': neat_vibera_features,
         '': documentation,  # Root docs path
     }
     

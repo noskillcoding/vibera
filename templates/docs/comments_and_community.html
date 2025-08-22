@@ -1,0 +1,53 @@
+{% extends 'docs/base.html' %}
+
+{% block title %}Comments and reports - vibera docs{% endblock %}
+
+{% block content %}
+<h1>Comments and reports</h1>
+
+<p>
+    <i>
+        <time datetime="2025-08-22T00:00Z">
+            22 Aug, 2025
+        </time>
+    </i>
+</p>
+
+<p>Vibera has built-in comments on all drops. Comments are enabled by default and let people give feedback on your projects.</p>
+
+<h2 id="how-comments-work">How comments work</h2>
+<p>Comments appear on drops (but not pages). Users must log in to vibera to comment.</p>
+
+<p>When commenting, users can show their name as:</p>
+<ul>
+<li><strong>Nickname</strong> - If set in account settings</li>
+<li><strong>Email address</strong> - Their vibera email</li>
+<li><strong>Anonymous</strong> - No name shown</li>
+</ul>
+
+<p>Users can delete their own comments anytime.</p>
+
+<h2 id="turning-comments-off">Turning comments off</h2>
+<p>Use the checkbox when editing a drop, or add this to your drop content:</p>
+<div class="highlight"><pre><span></span>title: My Project
+comments_enabled: false
+___
+Your drop content here...
+</pre></div>
+
+<h2 id="reports">Reports</h2>
+<p>Users can report drops that contain dangerous or inappropriate content. Reports help keep the platform safe.</p>
+
+<p>To report a drop:</p>
+<ul>
+<li>Users must be logged in</li>
+<li>Write a brief explanation (5-100 characters)</li>
+<li>Choose to show your nickname or email as reporter</li>
+<li>Each user can only have one active report per drop</li>
+</ul>
+
+<p>Reports appear at the bottom of drops in a collapsible section. Users can delete their own reports.</p>
+
+<h2 id="other-features">Other features</h2>
+<p>Vibera also has upvoting and a discovery feed for popular drops.</p>
+{% endblock %}

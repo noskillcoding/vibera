@@ -75,6 +75,54 @@ def anatomy_home_page(request):
 
 
 @docs_site_only
+def navigation(request):
+    """Navigation documentation page"""
+    return render(request, 'docs/navigation.html')
+
+
+@docs_site_only
+def styling(request):
+    """Themes and styling documentation page"""
+    return render(request, 'docs/styling.html')
+
+
+@docs_site_only
+def custom_project_lists(request):
+    """Custom drop lists documentation page"""
+    return render(request, 'docs/custom_project_lists.html')
+
+
+@docs_site_only
+def comments_and_community(request):
+    """Comments and community features documentation page"""
+    return render(request, 'docs/comments_and_community.html')
+
+
+@docs_site_only
+def media_uploads(request):
+    """Media uploads and galleries documentation page"""
+    return render(request, 'docs/media_uploads.html')
+
+
+@docs_site_only
+def github_integration(request):
+    """GitHub integration documentation page"""
+    return render(request, 'docs/github_integration.html')
+
+
+@docs_site_only
+def tags_and_tools(request):
+    """Tags and tools documentation page"""
+    return render(request, 'docs/tags_and_tools.html')
+
+
+@docs_site_only
+def neat_vibera_features(request):
+    """Vibera features documentation page"""
+    return render(request, 'docs/neat_vibera_features.html')
+
+
+@docs_site_only
 def home(request):
     """Docs homepage - redirects to main docs"""
     return documentation(request)

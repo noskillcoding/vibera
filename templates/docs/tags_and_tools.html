@@ -1,0 +1,51 @@
+{% extends 'docs/base.html' %}
+
+{% block title %}Tags and tools - vibera docs{% endblock %}
+
+{% block content %}
+<h1>Tags and tools</h1>
+
+<p>
+    <i>
+        <time datetime="2025-08-22T00:00Z">
+            22 Aug, 2025
+        </time>
+    </i>
+</p>
+
+<p>Vibera uses tags and tools to categorize and make your project drops discoverable. These help other developers find projects that use similar technologies or solve similar problems.</p>
+
+<h2 id="tags">Tags</h2>
+<p>Tags describe what your project is about or what category it fits into:</p>
+<ul>
+<li>Examples: "web-app", "machine-learning", "game", "mobile", "cli-tool"</li>
+<li>Help categorize your project's purpose or domain</li>
+<li>Used for filtering and discovery</li>
+</ul>
+
+<h2 id="tools">Tools</h2>
+<p>Tools specify the technologies, frameworks, and languages you used:</p>
+<ul>
+<li>Examples: "python", "react", "django", "tensorflow", "postgres", "claude-code", "gpt5", "cursor", "kling"</li>
+<li>Help other developers find projects using specific tech stacks</li>
+<li>Show your technical expertise</li>
+</ul>
+
+<h2 id="adding-tags-and-tools">Adding tags and tools</h2>
+<p>When creating or editing a drop:</p>
+<ul>
+<li>Use the dedicated tags and tools fields in the editor</li>
+<li>Get popular suggestions based on platform usage</li>
+<li>Or add via frontmatter in your drop content</li>
+</ul>
+
+<h2 id="frontmatter-example">Frontmatter example</h2>
+<div class="highlight"><pre><span></span>title: My Web App
+all_tags: ["web-app", "productivity", "saas"]
+all_tools: ["python", "django", "react", "postgres", "claude-code"]
+___
+Project description...
+</pre></div>
+
+<p>Choose tags and tools that accurately represent your project to help others discover and understand your work.</p>
+{% endblock %}

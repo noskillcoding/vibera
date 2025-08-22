@@ -1,0 +1,34 @@
+{% extends 'docs/base.html' %}
+
+{% block title %}GitHub integration - vibera docs{% endblock %}
+
+{% block content %}
+<h1>GitHub integration</h1>
+
+<p>
+    <i>
+        <time datetime="2025-08-22T00:00Z">
+            22 Aug, 2025
+        </time>
+    </i>
+</p>
+
+<p>Vibera includes built-in GitHub integration to link your project drops directly to their source code repositories.</p>
+
+<h2 id="adding-github-links">Adding GitHub links</h2>
+<p>When creating or editing a drop, you can add a GitHub repository URL:</p>
+<ul>
+<li>Use the dedicated GitHub URL field in the drop editor</li>
+<li>Or add it via frontmatter in your drop content</li>
+<li>Link appears prominently on your drop page</li>
+</ul>
+
+<h2 id="frontmatter-example">Frontmatter example</h2>
+<div class="highlight"><pre><span></span>title: My Awesome Project
+github_url: https://github.com/username/project-name
+___
+Project description goes here...
+</pre></div>
+
+<p>The GitHub URL field accepts any valid repository URL and displays it as a clickable link on your drop page, making it easy for other developers to explore your code.</p>
+{% endblock %}

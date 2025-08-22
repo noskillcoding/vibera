@@ -1,0 +1,71 @@
+{% extends 'docs/base.html' %}
+
+{% block title %}Vibera features - vibera docs{% endblock %}
+
+{% block content %}
+<h1>Vibera features</h1>
+
+<p>
+    <i>
+        <time datetime="2025-08-22T00:00Z">
+            22 Aug, 2025
+        </time>
+    </i>
+</p>
+
+<p>Here are some useful vibera features you might not know about.</p>
+
+<h2 id="dashboard-customization">Dashboard customization</h2>
+<p>You can customize your dashboard appearance in <strong>Account > Customise dashboard</strong>:</p>
+<ul>
+<li><strong>Dashboard styles</strong> - Custom CSS for your dashboard</li>
+<li><strong>Dashboard footer</strong> - Custom content for dashboard footer</li>
+<li><strong>Landing page styles</strong> - Custom CSS for the main vibera landing page</li>
+<li><strong>Discovery feed styles</strong> - Custom CSS for the discovery feed</li>
+</ul>
+
+<h2 id="embedded-drop-lists">Embedded drop lists</h2>
+<p>Add filtered drop lists to any content. This is covered in detail <a href='/docs/custom-project-lists/'>here</a>.</p>
+<div class="highlight"><pre><span></span>**Last 3 drops**
+{% templatetag openvariable %} posts|limit:3 {% templatetag closevariable %}
+</pre></div>
+
+<h2 id="edit-robotstxt">Edit robots.txt</h2>
+<p>You can edit your robots.txt file in <strong>Settings > Advanced settings</strong>. For example, block AI crawlers:</p>
+<div class="highlight"><pre><span></span>User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+</pre></div>
+
+<h2 id="media-uploads">Media uploads</h2>
+<p>Upload images, videos, and other files directly to your drops:</p>
+<ul>
+<li>Up to 15 files per drop</li>
+<li>10MB per file limit</li>
+<li>Visual thumbnails with click-to-insert</li>
+<li>Support for images, videos, audio, documents, and fonts</li>
+</ul>
+
+<h2 id="github-integration">GitHub integration</h2>
+<p>Link your drops to their source code repositories using the GitHub URL field or frontmatter:</p>
+<div class="highlight"><pre><span></span>github_url: https://github.com/username/project-name
+</pre></div>
+
+<h2 id="tags-and-tools">Tags and tools</h2>
+<p>Categorize your projects with tags and specify technologies used:</p>
+<ul>
+<li>Popular suggestions based on platform usage</li>
+<li>Used for filtering and discovery</li>
+<li>Help other developers find relevant projects</li>
+</ul>
+
+<h2 id="comments-and-reports">Comments and reports</h2>
+<p>Built-in native comments and content reporting:</p>
+<ul>
+<li>Users can comment with nickname, email, or anonymously</li>
+<li>Report dangerous or inappropriate content</li>
+<li>Self-moderation with user deletion options</li>
+</ul>
+{% endblock %}

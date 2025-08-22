@@ -1,0 +1,89 @@
+{% extends 'docs/base.html' %}
+
+{% block title %}Custom drop lists - vibera docs{% endblock %}
+
+{% block content %}
+<h1>Custom drop lists</h1>
+
+<p>
+    <i>
+        <time datetime="2025-08-22T00:00Z">
+            22 Aug, 2025
+        </time>
+    </i>
+</p>
+
+<p>The drop embed allows you to inject a list of drops into your content dynamically. This can be done in any content on your space including drops, the homepage, and footer. This feature supports various filters and settings that you can apply to customize the output.</p>
+
+<h2 id="syntax">Syntax</h2>
+<p>The base syntax for embedding drops is as follows:</p>
+<div class="highlight"><pre><span></span>{% templatetag openvariable %} posts {% templatetag closevariable %}
+</pre></div>
+
+<h2 id="optional-filters-and-parameters">Optional Filters and Parameters</h2>
+<p>Additional filters and parameters can be appended to the base syntax following a separator <code>|</code>.</p>
+
+<h3 id="1-tag-filters-drops-by-specific-tags">1. <code>tag</code>: Filters drops by specific tags.</h3>
+<div class="highlight"><pre><span></span>## Drops with tag "ai"
+{% templatetag openvariable %} posts|tag:ai {% templatetag closevariable %}
+
+## Drops with tag "ai" and "machine-learning"
+{% templatetag openvariable %} posts|tag:ai,machine-learning {% templatetag closevariable %}
+</pre></div>
+
+<h3 id="2-limit-limits-the-number-of-drops-to-display">2. <code>limit</code>: Limits the number of drops to display.</h3>
+<div class="highlight"><pre><span></span>## Check out my last 5 drops
+{% templatetag openvariable %} posts|limit:5 {% templatetag closevariable %}
+</pre></div>
+
+<h3 id="3-order-orders-drops-by-publication-date">3. <code>order</code>: Orders the drops by publication date. Drops are descending by default.</h3>
+<div class="highlight"><pre><span></span>## Ordered ascending
+{% templatetag openvariable %} posts|order:asc {% templatetag closevariable %}
+
+## Or descending 
+{% templatetag openvariable %} posts|order:desc {% templatetag closevariable %}
+</pre></div>
+
+<h3 id="4-description-controls-the-visibility-of-meta-description">4. <code>description</code>: Controls the visibility of the <code>meta_description</code> of the drop.</h3>
+<div class="highlight"><pre><span></span>## Show excerpt
+{% templatetag openvariable %} posts|description:True {% templatetag closevariable %}
+</pre></div>
+
+<p><em>Note: Additional CSS work will be required to format the drop list with descriptions correctly. The embedded drops have a classname of <code>embed</code>.</em></p>
+
+<h3 id="5-content-controls-the-visibility-of-full-content">5. <code>content</code>: Controls the visibility of the full content of the drop.</h3>
+<div class="highlight"><pre><span></span>## Show full drop content
+{% templatetag openvariable %} posts|limit:3|content:True {% templatetag closevariable %}
+</pre></div>
+
+<p><em>Note: Content can only be active on pages and the homepage (not drops). Additional CSS work will be required to format the drop list with content correctly. The embedded drops have a classname of <code>embed</code>.</em></p>
+
+<h3 id="6-image-controls-the-visibility-of-meta-image">6. <code>image</code>: Controls the visibility of the <code>meta_image</code> of the drop.</h3>
+<div class="highlight"><pre><span></span>## Show image
+{% templatetag openvariable %} posts|limit:3|image:True {% templatetag closevariable %}
+</pre></div>
+
+<p><em>Note: Additional CSS work will be required to format the drop list with images correctly. The embedded drops have a classname of <code>embed</code>.</em></p>
+
+<p>Using <code>description</code>, <code>image</code>, or <code>content</code> is only recommended for people who are comfortable with using CSS. The following CSS will do 90% of the work in styling the content, the rest is up to you:</p>
+
+<div class="highlight"><pre><span></span>ul.embedded.blog-posts li {
+    display: flex;
+    flex-flow: row wrap;
+}
+</pre></div>
+
+<p><strong>Patterns can be combined in any order:</strong></p>
+<div class="highlight"><pre><span></span>{% templatetag openvariable %} posts|tag:"ai"|limit:5|order:asc|description:True {% templatetag closevariable %}
+</pre></div>
+
+<p><strong>Spaces are optional around the filter delimiters. The following examples are equivalent:</strong></p>
+<div class="highlight"><pre><span></span>{% templatetag openvariable %} posts|limit:5 {% templatetag closevariable %}
+{% templatetag openvariable %} posts | limit:5 {% templatetag closevariable %}
+</pre></div>
+
+<h2 id="heres-an-example">Here's an example:</h2>
+<div class="highlight"><pre><span></span>### Most recent drops
+{% templatetag openvariable %} posts|limit:5 {% templatetag closevariable %}
+</pre></div>
+{% endblock %}
