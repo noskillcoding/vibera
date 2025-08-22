@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5">
+    
+    <title>{% block title %}Vibera Docs{% endblock %}</title>
+    
+    <link rel="icon" href="/logo.png">
+    <link rel="apple-touch-icon" href="/logo.png">
+    
+    <style>
+        {% include 'styles/blog/default.css' %}
+        {% include 'styles/dashboard.css' %}
+        
+        /* Docs-specific styling */
+        body {
+            max-width: 900px;
+        }
+        
+        .docs-nav {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .docs-nav a {
+            display: inline-block;
+            margin: 0 15px 10px 0;
+            padding: 8px 12px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #333;
+        }
+        
+        .docs-nav a:hover {
+            background: #f0f0f0;
+        }
+        
+        .docs-nav a.active {
+            background: #3273dc;
+            color: white;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+            .docs-nav {
+                background: #2d3748;
+                border-color: #4a5568;
+            }
+            
+            .docs-nav a {
+                background: #4a5568;
+                border-color: #718096;
+                color: #e2e8f0;
+            }
+            
+            .docs-nav a:hover {
+                background: #718096;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1><a href="/" style="text-decoration: none; color: inherit;">📚 Vibera Docs</a></h1>
+        
+        <div class="docs-nav">
+            <a href="/" {% if request.resolver_match.url_name == 'docs_home' %}class="active"{% endif %}>Documentation</a>
+            <a href="/privacy-policy/" {% if request.resolver_match.url_name == 'docs_privacy' %}class="active"{% endif %}>Privacy Policy</a>
+            <a href="/terms-of-service/" {% if request.resolver_match.url_name == 'docs_terms' %}class="active"{% endif %}>Terms of Service</a>
+            <a href="/roadmap/" {% if request.resolver_match.url_name == 'docs_roadmap' %}class="active"{% endif %}>Roadmap</a>
+        </div>
+    </header>
+    
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    
+    <footer style="padding: 25px 0; border-top: 1px solid #eee; margin-top: 40px;">
+        <p style="text-align: center; color: #666; font-size: 14px;">
+            © 2024 Vibera • <a href="https://vibera.dev">Back to Main Site</a>
+        </p>
+    </footer>
+</body>
+</html>

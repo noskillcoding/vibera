@@ -1,0 +1,44 @@
+from django.shortcuts import render
+from django.http import Http404
+import os
+
+
+def docs_site_only(view_func):
+    """Decorator to ensure only docs subdomain can access docs views"""
+    def _wrapped_view(request, *args, **kwargs):
+        host = request.get_host()
+        # Allow docs.lh.co for local development and docs.vibera.dev for production
+        if host not in ['docs.lh.co', 'docs.vibera.dev']:
+            raise Http404("Docs only available on docs subdomain")
+        return view_func(request, *args, **kwargs)
+    return _wrapped_view
+
+
+@docs_site_only
+def privacy_policy(request):
+    """Privacy Policy page"""
+    return render(request, 'docs/privacy_policy.html')
+
+
+@docs_site_only
+def terms_of_service(request):
+    """Terms of Service page"""
+    return render(request, 'docs/terms_of_service.html')
+
+
+@docs_site_only
+def documentation(request):
+    """Main documentation page"""
+    return render(request, 'docs/documentation.html')
+
+
+@docs_site_only
+def roadmap(request):
+    """Roadmap page"""
+    return render(request, 'docs/roadmap.html')
+
+
+@docs_site_only
+def home(request):
+    """Docs homepage - redirects to main docs"""
+    return documentation(request)

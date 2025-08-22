@@ -68,6 +68,11 @@ def ping(request):
 
 
 def home(request):
+    # Handle docs subdomain
+    if request.get_host() in ['docs.lh.co', 'docs.vibera.dev']:
+        from blogs.views.docs import home as docs_home
+        return docs_home(request)
+    
     blog = resolve_address(request)
     if not blog:
         # Get trending drops for landing page showcase
@@ -150,8 +155,36 @@ def posts(request, blog):
     )
 
 
+def docs_router(request, slug):
+    """Route docs subdomain requests to appropriate docs views"""
+    if request.get_host() not in ['docs.lh.co', 'docs.vibera.dev']:
+        return not_found(request)
+    
+    from blogs.views.docs import privacy_policy, terms_of_service, roadmap, documentation
+    
+    # Route to appropriate docs view based on slug
+    docs_routes = {
+        'privacy-policy': privacy_policy,
+        'terms-of-service': terms_of_service, 
+        'roadmap': roadmap,
+        '': documentation,  # Root docs path
+    }
+    
+    # Clean up slug
+    clean_slug = slug.strip('/')
+    
+    if clean_slug in docs_routes:
+        return docs_routes[clean_slug](request)
+    
+    return not_found(request)
+
+
 @csrf_exempt
 def post(request, slug):
+    # Handle docs subdomain first
+    if request.get_host() in ['docs.lh.co', 'docs.vibera.dev']:
+        return docs_router(request, slug)
+    
     # Prevent null characters in path
     slug = slug.replace('\x00', '')
 

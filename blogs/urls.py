@@ -1,6 +1,6 @@
 from django.urls import path
 
-from blogs.views import blog, dashboard, studio, feed, discover, analytics, emailer, staff, signup_flow, media
+from blogs.views import blog, dashboard, studio, feed, discover, analytics, emailer, staff, signup_flow, media, docs
 from blogs import subscriptions
 from conf import logger
 
