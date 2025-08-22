@@ -16,6 +16,15 @@
     {% if user.is_authenticated and user.settings.landing_styles %}
     {{ user.settings.landing_styles | safe }}
     {% endif %}
+    
+    /* Center header at top of page */
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .title {
+      display: inline-block;
+    }
   </style>
 </head>
 
@@ -29,7 +38,7 @@
   <header>
     <a class="title" href="/">
       <h1>
-        <span class="bear">∞ʕ◎ᴥ◎ʔ∞</span> Vibera
+        <span class="bear">∞ʕ◎ᴥ◎ʔ∞</span> vibera <span class="bear">∞ʕ◎ᴥ◎ʔ∞</span>
       </h1>
     </a>
     <nav>

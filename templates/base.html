@@ -24,6 +24,15 @@
         {% include 'styles/dashboard.css' %}
       {% endblock %}
       {% endautoescape %}
+      
+      /* Center header at top of page */
+      header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .title {
+        display: inline-block;
+      }
   </style>
 
   {% block analytics %}{% endblock %}
@@ -39,7 +48,7 @@
     <a class="title" href="{% block heading-link %}/{% endblock %}">
       <h1>
         {% block heading %}
-        <span class="bear">∞ʕ◎ᴥ◎ʔ∞</span> Vibera
+        <span class="bear">∞ʕ◎ᴥ◎ʔ∞</span> vibera <span class="bear">∞ʕ◎ᴥ◎ʔ∞</span>
         {% endblock %}
       </h1>
     </a>
