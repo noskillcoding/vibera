@@ -24,7 +24,7 @@ def analytics(request, id):
     # Handle docs subdomain requests
     if request.get_host() in ['docs.lh.co', 'docs.vibera.dev'] and id == 'docs':
         from blogs.views.blog import docs_router
-        return docs_router(request, 'docs/analytics')
+        return docs_router(request, 'analytics')
     
     return analytics_authenticated(request, id)
 

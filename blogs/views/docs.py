@@ -123,6 +123,12 @@ def neat_vibera_features(request):
 
 
 @docs_site_only
+def markdown_cheatsheet(request):
+    """Markdown cheatsheet documentation page"""
+    return render(request, 'docs/markdown_cheatsheet.html')
+
+
+@docs_site_only
 def home(request):
     """Docs homepage - redirects to main docs"""
     return documentation(request)

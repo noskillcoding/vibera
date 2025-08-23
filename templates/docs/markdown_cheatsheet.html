@@ -1,0 +1,275 @@
+{% extends 'docs/base.html' %}
+
+{% block title %}Markdown cheatsheet - vibera docs{% endblock %}
+
+{% block content %}
+<h1>Markdown cheatsheet</h1>
+
+<p>
+    <i>
+        <time datetime="2025-01-09T00:00Z">
+            09 Jan, 2025
+        </time>
+    </i>
+</p>
+
+<p>Vibera uses Markdown for formatting drop content. Here's a comprehensive guide to help you create beautiful project showcases.</p>
+
+<h2 id="emphasis">Emphasis</h2>
+<div class="highlight"><pre><span></span>**bold** *italics* ~~strikethrough~~ ==mark==
+</pre></div>
+<p><strong>bold</strong> <em>italics</em> <del>strikethrough</del> <mark>mark</mark></p>
+
+<hr />
+
+<h2 id="headers">Headers</h2>
+<div class="highlight"><pre><span></span># Big header
+## Medium header
+### Small header
+#### Tiny header
+</pre></div>
+
+<h1 id="big-header">Big header</h1>
+<h2 id="medium-header">Medium header</h2>
+<h3 id="small-header">Small header</h3>
+<h4 id="tiny-header">Tiny header</h4>
+
+<hr />
+
+<h2 id="lists">Lists</h2>
+<div class="highlight"><pre><span></span>* Generic list item
+* Generic list item
+* Generic list item
+
+1. Numbered list item
+2. Numbered list item
+3. Numbered list item
+</pre></div>
+
+<ul>
+<li>Generic list item</li>
+<li>Generic list item</li>
+<li>Generic list item</li>
+</ul>
+
+<ol>
+<li>Numbered list item</li>
+<li>Numbered list item</li>
+<li>Numbered list item</li>
+</ol>
+
+<hr />
+
+<h2 id="links">Links</h2>
+<div class="highlight"><pre><span></span>&lt;http://www.example.com&gt;
+
+[Open in same tab](http://www.example.com)
+
+[Open in new tab](tab:http://www.example.com)
+
+[Internal link](#headers)
+</pre></div>
+
+<p><a href="http://www.example.com">http://www.example.com</a></p>
+<p><a href="http://www.example.com">Open in same tab</a></p>
+<p><a href="http://www.example.com" target="_blank">Open in new tab</a></p>
+<p><a href="#headers">Internal link</a></p>
+
+<hr />
+
+<h2 id="typographic-replacements">Typographic replacements</h2>
+<div class="highlight"><pre><span></span>vibera(r)(c) is a Good Platform(tm) that took +-3 years to perfect.
+</pre></div>
+<p>vibera®© is a Good Platform™ that took ±3 years to perfect.</p>
+
+<div class="highlight"><pre><span></span>I drink H~2~O at the 6^th^ and 12^th^ hours of the day.
+</pre></div>
+<p>I drink H<sub>2</sub>O at the 6<sup>th</sup> and 12<sup>th</sup> hours of the day.</p>
+
+<hr />
+
+<h2 id="linebreaks">Linebreaks</h2>
+<p>Adding a single line break will not be rendered as a line break.</p>
+
+<div class="highlight"><pre><span></span>Here's some text.
+Here's some more text.
+</pre></div>
+
+<p>Here's some text.
+Here's some more text.</p>
+
+<p>To add a single line break use a <code>\</code> or two spaces at the end of the line.</p>
+
+<div class="highlight"><pre><span></span>Here's some text.\
+Here's some more text.
+</pre></div>
+
+<p>Here's some text.<br />
+Here's some more text.</p>
+
+<p>Adding 2 line breaks starts a new paragraph.</p>
+
+<div class="highlight"><pre><span></span>Here is one paragraph with lengthy text.
+
+Here is another.
+</pre></div>
+
+<p>Here is one paragraph with lengthy text.</p>
+<p>Here is another.</p>
+
+<hr />
+
+<h2 id="footnotes">Footnotes</h2>
+<div class="highlight"><pre><span></span>Here is a simple footnote,[^1] and here is a longer one.[^named-note]
+
+Then at the bottom of your drop...
+
+[^1]: This is the first footnote.
+
+[^named-note]: Here is another one.
+</pre></div>
+
+<p>Here's a simple footnote,<sup>1</sup> and here's a longer one.<sup>2</sup></p>
+
+<hr />
+
+<h2 id="quotes">Quotes</h2>
+<div class="highlight"><pre><span></span>&gt; This is a quote.
+&gt; It can span multiple lines!
+</pre></div>
+
+<blockquote>
+<p>This is a quote.</p>
+<p>It can span multiple lines!</p>
+</blockquote>
+
+<hr />
+
+<h2 id="images">Images</h2>
+<p><strong>Note:</strong> vibera has built-in media upload functionality. You can upload images directly through the drop creation form, or use external image hosting.</p>
+
+<div class="highlight"><pre><span></span>![Project screenshot](https://example.com/image.jpg)
+</pre></div>
+
+<hr />
+
+<h2 id="tables">Tables</h2>
+<div class="highlight"><pre><span></span>| Feature | Status | Notes |
+| ------- | ------ | ----- |
+| Authentication | ✅ Complete | OAuth integration |
+| Database | 🚧 In Progress | Migration pending |
+| Frontend | ❌ Planned | React components |
+
+Or without aligning the columns...
+
+| Feature | Status | Notes |
+| ------- | ------ | ----- |
+| Authentication | Complete | OAuth integration |
+| Database | In Progress | Migration pending |
+</pre></div>
+
+<table>
+<thead>
+<tr>
+  <th>Feature</th>
+  <th>Status</th>
+  <th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Authentication</td>
+  <td>✅ Complete</td>
+  <td>OAuth integration</td>
+</tr>
+<tr>
+  <td>Database</td>
+  <td>🚧 In Progress</td>
+  <td>Migration pending</td>
+</tr>
+<tr>
+  <td>Frontend</td>
+  <td>❌ Planned</td>
+  <td>React components</td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
+<h2 id="displaying-code">Displaying code</h2>
+<div class="highlight"><pre><span></span>`const project = "awesome";`
+
+Or spanning multiple lines...
+
+```javascript
+const project = {
+  name: "My Awesome Project",
+  status: "completed",
+  technologies: ["React", "Node.js", "PostgreSQL"]
+};
+
+console.log(project);
+```
+</pre></div>
+
+<p><code>const project = "awesome";</code></p>
+
+<div class="highlight"><pre><span></span><span class="kd">const</span> <span class="nx">project</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">name</span><span class="o">:</span> <span class="s2">"My Awesome Project"</span><span class="p">,</span>
+  <span class="nx">status</span><span class="o">:</span> <span class="s2">"completed"</span><span class="p">,</span>
+  <span class="nx">technologies</span><span class="o">:</span> <span class="p">[</span><span class="s2">"React"</span><span class="p">,</span> <span class="s2">"Node.js"</span><span class="p">,</span> <span class="s2">"PostgreSQL"</span><span class="p">]</span>
+<span class="p">};</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">project</span><span class="p">);</span>
+</pre></div>
+
+<p><em>For language-specific syntax highlighting, specify the language at the beginning of the code block (javascript, python, html, css, etc.).</em></p>
+
+<hr />
+
+<h2 id="project-showcase-tips">Project showcase tips</h2>
+
+<h3 id="structure-your-drops">Structure your drops</h3>
+<p>A well-structured project drop typically includes:</p>
+<ul>
+<li><strong>Overview:</strong> Brief description of what the project does</li>
+<li><strong>Features:</strong> Key functionality and capabilities</li>
+<li><strong>Tech stack:</strong> Tools and technologies used</li>
+<li><strong>Installation/Usage:</strong> How to run or use the project</li>
+<li><strong>Screenshots/Demo:</strong> Visual representation of the project</li>
+<li><strong>Challenges:</strong> What you learned or overcame</li>
+</ul>
+
+<h3 id="use-headers-effectively">Use headers effectively</h3>
+<div class="highlight"><pre><span></span>## 🚀 Overview
+Brief description of your project...
+
+## ✨ Features
+- Feature 1
+- Feature 2
+- Feature 3
+
+## 🛠️ Tech Stack
+- Frontend: React, TypeScript
+- Backend: Node.js, Express
+- Database: PostgreSQL
+
+## 📱 Demo
+![App Screenshot](screenshot.png)
+</pre></div>
+
+<h3 id="highlight-code-snippets">Highlight code snippets</h3>
+<p>Show key parts of your implementation:</p>
+
+<div class="highlight"><pre><span></span>```python
+def main():
+    """Entry point for the application"""
+    app = create_app()
+    app.run(debug=True, port=5000)
+
+if __name__ == "__main__":
+    main()
+```
+</pre></div>
+{% endblock %}
