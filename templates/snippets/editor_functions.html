@@ -17,7 +17,46 @@
 
 	$form.addEventListener('submit', function(e) {
 		e.preventDefault();
-        addHeaderContentToFormAndSubmit()
+		
+		// Check if this is a "Modify draft" submission
+		const modifyDraftBtn = document.getElementById('modify-draft-btn');
+		const isModifyDraft = modifyDraftBtn && !modifyDraftBtn.disabled && document.activeElement === modifyDraftBtn;
+		
+		if (isModifyDraft) {
+			// Handle modify draft with AJAX to stay on page
+			syncFormFieldsToHeader();
+			const formData = new FormData($form);
+			formData.set('header_content', $headerContent.innerText);
+			
+			fetch(window.location.href, {
+				method: 'POST',
+				body: formData,
+				headers: {
+					'X-Requested-With': 'XMLHttpRequest',
+				}
+			})
+			.then(response => {
+				if (response.ok) {
+					// Reset button to inactive state and update original values
+					modifyDraftBtn.style.opacity = '0.5';
+					modifyDraftBtn.disabled = true;
+					
+					// Update original values to current values so button stays inactive
+					if (window.updateOriginalValues) {
+						window.updateOriginalValues();
+					}
+					
+					// Show success feedback (optional)
+					console.log('Draft modified successfully');
+				}
+			})
+			.catch(error => {
+				console.error('Error modifying draft:', error);
+			});
+		} else {
+			// Normal form submission for other buttons
+			addHeaderContentToFormAndSubmit();
+		}
     });
 
 	document.addEventListener('keydown', function(event) {
@@ -190,7 +229,7 @@
 		const removeBtn = document.createElement('button');
 		removeBtn.textContent = '×';
 		removeBtn.style.cssText = 'position: absolute; top: -5px; right: -5px; background: red; color: white; border: none; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; cursor: pointer;';
-		removeBtn.onclick = () => removeMedia(imageUrl);
+		removeBtn.onclick = (event) => removeMedia(imageUrl, event);
 		mediaItem.appendChild(removeBtn);
 		
 		mediaContainer.appendChild(mediaItem);
@@ -213,8 +252,14 @@
 		$textarea.focus();
 	}
 
-	window.removeMedia = function(mediaUrl) {
-		if (!confirm('Remove this media item?')) return;
+	window.removeMedia = function(mediaUrl, event) {
+		// Prevent any default behavior or event propagation
+		if (event) {
+			event.preventDefault();
+			event.stopPropagation();
+		}
+		
+		if (!confirm('Remove this media item?')) return false;
 		
 		// Remove from preview
 		const mediaItem = document.querySelector(`[data-url="${mediaUrl}"]`);
@@ -228,8 +273,14 @@
 			document.getElementById('media-preview').style.display = 'none';
 		}
 		
+		// Trigger change detection for published posts
+		if (window.checkForChanges) {
+			window.checkForChanges();
+		}
+		
 		// TODO: Remove from post.media_urls (would need backend call)
 		// For now, user can manually remove from content
+		return false;
 	}
 
 	// Helper functions for adding tags/tools - make them global
@@ -240,6 +291,11 @@
 		if (!currentTags.includes(tag)) {
 			currentTags.push(tag);
 			tagsInput.value = currentTags.join(', ');
+			
+			// Trigger change detection for published posts
+			if (window.checkForChanges) {
+				window.checkForChanges();
+			}
 		}
 	}
 
@@ -250,6 +306,11 @@
 		if (!currentTools.includes(tool)) {
 			currentTools.push(tool);
 			toolsInput.value = currentTools.join(', ');
+			
+			// Trigger change detection for published posts
+			if (window.checkForChanges) {
+				window.checkForChanges();
+			}
 		}
 	}
 
@@ -506,17 +567,22 @@
 		});
 	}
 
-	// Change detection for published posts and pages
+	// Change detection for published posts, pages, and drafts
 	const saveAsDraftBtn = document.getElementById('save-as-draft-btn');
 	const modifyPageBtn = document.getElementById('modify-page-btn');
+	const modifyDraftBtn = document.getElementById('modify-draft-btn');
 	
-	if (saveAsDraftBtn || modifyPageBtn) {
+	// Global change detection function
+	window.checkForChanges = null;
+	
+	if (saveAsDraftBtn || modifyPageBtn || modifyDraftBtn) {
 		let originalContent = '';
 		let originalTitle = '';
 		let originalTags = '';
 		let originalTools = '';
 		let originalGithub = '';
 		let originalShortDesc = '';
+		let originalMediaUrls = '';
 		
 		// Store original values
 		const titleInput = document.getElementById('title-input');
@@ -533,7 +599,25 @@
 		if (shortDescInput) originalShortDesc = shortDescInput.value;
 		if (bodyTextarea) originalContent = bodyTextarea.value;
 		
-		function checkForChanges() {
+		// Store original media URLs
+		function getCurrentMediaUrls() {
+			const mediaItems = document.querySelectorAll('.media-item');
+			return Array.from(mediaItems).map(item => item.getAttribute('data-url')).sort().join(',');
+		}
+		originalMediaUrls = getCurrentMediaUrls();
+		
+		// Function to update original values after successful save
+		window.updateOriginalValues = function() {
+			if (titleInput) originalTitle = titleInput.value;
+			if (tagsInput) originalTags = tagsInput.value;
+			if (toolsInput) originalTools = toolsInput.value;
+			if (githubInput) originalGithub = githubInput.value;
+			if (shortDescInput) originalShortDesc = shortDescInput.value;
+			if (bodyTextarea) originalContent = bodyTextarea.value;
+			originalMediaUrls = getCurrentMediaUrls();
+		}
+		
+		window.checkForChanges = function() {
 			let hasChanges = false;
 			
 			if (titleInput && titleInput.value !== originalTitle) hasChanges = true;
@@ -542,6 +626,7 @@
 			if (githubInput && githubInput.value !== originalGithub) hasChanges = true;
 			if (shortDescInput && shortDescInput.value !== originalShortDesc) hasChanges = true;
 			if (bodyTextarea && bodyTextarea.value !== originalContent) hasChanges = true;
+			if (getCurrentMediaUrls() !== originalMediaUrls) hasChanges = true;
 			
 			if (saveAsDraftBtn) {
 				if (hasChanges) {
@@ -562,14 +647,37 @@
 					modifyPageBtn.disabled = true;
 				}
 			}
+			
+			if (modifyDraftBtn) {
+				if (hasChanges) {
+					modifyDraftBtn.style.opacity = '1';
+					modifyDraftBtn.disabled = false;
+				} else {
+					modifyDraftBtn.style.opacity = '0.5';
+					modifyDraftBtn.disabled = true;
+				}
+			}
 		}
 		
 		// Add event listeners to detect changes
-		if (titleInput) titleInput.addEventListener('input', checkForChanges);
-		if (tagsInput) tagsInput.addEventListener('input', checkForChanges);
-		if (toolsInput) toolsInput.addEventListener('input', checkForChanges);
-		if (githubInput) githubInput.addEventListener('input', checkForChanges);
-		if (shortDescInput) shortDescInput.addEventListener('input', checkForChanges);
-		if (bodyTextarea) bodyTextarea.addEventListener('input', checkForChanges);
+		if (titleInput) titleInput.addEventListener('input', window.checkForChanges);
+		if (tagsInput) tagsInput.addEventListener('input', window.checkForChanges);
+		if (toolsInput) toolsInput.addEventListener('input', window.checkForChanges);
+		if (githubInput) githubInput.addEventListener('input', window.checkForChanges);
+		if (shortDescInput) shortDescInput.addEventListener('input', window.checkForChanges);
+		if (bodyTextarea) bodyTextarea.addEventListener('input', window.checkForChanges);
+		
+		// Monitor media changes using MutationObserver
+		const mediaContainer = document.getElementById('media-preview');
+		if (mediaContainer) {
+			const mediaObserver = new MutationObserver(function(mutations) {
+				mutations.forEach(function(mutation) {
+					if (mutation.type === 'childList') {
+						window.checkForChanges();
+					}
+				});
+			});
+			mediaObserver.observe(mediaContainer, { childList: true, subtree: true });
+		}
 	}
 </script>

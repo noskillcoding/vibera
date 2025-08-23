@@ -292,6 +292,19 @@ def post(request, id, uid=None):
     preview = request.POST.get("preview", False) == "true"
 
     if request.method == "POST" and header_content:
+        # Prevent accidental updates to published posts
+        # Only process if it's a new post, draft, or explicit save action
+        if post and post.publish and not preview:
+            # This is a published post - only allow updates if user explicitly clicked a save button
+            is_explicit_save = request.POST.get("publish") in ["true", "false"]
+            if not is_explicit_save:
+                error_messages.append("Published posts cannot be updated automatically. Use 'Save as new draft' to create a draft version.")
+                return render(request, 'studio/post_edit.html', {
+                    'blog': blog,
+                    'post': post,
+                    'error_messages': error_messages,
+                })
+        
         if blog.posts.count() >= 3000:
             error_messages.append("You have reached the maximum number of posts. This is a safety feature to prevent abuse. If you're sure you need more, please contact support.")
             return render(request, 'studio/post_edit.html', {
@@ -486,11 +499,20 @@ def post(request, id, uid=None):
                 else:
                     # If saving as draft
                     if is_saving_published_as_draft:
-                        # For "Save as new draft", redirect to drops list to show both versions
-                        return redirect('posts_edit', id=blog.subdomain)
+                        # For "Save as new draft", redirect to appropriate list to show both versions
+                        if post.is_page:
+                            return redirect('pages_edit', id=blog.subdomain)
+                        else:
+                            return redirect('posts_edit', id=blog.subdomain)
                     else:
-                        # For regular draft saves, redirect to the edit page
-                        return redirect('post_edit', id=blog.subdomain, uid=post.uid)
+                        # For draft modifications, check if it's an existing draft
+                        if post and not is_new and not post.publish:
+                            # This is modifying an existing draft - stay on same page
+                            # Don't redirect, just continue to render the page with updated post
+                            pass
+                        else:
+                            # For new draft saves, redirect to the edit page
+                            return redirect('post_edit', id=blog.subdomain, uid=post.uid)
 
         except Exception as error:
             error_messages.append(f"Header attribute error - your post has not been saved. Error: {str(error)}")

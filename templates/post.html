@@ -109,7 +109,7 @@
                         <!-- Check if it's a video -->
                         {% if '.mp4' in media_url or '.webm' in media_url or '.mkv' in media_url %}
                             <a href="#" onclick="openMediaOverlay('{{ media_url }}', 'video'); return false;" style="text-decoration: none; position: relative; display: inline-block;">
-                                <video src="{{ media_url }}" style="display: block; width: 100px; height: 100px; object-fit: cover; object-position: center; border-radius: 8px; border: 1px solid #ddd; margin: 0;" muted preload="metadata"></video>
+                                <video src="{{ media_url }}" style="display: block; width: 100px; height: 100px; object-fit: contain; object-position: center; border-radius: 8px; border: 1px solid #ddd; margin: 0; background-color: #f5f5f5;" muted preload="metadata"></video>
                                 <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.7); border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; pointer-events: none;">
                                     <span style="color: white; font-size: 12px;">▶️</span>
                                 </div>
@@ -118,7 +118,7 @@
                         {% else %}
                             <!-- It's an image -->
                             <a href="#" onclick="openMediaOverlay('{{ media_url }}', 'image'); return false;" style="text-decoration: none;">
-                                <img src="{{ media_url }}" alt="Project media" style="display: block; width: 100px; height: 100px; object-fit: cover; object-position: center; border-radius: 8px; border: 1px solid #ddd; margin: 0;">
+                                <img src="{{ media_url }}" alt="Project media" style="display: block; width: 100px; height: 100px; object-fit: contain; object-position: center; border-radius: 8px; border: 1px solid #ddd; margin: 0; background-color: #f5f5f5;">
                             </a>
                         {% endif %}
                     {% endif %}
