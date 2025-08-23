@@ -31,12 +31,18 @@ New drop | Vibera
         >
             &#8592; Back
         </button>
+        {% if not post or not post.publish %}
         <button type="submit" onclick="document.getElementById('publish').value = true; syncFormFieldsToHeader();">Publish</button>
+        {% endif %}
         
-        {% if post %}
-            <button onclick="event.preventDefault(); window.open('{{ blog.dynamic_useful_domain }}/{{ post.slug }}{% if not post.publish %}?token={{ post.token }}{% endif %}');">
+        <button {% if post %}onclick="event.preventDefault(); window.open('{{ blog.dynamic_useful_domain }}/{{ post.slug }}{% if not post.publish %}?token={{ post.token }}{% endif %}');"{% else %}disabled style="opacity: 0.5; cursor: not-allowed;"{% endif %}>
+            {% if post %}
                 View{% if not post.publish %} draft{% endif %}
-            </button>
+            {% else %}
+                View draft
+            {% endif %}
+        </button>
+        {% if post %}
             <button
                 style="color: red; float: right;"
                 onclick="event.preventDefault(); deletePost();"
@@ -44,13 +50,11 @@ New drop | Vibera
                 Delete
             </button>
         {% endif %}
-        <button type="submit" {% if post.publish %}style="color: lightsalmon;"{% endif %} onclick="document.getElementById('publish').value = false; syncFormFieldsToHeader();">
-            {% if post.publish %}
-            Unpublish
-            {% else %}
+        {% if not post or not post.publish %}
+        <button type="submit" onclick="document.getElementById('publish').value = false; syncFormFieldsToHeader();">
             Save as draft
-            {% endif %}
         </button>
+        {% endif %}
     </p>
 
     <!-- Attributes examples hidden - we now have proper UI form fields below -->
@@ -215,10 +219,7 @@ New drop | Vibera
 
     <span class="helptext sticky">
         <span>
-            <a href='https://herman.bearblog.dev/markdown-cheatsheet/' target='_blank'>Markdown syntax</a>
-        </span>
-        <span>
-            <a id="preview">Preview</a>
+            <a href='http://docs.lh.co/markdown-cheatsheet/' target='_blank'>Markdown syntax</a>
         </span>
     </span>
 </form>

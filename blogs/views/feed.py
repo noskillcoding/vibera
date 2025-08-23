@@ -37,7 +37,7 @@ def feed(request):
 
 
 def generate_feed(blog, feed_type="atom", tag=None):
-    all_posts = blog.posts.filter(publish=True, is_page=False, published_date__lte=timezone.now())
+    all_posts = blog.posts.filter(publish=True, is_page=False, published_date__lte=timezone.now(), is_template_draft=False)
 
     if tag:
         all_posts = all_posts.filter(all_tags__icontains=tag)

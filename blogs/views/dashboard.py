@@ -88,7 +88,7 @@ def posts_edit(request, id):
     else:
         blog = get_object_or_404(Blog, user=request.user, subdomain=id)
 
-    posts = Post.objects.filter(blog=blog, is_page=False).order_by('-published_date')
+    posts = Post.objects.filter(blog=blog, is_page=False, is_template_draft=False).order_by('-published_date')
 
     return render(request, 'dashboard/posts.html', {
         'pages': False,
@@ -122,7 +122,15 @@ def post_delete(request, id, uid):
 
         post = get_object_or_404(Post, blog=blog, uid=uid)
         is_page = post.is_page
-        post.delete()
+        
+        if post.publish:
+            # Convert published post to draft instead of deleting
+            post.publish = False
+            post.save()
+        else:
+            # Actually delete drafts
+            post.delete()
+            
         if is_page:
             return redirect('pages_edit', id=blog.subdomain)
     return redirect('posts_edit', id=blog.subdomain)

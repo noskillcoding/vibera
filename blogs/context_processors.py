@@ -39,7 +39,7 @@ def blog_space_variables(request):
         blog_last_modified_days = (now - blog.last_modified).days if blog.last_modified else None
         
         # Get latest post date
-        latest_post = blog.posts.filter(publish=True, published_date__lte=now, is_page=False).order_by('-published_date').first()
+        latest_post = blog.posts.filter(publish=True, published_date__lte=now, is_page=False, is_template_draft=False).order_by('-published_date').first()
         blog_last_posted_days = (now - latest_post.published_date).days if latest_post else None
         
         # Create template variables (both legacy and new naming)

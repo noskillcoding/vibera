@@ -90,7 +90,7 @@ def home(request):
             'showcase_drops': showcase_drops
         })
 
-    all_posts = blog.posts.filter(publish=True, published_date__lte=timezone.now(), is_page=False).order_by('-published_date')
+    all_posts = blog.posts.filter(publish=True, published_date__lte=timezone.now(), is_page=False, is_template_draft=False).order_by('-published_date')
 
     meta_description = blog.meta_description or unmark(blog.content)[:157] + '...'
     
@@ -120,7 +120,7 @@ def posts(request, blog):
     tools = [t.strip() for t in tool_param.split(',')] if tool_param else []
     tools = [t for t in tools if t]  # Remove empty strings
 
-    posts = blog.posts.filter(blog=blog, publish=True, published_date__lte=timezone.now(), is_page=False).order_by('-published_date')
+    posts = blog.posts.filter(blog=blog, publish=True, published_date__lte=timezone.now(), is_page=False, is_template_draft=False).order_by('-published_date')
     
     if tags or tools:
         # Filter posts that contain ALL specified tags AND tools
@@ -257,6 +257,9 @@ def post(request, slug):
     now = timezone.now()
     post_last_modified_days = (now - post.last_modified).days if post.last_modified else None
     
+    # Determine if this is a preview (draft or template draft)
+    is_preview = (post.publish is False and request.GET.get('token') == post.token) or post.is_template_draft
+    
     context = {
         'blog': blog,
         'post': post,
@@ -267,6 +270,7 @@ def post(request, slug):
         'upvoted': upvoted,
         'user_has_reported': post.user_has_active_report(request.user),
         'user_latest_report': user_latest_report,
+        'preview': is_preview,
         
         # Legacy post_* variables (for Bear compatibility and docs)
         'post_title': post.title,
@@ -330,7 +334,7 @@ def sitemap(request):
         return not_found(request)
     
     try:
-        posts = blog.posts.filter(publish=True, published_date__lte=timezone.now()).only('slug', 'last_modified', 'blog_id').order_by('-published_date')
+        posts = blog.posts.filter(publish=True, published_date__lte=timezone.now(), is_template_draft=False).only('slug', 'last_modified', 'blog_id').order_by('-published_date')
     except AttributeError:
         posts = []
 

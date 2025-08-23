@@ -50,20 +50,20 @@
                             {% if user.settings.nickname %}
                             <div style="margin: 5px 0;">
                                 <label>
-                                    <input type="radio" name="display_option" value="nickname" style="margin-right: 5px;" checked>
+                                    <input type="radio" name="display_option" value="nickname" style="margin-right: 5px;" {% if preview %}disabled{% else %}checked{% endif %}>
                                     Use nickname: <strong>{{ user.settings.nickname }}</strong>
                                 </label>
                             </div>
                             <div style="margin: 5px 0;">
                                 <label>
-                                    <input type="radio" name="display_option" value="email" style="margin-right: 5px;">
+                                    <input type="radio" name="display_option" value="email" style="margin-right: 5px;" {% if preview %}disabled{% endif %}>
                                     Use email: {{ user.email }}
                                 </label>
                             </div>
                             {% else %}
                             <div style="margin: 5px 0;">
                                 <label>
-                                    <input type="radio" name="display_option" value="email" style="margin-right: 5px;" checked>
+                                    <input type="radio" name="display_option" value="email" style="margin-right: 5px;" {% if preview %}disabled{% else %}checked{% endif %}>
                                     Use email: {{ user.email }} <span style="font-size: 0.9em; color: #666;">(you can <a href="{% url 'user_account_settings' %}" target="_blank" style="color: #007cba; text-decoration: underline;">set up a nickname</a> to use instead of your email address)</span>
                                 </label>
                             </div>
@@ -71,24 +71,24 @@
                         </div>
                         
                         <div style="margin: 10px 0;">
-                            <textarea id="comment" name="comment" required minlength="5" maxlength="100" rows="3"
-                                      style="width: 100%; max-width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; resize: vertical; box-sizing: border-box;"
-                                      placeholder="Why is this post dangerous? (5-100 characters)"></textarea>
+                            <textarea id="comment" name="comment" {% if not preview %}required{% endif %} minlength="5" maxlength="100" rows="3"
+                                      style="width: 100%; max-width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; resize: vertical; box-sizing: border-box; {% if preview %}background-color: #f5f5f5; opacity: 0.7;{% endif %}"
+                                      {% if preview %}disabled placeholder="Reporting is disabled in preview mode"{% else %}placeholder="Why is this post dangerous? (5-100 characters)"{% endif %}></textarea>
                         </div>
                         
-                        <button type="submit" style="background: #d63031; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
-                            Submit Report
+                        <button type="submit" {% if preview %}disabled{% endif %} style="background: {% if preview %}#ccc{% else %}#d63031{% endif %}; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: {% if preview %}not-allowed{% else %}pointer{% endif %};">
+                            {% if preview %}Reporting Disabled (Preview){% else %}Submit Report{% endif %}
                         </button>
                     </form>
                 </div>
             {% else %}
                 <div style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; color: #666; text-align: center;">
-                    <p>You have already reported this post.</p>
+                    <p>{% if preview %}<span style="opacity: 0.6;">Preview mode: </span>{% endif %}You have already reported this post.</p>
                 </div>
             {% endif %}
         {% else %}
             <div style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; color: #666;">
-                <p><a href="/accounts/login/">Log in</a> to report dangerous content.</p>
+                <p>{% if preview %}<span style="opacity: 0.6;">Preview mode: </span>{% endif %}<a href="/accounts/login/" {% if preview %}style="opacity: 0.6; pointer-events: none;"{% endif %}>Log in</a> to report dangerous content.</p>
             </div>
         {% endif %}
         </div>

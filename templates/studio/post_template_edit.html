@@ -29,6 +29,11 @@
         <button type="submit" onclick="document.getElementById('action').value = 'save_template'; syncFormFieldsToHeader();">
             {% if blog.post_template %}Modify template{% else %}Save template{% endif %}
         </button>
+        {% if blog.post_template %}
+        <button onclick="event.preventDefault(); previewTemplate();">
+            Preview template
+        </button>
+        {% endif %}
         {% if success_message %}
         <span style="color: {% if success_message == 'Template deleted' %}red{% else %}lightgreen{% endif %}; margin-left: 10px;">{{ success_message }}</span>
         {% endif %}
@@ -129,15 +134,53 @@
 
     <span class="helptext sticky">
         <span>
-            <a href='https://herman.bearblog.dev/markdown-cheatsheet/' target='_blank'>Markdown syntax</a>
-        </span>
-        <span>
-            <a id="preview">Preview</a>
+            <a href='http://docs.lh.co/markdown-cheatsheet/' target='_blank'>Markdown syntax</a>
         </span>
     </span>
 </form>
 
 
 {% include '../snippets/editor_functions.html' with blog=blog %}
+
+<script>
+function previewTemplate() {
+    // First save the template
+    syncFormFieldsToHeader();
+    
+    // Get form data
+    const templateForm = document.querySelector('form.post-form');
+    const formData = new FormData(templateForm);
+    formData.set('action', 'save_template');
+    
+    // Save template via AJAX
+    fetch(window.location.href, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.preview_url) {
+            // Open preview in new tab
+            window.open(data.preview_url, '_blank');
+            
+            // Reload the current page to ensure template data is properly loaded
+            // This prevents the "empty fields" issue when user comes back
+            setTimeout(() => {
+                window.location.reload();
+            }, 500); // Small delay to ensure preview tab opens first
+        } else {
+            alert('Error: Could not generate preview URL');
+        }
+    })
+    .catch(error => {
+        console.error('Error saving template:', error);
+        alert('Error saving template. Please try again.');
+    });
+}
+</script>
+
 {{ request.user.settings.dashboard_footer | safe }}
 {% endblock %}

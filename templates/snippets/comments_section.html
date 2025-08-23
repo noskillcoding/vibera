@@ -73,32 +73,32 @@
                         {% if user.settings.nickname %}
                         <div style="margin: 5px 0;">
                             <label>
-                                <input type="radio" name="display_option" value="nickname" style="margin-right: 5px;" checked>
+                                <input type="radio" name="display_option" value="nickname" style="margin-right: 5px;" {% if preview %}disabled{% else %}checked{% endif %}>
                                 Use nickname: <strong>{{ user.settings.nickname }}</strong>
                             </label>
                         </div>
                         <div style="margin: 5px 0;">
                             <label>
-                                <input type="radio" name="display_option" value="email" style="margin-right: 5px;">
+                                <input type="radio" name="display_option" value="email" style="margin-right: 5px;" {% if preview %}disabled{% endif %}>
                                 Use email: {{ user.email }}
                             </label>
                         </div>
                         <div style="margin: 5px 0;">
                             <label>
-                                <input type="radio" name="display_option" value="anonymous" style="margin-right: 5px;">
+                                <input type="radio" name="display_option" value="anonymous" style="margin-right: 5px;" {% if preview %}disabled{% endif %}>
                                 Anonymous
                             </label>
                         </div>
                         {% else %}
                         <div style="margin: 5px 0;">
                             <label>
-                                <input type="radio" name="display_option" value="email" style="margin-right: 5px;" checked>
+                                <input type="radio" name="display_option" value="email" style="margin-right: 5px;" {% if preview %}disabled{% else %}checked{% endif %}>
                                 Use email: {{ user.email }} <span style="font-size: 0.9em; color: #666;">(you can <a href="{% url 'user_account_settings' %}" target="_blank" style="color: #007cba; text-decoration: underline;">set up a nickname</a> to use instead of your email address)</span>
                             </label>
                         </div>
                         <div style="margin: 5px 0;">
                             <label>
-                                <input type="radio" name="display_option" value="anonymous" style="margin-right: 5px;">
+                                <input type="radio" name="display_option" value="anonymous" style="margin-right: 5px;" {% if preview %}disabled{% endif %}>
                                 Anonymous
                             </label>
                         </div>
@@ -107,19 +107,19 @@
                     
                     <div style="margin: 10px 0;">
                         <label for="content" style="display: block; margin-bottom: 5px; font-weight: bold;">Comment</label>
-                        <textarea id="content" name="content" required minlength="5" maxlength="1000" rows="4"
-                                  style="width: 100%; max-width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; resize: vertical; box-sizing: border-box;"></textarea>
+                        <textarea id="content" name="content" {% if not preview %}required{% endif %} minlength="5" maxlength="1000" rows="4"
+                                  style="width: 100%; max-width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; resize: vertical; box-sizing: border-box; {% if preview %}background-color: #f5f5f5; opacity: 0.7;{% endif %}" {% if preview %}disabled placeholder="Comments are disabled in preview mode"{% endif %}></textarea>
                         <small style="color: #666;">5-1000 characters</small>
                     </div>
                     
-                    <button type="submit" style="background: #007cba; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;">
-                        Post Comment
+                    <button type="submit" {% if preview %}disabled{% endif %} style="background: {% if preview %}#ccc{% else %}#007cba{% endif %}; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: {% if preview %}not-allowed{% else %}pointer{% endif %};">
+                        {% if preview %}Comments Disabled (Preview){% else %}Post Comment{% endif %}
                     </button>
                 </form>
             </div>
         {% else %}
             <div style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px; color: #666;">
-                <p><a href="/accounts/login/">Log in</a> to leave a comment.</p>
+                <p>{% if preview %}<span style="opacity: 0.6;">Preview mode: </span>{% endif %}<a href="/accounts/login/" {% if preview %}style="opacity: 0.6; pointer-events: none;"{% endif %}>Log in</a> to leave a comment.</p>
             </div>
         {% endif %}
         </div>

@@ -271,6 +271,7 @@ class Post(models.Model):
     publish = models.BooleanField(default=True, db_index=True)
     make_discoverable = models.BooleanField(default=True, db_index=True)
     is_page = models.BooleanField(default=False, db_index=True)
+    is_template_draft = models.BooleanField(default=False, db_index=True)
     content = models.TextField()
     canonical_url = models.CharField(max_length=200, blank=True)
     meta_description = models.CharField(max_length=200, blank=True)

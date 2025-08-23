@@ -3,7 +3,7 @@ from django.db import DataError
 from django.forms import ValidationError
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponseBadRequest, JsonResponse
 from django.utils import timezone
 from django.utils.text import slugify
 from django.core.validators import URLValidator
@@ -12,6 +12,7 @@ from zoneinfo import ZoneInfo
 from datetime import datetime
 import json
 import random
+import re
 import string
 
 from blogs.backup import backup_in_thread
@@ -22,10 +23,78 @@ from collections import Counter
 from blogs.subscriptions import get_subscriptions
 
 
+def _create_or_update_template_draft(blog, header_content, body_content):
+    """Create or update a template draft post for preview purposes"""
+    # Get or create template draft post
+    template_draft, created = Post.objects.get_or_create(
+        blog=blog,
+        is_template_draft=True,
+        defaults={
+            'uid': f'template-{blog.subdomain}',
+            'title': 'Template Preview',
+            'slug': 'template-preview',
+            'content': '',
+            'publish': False,  # Always unpublished
+            'published_date': timezone.now(),
+            'is_page': False,
+            'make_discoverable': True,
+        }
+    )
+    
+    # Parse header content and populate fields
+    if header_content:
+        raw_header = [item for item in header_content.split('\r\n') if item]
+        
+        # Clear out data
+        template_draft.title = 'Template Preview'
+        template_draft.short_description = ''
+        template_draft.all_tags = '[]'
+        template_draft.all_tools = '[]'
+        template_draft.github_url = ''
+        template_draft.comments_enabled = True
+        template_draft.media_urls = []
+        
+        # Parse header data
+        for item in raw_header:
+            if ':' in item:
+                # Strip HTML tags from the item
+                clean_item = re.sub(r'<[^>]+>', '', item)
+                name, value = clean_item.split(':', 1)
+                name = name.strip()
+                value = value.strip()
+                
+                if name == 'title' and value:
+                    template_draft.title = value
+                elif name == 'short_description':
+                    template_draft.short_description = value[:100]
+                elif name == 'tags' or name == 'all_tags':
+                    tags = [tag.strip() for tag in value.split(',') if tag.strip()]
+                    template_draft.all_tags = json.dumps(tags)
+                elif name == 'tools' or name == 'all_tools':
+                    tools = [tool.strip() for tool in value.split(',') if tool.strip()]
+                    template_draft.all_tools = json.dumps(tools)
+                elif name == 'github_url':
+                    template_draft.github_url = value
+                elif name == 'comments_enabled':
+                    template_draft.comments_enabled = str(value).lower() != 'false'
+    
+    # Set content
+    template_draft.content = body_content or ''
+    
+    # Ensure template drafts are discoverable for reports section to show
+    template_draft.make_discoverable = True
+    
+    # Ensure slug is unique and doesn't conflict
+    template_draft.slug = 'template-preview'
+    
+    template_draft.save()
+    return template_draft
+
+
 def get_popular_tags_and_tools(limit=10):
     """Get the most popular tags and tools from published posts"""
     # Get all published posts
-    posts = Post.objects.filter(publish=True, is_page=False)
+    posts = Post.objects.filter(publish=True, is_page=False, is_template_draft=False)
     
     # Count tags
     all_tags = []
@@ -265,7 +334,9 @@ def post(request, id, uid=None):
 
             # Parse and populate header data
             for item in raw_header:
-                item = item.split(':', 1)
+                # Strip HTML tags from the item
+                clean_item = re.sub(r'<[^>]+>', '', item)
+                item = clean_item.split(':', 1)
                 name = item[0].strip()
 
                 # Prevent index error
@@ -590,7 +661,6 @@ def preview(request, id):
 
 @login_required
 def post_template(request, id):
-    print(f"DEBUG: post_template view called with id={id}")  # Debug line
     if request.user.is_superuser:
         blog = get_object_or_404(Blog, subdomain=id)
     else:
@@ -618,17 +688,34 @@ def post_template(request, id):
             template_content = ""
 
         if action == "save_template":
-            # Save template
+            # Save template to blog.post_template and create/update template draft post
             was_existing = bool(blog.post_template)
             blog.post_template = template_content
             blog.save()
+            
+            # Create or update template draft post for preview
+            template_draft = _create_or_update_template_draft(blog, header_content, body_content)
+            
+            # Handle AJAX requests for preview functionality
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                preview_url = f"{blog.dynamic_useful_domain}/{template_draft.slug}?token={template_draft.token}"
+                return JsonResponse({
+                    'success': True,
+                    'message': 'Template updated' if was_existing else 'Template saved',
+                    'preview_url': preview_url
+                })
+            
             success_message = "Template updated" if was_existing else "Template saved"
             current_template = blog.post_template
             
         elif action == "delete_template":
-            # Delete template
+            # Delete template and template draft post
             blog.post_template = ""
             blog.save()
+            
+            # Delete template draft post
+            Post.objects.filter(blog=blog, is_template_draft=True).delete()
+            
             success_message = "Template deleted"
             current_template = ""
 
@@ -649,15 +736,24 @@ def post_template(request, id):
         if template_header:
             for line in template_header.split('\n'):
                 if ':' in line:
-                    key, value = line.split(':', 1)
+                    # Strip HTML tags from the line
+                    clean_line = re.sub(r'<[^>]+>', '', line)
+                    key, value = clean_line.split(':', 1)
                     key = key.strip()
                     value = value.strip()
                     template_data[key] = value
 
     # Get popular tags and tools for suggestions
     popular_tags, popular_tools = get_popular_tags_and_tools(10)
+    
+    # Get template draft for preview URL (if it exists)
+    template_draft = None
+    if blog.post_template:
+        try:
+            template_draft = Post.objects.get(blog=blog, is_template_draft=True)
+        except Post.DoesNotExist:
+            pass
 
-    # Debug: Force template reload
     return render(request, 'studio/post_template_edit.html', {
         'blog': blog,
         'template_header': template_header,
@@ -667,6 +763,7 @@ def post_template(request, id):
         'popular_tools': popular_tools,
         'error_messages': error_messages,
         'success_message': success_message,
+        'template_draft': template_draft,
     })
 
 
