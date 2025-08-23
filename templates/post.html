@@ -225,8 +225,8 @@
         {% include 'snippets/comments_section.html' with post=post %}
     {% endif %}
     
-    <!-- Reports Section - always show but disable in preview -->
-    {% if post.make_discoverable %}
+    <!-- Reports Section - always show but disable in preview (not available for pages) -->
+    {% if post.make_discoverable and not post.is_page %}
         {% include 'snippets/dangerous_report_form.html' with post=post user_has_reported=user_has_reported %}
     {% endif %}
 

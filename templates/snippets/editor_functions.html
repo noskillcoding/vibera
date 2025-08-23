@@ -84,15 +84,29 @@
 	function deletePost() {
 		{% if post %}
 		{% if post.publish %}
-		if (confirm('Are you sure? This will convert your published drop to a draft and remove it from public view.')) {
-			$form.action = '{% url "post_delete" id=blog.subdomain uid=post.uid %}';
-			$form.submit()
-		}
+			{% if post.is_page %}
+			if (confirm('Are you sure? This will convert your published page to a draft and remove it from public view.')) {
+				$form.action = '{% url "post_delete" id=blog.subdomain uid=post.uid %}';
+				$form.submit()
+			}
+			{% else %}
+			if (confirm('Are you sure? This will convert your published drop to a draft and remove it from public view.')) {
+				$form.action = '{% url "post_delete" id=blog.subdomain uid=post.uid %}';
+				$form.submit()
+			}
+			{% endif %}
 		{% else %}
-		if (confirm('Are you sure you want to delete this draft?')) {
-			$form.action = '{% url "post_delete" id=blog.subdomain uid=post.uid %}';
-			$form.submit()
-		}
+			{% if post.is_page %}
+			if (confirm('Are you sure you want to delete this page draft?')) {
+				$form.action = '{% url "post_delete" id=blog.subdomain uid=post.uid %}';
+				$form.submit()
+			}
+			{% else %}
+			if (confirm('Are you sure you want to delete this draft?')) {
+				$form.action = '{% url "post_delete" id=blog.subdomain uid=post.uid %}';
+				$form.submit()
+			}
+			{% endif %}
 		{% endif %}
 		{% else %}
 		alert('Delete function not available on this page.');

@@ -452,9 +452,12 @@ def post(request, id, uid=None):
                     upvote = Upvote(post=post, hash_id=salt_and_hash(request, 'year'))
                     upvote.save()
 
-                # If publishing, redirect to posts page for better UX
+                # If publishing, redirect to appropriate list page for better UX
                 if post.publish:
-                    return redirect('posts_edit', id=blog.subdomain)
+                    if post.is_page:
+                        return redirect('pages_edit', id=blog.subdomain)
+                    else:
+                        return redirect('posts_edit', id=blog.subdomain)
                 else:
                     # If saving as draft, redirect to the edit page
                     return redirect('post_edit', id=blog.subdomain, uid=post.uid)
