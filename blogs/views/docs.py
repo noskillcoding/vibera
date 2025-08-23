@@ -129,6 +129,12 @@ def markdown_cheatsheet(request):
 
 
 @docs_site_only
+def date_format(request):
+    """Date format documentation page"""
+    return render(request, 'docs/date_format.html')
+
+
+@docs_site_only
 def home(request):
     """Docs homepage - redirects to main docs"""
     return documentation(request)

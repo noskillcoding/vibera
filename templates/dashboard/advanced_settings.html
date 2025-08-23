@@ -16,7 +16,6 @@
     {% csrf_token %}
     <p style="line-height: 0">
         <button type="submit">Save</button>
-        <button onclick="event.preventDefault(); window.open('{{ blog.dynamic_useful_domain }}');">View</button>
     </p>
     {{ form.as_p }}
 </form>

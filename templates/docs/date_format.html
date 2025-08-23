@@ -1,0 +1,41 @@
+{% extends 'docs/base.html' %}
+
+{% block title %}Date format - Vibera Docs{% endblock %}
+
+{% block content %}
+<h1>Date format</h1>
+
+<p>The date format can be updated in your space settings on your dashboard using the following attribute:</p>
+
+<div class="highlight"><pre><span></span>Date format: d M, Y
+</pre></div>
+
+<p>Here's what each formatting character represents:</p>
+
+<ul>
+<li><strong><code>d</code></strong>: Day of the month, 2 digits with leading zeros. <code>03</code></li>
+<li><strong><code>m</code></strong>: Numeric representation of a month, with leading zeros. <code>05</code> for May.</li>
+<li><strong><code>Y</code></strong>: A full numeric representation of a year, 4 digits. <code>2023</code></li>
+<li><strong><code>F</code></strong>: A full textual representation of a month, such as January or March. <code>May</code></li>
+<li><strong><code>j</code></strong>: Day of the month without leading zeros. <code>3</code> for the 3rd day of the month.</li>
+<li><strong><code>D</code></strong>: A textual representation of a day, three letters. <code>Mon</code> for Monday.</li>
+<li><strong><code>l</code></strong> (lowercase 'L'): A full textual representation of the day of the week. <code>Monday</code></li>
+<li><strong><code>S</code></strong>: English ordinal suffix for the day of the month, 2 characters (st, nd, rd or th. Works well with <code>j</code>).<code>rd</code> for the 3rd day of the month.</li>
+<li><strong><code>M</code></strong>: A short textual representation of a month, three letters. <code>May</code> for May.</li>
+</ul>
+
+<p>Here are some examples of date formats:</p>
+
+<ul>
+<li><strong><code>d, M Y</code></strong>: 22, May 2023</li>
+<li><strong><code>Y-m-d</code></strong>: 2023-05-22</li>
+<li><strong><code>m/d/Y</code></strong>: 05/22/2023</li>
+<li><strong><code>d/m/Y</code></strong>: 22/05/2023</li>
+<li><strong><code>F j, Y</code></strong>: May 22, 2023</li>
+<li><strong><code>D, M j, Y</code></strong>: Mon, May 22, 2023</li>
+<li><strong><code>l, F j, Y</code></strong>: Monday, May 22, 2023</li>
+<li><strong><code>jS F, Y</code></strong>: 22nd May, 2023</li>
+<li><strong><code>d-M-Y</code></strong>: 22-May-2023</li>
+</ul>
+
+{% endblock %}

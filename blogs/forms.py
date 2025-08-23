@@ -100,7 +100,7 @@ class AdvancedSettingsForm(forms.ModelForm):
     date_format =forms.CharField(
         max_length=20,
         required=False,
-        help_text="<span>More date formats <a href='https://docs.bearblog.dev/date-format/' target='_blank'>here</a></span>"
+        help_text="<span>More date formats <a href='http://docs.lh.co/date-format/' target='_blank'>here</a></span>"
     )
 
     fathom_site_id = forms.CharField(
