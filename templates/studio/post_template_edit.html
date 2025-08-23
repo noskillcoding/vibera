@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
+{% load custom_tags %}
 
-{% block title %}Post template | Bear Blog{% endblock %}
+{% block title %}Edit template | Vibera{% endblock %}
 
 {% block custom_styles %}
     {% include 'styles/blog/default.css' %}
@@ -9,13 +10,134 @@
 {% endblock %}
 
 {% block content %}
-<h1>Post template</h1>
+
+{% if error_messages %}
+<p style="color:lightsalmon">
+    {% for error_message in error_messages %}
+        {{ error_message }}<br>
+    {% endfor %}
+</p>
+{% endif %}
+
 <form method="POST" class="post-form full-width">
-    {% csrf_token %}
-    <p>
-        <button onclick="event.preventDefault(); window.location = '{% url \"posts_edit\" id=blog.subdomain %}'">&#8592; Back</button>
-        <button type="submit">Update</button>
+    <p class="sticky-controls">
+        <button
+            onclick="event.preventDefault(); sessionStorage.clear(); window.location = '{% url 'posts_edit' id=blog.subdomain %}'"
+        >
+            &#8592; Back
+        </button>
+        <button type="submit" onclick="document.getElementById('action').value = 'save_template'; syncFormFieldsToHeader();">
+            {% if blog.post_template %}Modify template{% else %}Save template{% endif %}
+        </button>
+        {% if success_message %}
+        <span style="color: {% if success_message == 'Template deleted' %}red{% else %}lightgreen{% endif %}; margin-left: 10px;">{{ success_message }}</span>
+        {% endif %}
+        
+        {% if blog.post_template %}
+        <button
+            style="color: red; float: right;"
+            onclick="event.preventDefault(); if(confirm('Are you sure you want to delete your template? This cannot be undone.')) { document.getElementById('action').value = 'delete_template'; syncFormFieldsToHeader(); document.forms[0].submit(); }"
+        >
+            Delete template
+        </button>
+        {% endif %}
     </p>
-    {{ form.as_p }}
+
+    {% csrf_token %}
+    <input type="text" name="action" id="action" value="" hidden>
+    <div
+        id="header_content"
+        class="editable"
+        contenteditable="true"
+        style="position: absolute; left: -9999px; margin-bottom:-1px; border-bottom: 1px solid lightgrey;"
+    >
+        {% if template_header %}<b>{{ template_header|linebreaksbr }}</b>{% else %}<b>title:</b> <br>{% endif %}
+    </div>
+
+    <input type="hidden" id="hidden_header_content" name="header_content">
+
+    <!-- Drop Title Section -->
+    <div style="margin-bottom: 15px;">
+        <label style="display: block; font-weight: bold; margin-bottom: 5px;">Drop Title</label>
+        <input type="text" id="title-input" 
+               placeholder="Enter your drop title..."
+               style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; font-size: 16px; box-sizing: border-box;"
+               value="{{ template_data.title|default:'' }}">
+    </div>
+
+    <!-- Short Description Section -->
+    <div style="margin-bottom: 15px;">
+        <label style="display: block; font-weight: bold; margin-bottom: 5px;">Short Description (for discovery feed)</label>
+        <input type="text" id="short-description-input" maxlength="100" 
+               placeholder="A brief description (max 100 characters)..."
+               style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; box-sizing: border-box;"
+               value="{{ template_data.short_description|default:'' }}">
+        <div id="char-counter" style="font-size: 12px; color: #666; text-align: right; margin-top: 2px;">
+            <span id="char-count">{{ template_data.short_description|length|default:0 }}</span>/100 characters
+        </div>
+    </div>
+
+    <textarea
+        name="body_content"
+        id="body_content"
+        style="width: 100%; min-height: 200px; padding: 8px; border: 1px solid #ddd; border-radius: 3px; resize: vertical; box-sizing: border-box; font-family: inherit;"
+        placeholder="Describe your stuff..."
+    >{{ template_body }}</textarea>
+
+    <!-- Project Details Sections -->
+    <div style="margin-top: 20px;">
+        <!-- Tags Section -->
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Tags</label>
+            <input type="text" id="tags-input" placeholder="mobile, crypto, dev tools" 
+                   style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; box-sizing: border-box;"
+                   value="{{ template_data.tags|default:'' }}">
+            <div id="suggested-tags" style="margin-top: 5px; font-size: 12px; color: #666;">
+                Popular: <span style="cursor: pointer; color: #0066cc;" onclick="addTag('mobile')">mobile</span>, <span style="cursor: pointer; color: #0066cc;" onclick="addTag('crypto')">crypto</span>, <span style="cursor: pointer; color: #0066cc;" onclick="addTag('dev tools')">dev tools</span>{% if popular_tags %}{% for tag, count in popular_tags|slice:":10" %}{% if tag not in 'mobile,crypto,dev tools' %}, <span style="cursor: pointer; color: #0066cc;" onclick="addTag('{{ tag }}')">{{ tag }}</span>{% endif %}{% endfor %}{% endif %}
+            </div>
+        </div>
+
+        <!-- Tools Section -->
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">Tools Used</label>
+            <input type="text" id="tools-input" placeholder="cursor, claude code, GPT5" 
+                   style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; box-sizing: border-box;"
+                   value="{{ template_data.tools|default:'' }}">
+            <div id="suggested-tools" style="margin-top: 5px; font-size: 12px; color: #666;">
+                Popular: <span style="cursor: pointer; color: #0066cc;" onclick="addTool('cursor')">cursor</span>, <span style="cursor: pointer; color: #0066cc;" onclick="addTool('claude code')">claude code</span>, <span style="cursor: pointer; color: #0066cc;" onclick="addTool('GPT5')">GPT5</span>{% if popular_tools %}{% for tool, count in popular_tools|slice:":10" %}{% if tool not in 'cursor,claude code,GPT5' %}, <span style="cursor: pointer; color: #0066cc;" onclick="addTool('{{ tool }}')">{{ tool }}</span>{% endif %}{% endfor %}{% endif %}
+            </div>
+        </div>
+
+        <!-- GitHub Section -->
+        <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">GitHub Repository</label>
+            <input type="url" id="github-input" placeholder="https://github.com/username/project" 
+                   style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; box-sizing: border-box;"
+                   value="{{ template_data.github_url|default:'' }}">
+        </div>
+
+        <!-- Comments Section -->
+        <div style="margin-bottom: 15px;">
+            <label style="display: flex; align-items: center; font-weight: bold;">
+                <input type="checkbox" id="comments-checkbox" 
+                       style="margin-right: 8px;" 
+                       {% if template_data.comments_enabled == 'false' %}{% else %}checked{% endif %}>
+                Enable comments
+            </label>
+        </div>
+    </div>
+
+    <span class="helptext sticky">
+        <span>
+            <a href='https://herman.bearblog.dev/markdown-cheatsheet/' target='_blank'>Markdown syntax</a>
+        </span>
+        <span>
+            <a id="preview">Preview</a>
+        </span>
+    </span>
 </form>
+
+
+{% include '../snippets/editor_functions.html' with blog=blog %}
+{{ request.user.settings.dashboard_footer | safe }}
 {% endblock %}

@@ -145,7 +145,7 @@ New drop | Vibera
             <input type="text" id="title-input" 
                    placeholder="Enter your drop title..."
                    style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; font-size: 16px; box-sizing: border-box;"
-                   value="{% if post.title %}{{ post.title }}{% endif %}">
+                   value="{% if post.title %}{{ post.title }}{% elif template_data.title %}{{ template_data.title }}{% endif %}">
         </div>
 
         <!-- Short Description Section -->
@@ -154,9 +154,9 @@ New drop | Vibera
             <input type="text" id="short-description-input" maxlength="100" 
                    placeholder="A brief description (max 100 characters)..."
                    style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; box-sizing: border-box;"
-                   value="{% if post.short_description %}{{ post.short_description }}{% endif %}">
+                   value="{% if post.short_description %}{{ post.short_description }}{% elif template_data.short_description %}{{ template_data.short_description }}{% endif %}">
             <div id="char-counter" style="font-size: 12px; color: #666; text-align: right; margin-top: 2px;">
-                <span id="char-count">{% if post.short_description %}{{ post.short_description|length }}{% else %}0{% endif %}</span>/100 characters
+                <span id="char-count">{% if post.short_description %}{{ post.short_description|length }}{% elif template_data.short_description %}{{ template_data.short_description|length }}{% else %}0{% endif %}</span>/100 characters
             </div>
         </div>
 
@@ -176,7 +176,7 @@ New drop | Vibera
                 <label style="display: block; font-weight: bold; margin-bottom: 5px;">Tags</label>
                 <input type="text" id="tags-input" placeholder="mobile, crypto, dev tools" 
                        style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; box-sizing: border-box;"
-                       value="{% if post.tags %}{{ post.tags|join:", " }}{% endif %}">
+                       value="{% if post.tags %}{{ post.tags|join:", " }}{% elif template_data.tags %}{{ template_data.tags }}{% endif %}">
                 <div id="suggested-tags" style="margin-top: 5px; font-size: 12px; color: #666;">
                     Popular: <span style="cursor: pointer; color: #0066cc;" onclick="addTag('mobile')">mobile</span>, <span style="cursor: pointer; color: #0066cc;" onclick="addTag('crypto')">crypto</span>, <span style="cursor: pointer; color: #0066cc;" onclick="addTag('dev tools')">dev tools</span>{% if popular_tags %}{% for tag, count in popular_tags|slice:":10" %}{% if tag not in 'mobile,crypto,dev tools' %}, <span style="cursor: pointer; color: #0066cc;" onclick="addTag('{{ tag }}')">{{ tag }}</span>{% endif %}{% endfor %}{% endif %}
                 </div>
@@ -187,7 +187,7 @@ New drop | Vibera
                 <label style="display: block; font-weight: bold; margin-bottom: 5px;">Tools Used</label>
                 <input type="text" id="tools-input" placeholder="cursor, claude code, GPT5" 
                        style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; box-sizing: border-box;"
-                       value="{% if post.tools %}{{ post.tools|join:", " }}{% endif %}">
+                       value="{% if post.tools %}{{ post.tools|join:", " }}{% elif template_data.tools %}{{ template_data.tools }}{% endif %}">
                 <div id="suggested-tools" style="margin-top: 5px; font-size: 12px; color: #666;">
                     Popular: <span style="cursor: pointer; color: #0066cc;" onclick="addTool('cursor')">cursor</span>, <span style="cursor: pointer; color: #0066cc;" onclick="addTool('claude code')">claude code</span>, <span style="cursor: pointer; color: #0066cc;" onclick="addTool('GPT5')">GPT5</span>{% if popular_tools %}{% for tool, count in popular_tools|slice:":10" %}{% if tool not in 'cursor,claude code,GPT5' %}, <span style="cursor: pointer; color: #0066cc;" onclick="addTool('{{ tool }}')">{{ tool }}</span>{% endif %}{% endfor %}{% endif %}
                 </div>
@@ -198,7 +198,7 @@ New drop | Vibera
                 <label style="display: block; font-weight: bold; margin-bottom: 5px;">GitHub Repository</label>
                 <input type="url" id="github-input" placeholder="https://github.com/username/project" 
                        style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 3px; box-sizing: border-box;"
-                       value="{% if post.github_url %}{{ post.github_url }}{% endif %}">
+                       value="{% if post.github_url %}{{ post.github_url }}{% elif template_data.github_url %}{{ template_data.github_url }}{% endif %}">
             </div>
 
             <!-- Comments Section -->
@@ -206,7 +206,7 @@ New drop | Vibera
                 <label style="display: flex; align-items: center; font-weight: bold;">
                     <input type="checkbox" id="comments-checkbox" 
                            style="margin-right: 8px;" 
-                           {% if post.comments_enabled != False %}checked{% endif %}>
+                           {% if post %}{% if post.comments_enabled != False %}checked{% endif %}{% else %}{% if template_data.comments_enabled == 'false' %}{% else %}checked{% endif %}{% endif %}>
                     Enable comments
                 </label>
             </div>

@@ -394,10 +394,23 @@ def post(request, id, uid=None):
 
     template_header = ""
     template_body = ""
+    template_data = {}
+    
     if blog.post_template:
         template_parts = blog.post_template.split("___", 1)
         if len(template_parts) == 2:
             template_header, template_body = template_parts
+        else:
+            template_header = blog.post_template.strip()
+            
+        # Parse template header to extract individual field values for new posts
+        if template_header and not post:  # Only for new posts, not editing existing ones
+            for line in template_header.split('\n'):
+                if ':' in line:
+                    key, value = line.split(':', 1)
+                    key = key.strip()
+                    value = value.strip()
+                    template_data[key] = value
 
     # Get popular tags and tools for suggestions
     popular_tags, popular_tools = get_popular_tags_and_tools(10)
@@ -408,6 +421,7 @@ def post(request, id, uid=None):
         'error_messages': error_messages,
         'template_header': template_header,
         'template_body': template_body,
+        'template_data': template_data,
         'is_page': is_page,
         'popular_tags': popular_tags,
         'popular_tools': popular_tools
@@ -576,22 +590,84 @@ def preview(request, id):
 
 @login_required
 def post_template(request, id):
+    print(f"DEBUG: post_template view called with id={id}")  # Debug line
     if request.user.is_superuser:
         blog = get_object_or_404(Blog, subdomain=id)
     else:
         blog = get_object_or_404(Blog, user=request.user, subdomain=id)
 
-    if request.method == "POST":
-        form = PostTemplateForm(request.POST, instance=blog)
-        if form.is_valid():
-            blog_info = form.save(commit=False)
-            blog_info.save()
-    else:
-        form = PostTemplateForm(instance=blog)
+    error_messages = []
+    success_message = ""
+    
+    # Get template data
+    current_template = blog.post_template
 
+    if request.method == "POST":
+        header_content = request.POST.get("header_content", "")
+        body_content = request.POST.get("body_content", "")
+        action = request.POST.get("action", "")
+        
+        # Combine header and body content
+        if header_content and body_content:
+            template_content = header_content + "\n___\n" + body_content
+        elif header_content:
+            template_content = header_content
+        elif body_content:
+            template_content = body_content
+        else:
+            template_content = ""
+
+        if action == "save_template":
+            # Save template
+            was_existing = bool(blog.post_template)
+            blog.post_template = template_content
+            blog.save()
+            success_message = "Template updated" if was_existing else "Template saved"
+            current_template = blog.post_template
+            
+        elif action == "delete_template":
+            # Delete template
+            blog.post_template = ""
+            blog.save()
+            success_message = "Template deleted"
+            current_template = ""
+
+    # Split template content for display
+    template_header = ""
+    template_body = ""
+    template_data = {}
+    
+    if current_template:
+        if '___' in current_template:
+            template_parts = current_template.split('___', 1)
+            template_header = template_parts[0].strip()
+            template_body = template_parts[1].strip()
+        else:
+            template_header = current_template.strip()
+            
+        # Parse template header to extract individual field values
+        if template_header:
+            for line in template_header.split('\n'):
+                if ':' in line:
+                    key, value = line.split(':', 1)
+                    key = key.strip()
+                    value = value.strip()
+                    template_data[key] = value
+
+    # Get popular tags and tools for suggestions
+    popular_tags, popular_tools = get_popular_tags_and_tools(10)
+
+    # Debug: Force template reload
     return render(request, 'studio/post_template_edit.html', {
         'blog': blog,
-        'form': form})
+        'template_header': template_header,
+        'template_body': template_body,
+        'template_data': template_data,
+        'popular_tags': popular_tags,
+        'popular_tools': popular_tools,
+        'error_messages': error_messages,
+        'success_message': success_message,
+    })
 
 
 @login_required

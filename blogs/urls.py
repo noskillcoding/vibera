@@ -76,11 +76,10 @@ urlpatterns = [
     path('<id>/drops/', dashboard.posts_edit, name='posts_edit'),
     path('<id>/pages/', dashboard.pages_edit, name='pages_edit'),
     path('<id>/drops/new/', studio.post, name="post_new"),
+    path('<id>/drops/template/', studio.post_template, name="post_template"),
     path('<id>/drops/<uid>/', studio.post, name="post_edit"),
     path('<id>/drops/<uid>/delete/', dashboard.post_delete, name='post_delete'),
     path('<id>/drops/preview/', studio.preview, name="post_preview"),
-
-    path('<id>/drops/template/', studio.post_template, name="post_template"),
 
     # Webhook
     path('lemon-webhook/', subscriptions.lemon_webhook, name='lemon_webhook'),
