@@ -505,4 +505,71 @@
 			}
 		});
 	}
+
+	// Change detection for published posts and pages
+	const saveAsDraftBtn = document.getElementById('save-as-draft-btn');
+	const modifyPageBtn = document.getElementById('modify-page-btn');
+	
+	if (saveAsDraftBtn || modifyPageBtn) {
+		let originalContent = '';
+		let originalTitle = '';
+		let originalTags = '';
+		let originalTools = '';
+		let originalGithub = '';
+		let originalShortDesc = '';
+		
+		// Store original values
+		const titleInput = document.getElementById('title-input');
+		const tagsInput = document.getElementById('tags-input');
+		const toolsInput = document.getElementById('tools-input');
+		const githubInput = document.getElementById('github-input');
+		const shortDescInput = document.getElementById('short-description-input');
+		const bodyTextarea = document.getElementById('body_content');
+		
+		if (titleInput) originalTitle = titleInput.value;
+		if (tagsInput) originalTags = tagsInput.value;
+		if (toolsInput) originalTools = toolsInput.value;
+		if (githubInput) originalGithub = githubInput.value;
+		if (shortDescInput) originalShortDesc = shortDescInput.value;
+		if (bodyTextarea) originalContent = bodyTextarea.value;
+		
+		function checkForChanges() {
+			let hasChanges = false;
+			
+			if (titleInput && titleInput.value !== originalTitle) hasChanges = true;
+			if (tagsInput && tagsInput.value !== originalTags) hasChanges = true;
+			if (toolsInput && toolsInput.value !== originalTools) hasChanges = true;
+			if (githubInput && githubInput.value !== originalGithub) hasChanges = true;
+			if (shortDescInput && shortDescInput.value !== originalShortDesc) hasChanges = true;
+			if (bodyTextarea && bodyTextarea.value !== originalContent) hasChanges = true;
+			
+			if (saveAsDraftBtn) {
+				if (hasChanges) {
+					saveAsDraftBtn.style.opacity = '1';
+					saveAsDraftBtn.disabled = false;
+				} else {
+					saveAsDraftBtn.style.opacity = '0.5';
+					saveAsDraftBtn.disabled = true;
+				}
+			}
+			
+			if (modifyPageBtn) {
+				if (hasChanges) {
+					modifyPageBtn.style.opacity = '1';
+					modifyPageBtn.disabled = false;
+				} else {
+					modifyPageBtn.style.opacity = '0.5';
+					modifyPageBtn.disabled = true;
+				}
+			}
+		}
+		
+		// Add event listeners to detect changes
+		if (titleInput) titleInput.addEventListener('input', checkForChanges);
+		if (tagsInput) tagsInput.addEventListener('input', checkForChanges);
+		if (toolsInput) toolsInput.addEventListener('input', checkForChanges);
+		if (githubInput) githubInput.addEventListener('input', checkForChanges);
+		if (shortDescInput) shortDescInput.addEventListener('input', checkForChanges);
+		if (bodyTextarea) bodyTextarea.addEventListener('input', checkForChanges);
+	}
 </script>

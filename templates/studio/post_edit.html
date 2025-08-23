@@ -54,6 +54,14 @@ New drop | Vibera
         <button type="submit" onclick="document.getElementById('publish').value = false; syncFormFieldsToHeader();">
             Save as draft
         </button>
+        {% elif post.publish and not post.is_page %}
+        <button type="submit" id="save-as-draft-btn" onclick="document.getElementById('publish').value = false; syncFormFieldsToHeader();" style="opacity: 0.5;" disabled>
+            Save as new draft
+        </button>
+        {% elif post.publish and post.is_page %}
+        <button type="submit" id="modify-page-btn" onclick="document.getElementById('publish').value = true; syncFormFieldsToHeader();" style="opacity: 0.5;" disabled>
+            Modify page
+        </button>
         {% endif %}
     </p>
 

@@ -110,6 +110,24 @@ class MyRenderer(HTMLRenderer):
                 return f"<a href='{url}' target='_blank' title='{title}'>{text}</a>"
             return f"<a href='{url}' target='_blank'>{text}</a>"
         
+        # For pages, convert media links to actual media display
+        if self.post and self.post.is_page:
+            # Check if URL is a media file (image or video)
+            media_extensions = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.bmp', '.tiff', '.heic', '.avif', '.ico']
+            video_extensions = ['.mp4', '.webm', '.mkv']
+            
+            url_lower = url.lower()
+            is_image = any(url_lower.endswith(ext) for ext in media_extensions)
+            is_video = any(url_lower.endswith(ext) for ext in video_extensions)
+            
+            if is_image:
+                if title:
+                    return f"<img src='{url}' alt='{text}' title='{title}' style='max-width: 100%; height: auto; display: block; margin: 10px 0;' />"
+                return f"<img src='{url}' alt='{text}' style='max-width: 100%; height: auto; display: block; margin: 10px 0;' />"
+            elif is_video:
+                return f"<video src='{url}' controls style='max-width: 100%; height: auto; display: block; margin: 10px 0;' title='{text}'></video>"
+        
+        # Regular link handling for non-pages or non-media links
         if title:
             return f"<a href='{url}' title='{title}'>{text}</a>"
         return f"<a href='{url}'>{text}</a>"
