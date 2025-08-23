@@ -179,7 +179,8 @@
 		const mediaItem = document.createElement('div');
 		mediaItem.className = 'media-item';
 		mediaItem.setAttribute('data-url', imageUrl);
-		mediaItem.style.position = 'relative';
+		mediaItem.draggable = true;
+		mediaItem.style.cssText = 'position: relative; cursor: move; transition: transform 0.2s ease;';
 		
 		// Check if it's a video file
 		const isVideo = imageUrl.toLowerCase().match(/\.(mp4|webm|mkv)$/);
@@ -188,6 +189,7 @@
 			const video = document.createElement('video');
 			video.src = imageUrl;
 			video.style.cssText = 'width: 80px; height: 80px; object-fit: cover; border-radius: 3px; cursor: pointer;';
+			video.draggable = false;
 			video.onclick = () => openMediaOverlay(imageUrl, 'video');
 			mediaItem.appendChild(video);
 		} else {
@@ -195,6 +197,7 @@
 			img.src = imageUrl;
 			img.style.cssText = 'width: 80px; height: 80px; object-fit: cover; border-radius: 3px; cursor: pointer;';
 			img.loading = 'lazy';
+			img.draggable = false;
 			img.onclick = () => openMediaOverlay(imageUrl, 'image');
 			
 			// Add error handling for broken images
@@ -233,6 +236,11 @@
 		mediaItem.appendChild(removeBtn);
 		
 		mediaContainer.appendChild(mediaItem);
+		
+		// Update landing page indicators after adding new media
+		if (window.updateLandingPageIndicators) {
+			setTimeout(() => window.updateLandingPageIndicators(), 100);
+		}
 	}
 
 	window.insertMediaToTextarea = function(mediaUrl, fileName) {
@@ -271,6 +279,11 @@
 		const mediaContainer = document.getElementById('media-container');
 		if (mediaContainer.children.length === 0) {
 			document.getElementById('media-preview').style.display = 'none';
+		}
+		
+		// Update landing page indicators after removal
+		if (window.updateLandingPageIndicators) {
+			setTimeout(() => window.updateLandingPageIndicators(), 100);
 		}
 		
 		// Trigger change detection for published posts

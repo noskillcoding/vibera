@@ -440,7 +440,7 @@ def post(request, id, uid=None):
                     error_messages.append(f"{name} is an unrecognised header option")
 
             if not post.title:
-                post.title = "New post"
+                post.title = "New drop"
 
             post.slug = unique_slug(blog, post, slug)
 
@@ -675,7 +675,7 @@ def preview(request, id):
                     post.comments_enabled = value
 
             if not post.title:
-                post.title = "New post"
+                post.title = "New drop"
             if not post.slug:
                 post.slug = slugify(post.title)
                 if not post.slug or post.slug == "":
