@@ -5,19 +5,20 @@
 {% block custom_styles %}
     {% include 'styles/blog/default.css' %}
     {% include 'styles/dashboard.css' %}
+    {% if request.user.settings.dashboard_styles %}
     {{ request.user.settings.dashboard_styles | safe }}
-    <style>
-        @media (max-width: 768px) {
-            .preset-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
-            }
+    {% endif %}
+    
+    @media (max-width: 768px) {
+        .preset-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
         }
-        @media (max-width: 480px) {
-            .preset-grid {
-                grid-template-columns: 1fr !important;
-            }
+    }
+    @media (max-width: 480px) {
+        .preset-grid {
+            grid-template-columns: 1fr !important;
         }
-    </style>
+    }
 {% endblock %}
 
 {% block nav %}{% include '../snippets/dashboard_nav.html' %}{% endblock %}
