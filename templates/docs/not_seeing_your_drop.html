@@ -1,0 +1,19 @@
+{% extends 'docs/base.html' %}
+
+{% block title %}Not seeing your drop? - Vibera Docs{% endblock %}
+
+{% block content %}
+<h1>Not seeing your drop?</h1>
+
+<p>The discovery feed only displays drops from spaces that are <a href='/dashboard/upgrade/' target='_blank'>upgraded</a> or reviewed. You can also opt in for a review at <code>https://vibera.dev/&lt;your-subdomain&gt;/dashboard/opt-in-review/</code>.</p>
+<p>If your space is not visible after upgrading:</p>
+<ul>
+<li>Check the <strong>published_date</strong> of the drop. It could be a few days old and deep in the Newest feed.</li>
+<li>Check that <strong>make_discoverable</strong> is not set to false. This is used to hide drops from the discovery feed.</li>
+<li>Check that the content length is more than 100 characters. This restriction is to prevent low effort drops, or drops like "Hello world!" or "WIP" from making their way onto the discovery feed.</li>
+<li>Spaces that post too often in a 24 hour period are temporarily hidden to prevent <em>flooding</em> the Newest feed.</li>
+<li>Your drop may infringe on community guidelines and be hidden by a moderator.</li>
+</ul>
+<p>If you've checked all of the above, feel free to get in touch with <a href='mailto:lowskillcoding@gmail.com'>lowskillcoding@gmail.com</a>.</p>
+
+{% endblock %}

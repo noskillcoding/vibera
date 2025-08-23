@@ -101,7 +101,7 @@
 
 {% if newest and request.user.is_authenticated %}
 <p>
-    <small><i><a target="_blank" href="https://docs.bearblog.dev/not-seeing-your-post/">Not seeing your post?</a></i></small>
+    <small><i><a target="_blank" href="http://docs.lh.co/not-seeing-your-drop/">Not seeing your drop?</a></i></small>
 </p>
 {% endif %}
 <ul class="discover-posts" style="list-style: none; padding: 0;">
@@ -163,7 +163,7 @@
     </li>
     {% empty %}
     <li>
-        We've run out of posts ʕノ•ᴥ•ʔノ ︵ ┻━┻
+        No more drops :(
     </li>
     {% endfor %}
 </ul>
@@ -215,6 +215,6 @@ B values is used to modify the effect of time on the score. A lower B causes pos
 
 {% block footer %}
 <p>
-    Start your own blog with <a href="/accounts/signup/"><span class="bear">ʕ•ᴥ•ʔ</span> Bear</a>
+    share yours on <a href="/accounts/signup/">vibera</a>
 </p>
 {% endblock %}

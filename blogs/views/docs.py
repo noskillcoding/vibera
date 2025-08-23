@@ -135,6 +135,12 @@ def date_format(request):
 
 
 @docs_site_only
+def not_seeing_your_drop(request):
+    """Not seeing your drop documentation page"""
+    return render(request, 'docs/not_seeing_your_drop.html')
+
+
+@docs_site_only
 def home(request):
     """Docs homepage - redirects to main docs"""
     return documentation(request)
