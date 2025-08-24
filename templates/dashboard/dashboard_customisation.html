@@ -1015,12 +1015,42 @@ details[open] {
     --claude-subtle: #64748b;
     --claude-deep: #1e293b;
     --claude-light: #ffffff;
+    --heading-color: var(--claude-teal);
 }
 body {
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     background: linear-gradient(135deg, var(--claude-soft) 0%, var(--claude-light) 100%) !important;
     color: var(--claude-deep) !important;
 }
+
+/* Fix header styling to match landing page exactly */
+.header-bears, .header-bears:hover, header h1, header .title, 
+header a, header a h1, .title, .title h1 {
+    color: var(--claude-teal) !important;
+    font-weight: 600 !important;
+    font-size: 1.5rem !important;
+    font-family: "Inter", sans-serif !important;
+}
+
+/* Fix bear logo styling - force teal color like landing page */
+span.bear-sync, span.bear.bear-sync, 
+.header-bears span.bear-sync, .header-bears span.bear.bear-sync,
+h1 span.bear-sync, h1 span.bear.bear-sync {
+    color: var(--claude-teal) !important;
+}
+
+.header-bears:hover span.bear-sync, 
+.header-bears:hover span.bear.bear-sync {
+    color: var(--claude-blue) !important;
+}
+
+/* Override any conflicting h1 styles in header */
+header h1, header .header-bears {
+    font-size: 1.5rem !important;
+    font-family: "Inter", sans-serif !important;
+    font-weight: 600 !important;
+}
+
 h1 {
     color: var(--claude-teal) !important;
     font-weight: 600 !important;
