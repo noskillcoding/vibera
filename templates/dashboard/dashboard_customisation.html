@@ -247,9 +247,25 @@ fieldset legend, .form-field-label, .field-description,
 
 body {
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
-    background-color: var(--claude-light) !important;
+    background: linear-gradient(135deg, var(--claude-soft) 0%, var(--claude-light) 100%) !important;
     color: var(--claude-deep) !important;
     line-height: 1.6 !important;
+}
+
+/* Fix header styling to match landing page */
+.header-bears, .header-bears:hover {
+    color: var(--claude-teal) !important;
+    font-weight: 600 !important;
+    font-size: 1.5rem !important;
+}
+
+/* Fix bear logo styling */
+.bear-sync::before {
+    color: var(--claude-teal) !important;
+}
+
+.header-bears:hover .bear-sync::before {
+    color: var(--claude-blue) !important;
 }
 
 h1, h2, h3, h4, h5, h6 {
