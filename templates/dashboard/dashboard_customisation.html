@@ -127,6 +127,89 @@ input, textarea, select {
     background: #000060 !important;
     border: 2px solid #00AAAA !important;
     padding: 20px !important;
+}
+
+/* Fix white rectangle containers - make them transparent like nav page */
+main, .main-content, .content, article, section {
+    background: transparent !important;
+}
+
+/* Fix form containers that create white rectangles around buttons */
+form {
+    background: transparent !important;
+}
+
+/* Fix specific white containers visible in screenshots */
+.container, .page-container, .dashboard-container,
+.content-wrapper, .main-wrapper, .form-wrapper,
+fieldset, .fieldset, .field-wrapper,
+.button-container, .action-buttons {
+    background: transparent !important;
+    border: none !important;
+}
+
+/* Fix any divs that might be creating white boxes */
+div.bg-white, .bg-white, .white-bg {
+    background: transparent !important;
+}
+
+/* Nuclear option - override ALL white backgrounds */
+* {
+    background-color: transparent !important;
+}
+
+/* Restore only the specific elements that should have backgrounds */
+body {
+    background-color: #000084 !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    background: #00AAAA !important;
+}
+
+input, textarea, select {
+    background: #000060 !important;
+}
+
+button, input[type="submit"] {
+    background: #00AAAA !important;
+}
+
+button:hover, input[type="submit"]:hover {
+    background: #B7B7B7 !important;
+}
+
+.post-form {
+    background: #000060 !important;
+}
+
+/* Force border on ALL input fields including home page title */
+input, textarea, select {
+    border: 2px solid #00AAAA !important;
+    background: #000060 !important;
+    color: #B7B7B7 !important;
+    font-family: 'Space Mono', monospace !important;
+}
+
+/* Fix contenteditable title field (div with contenteditable) */
+div[contenteditable="true"], .editable, #header_content {
+    border: 2px solid #00AAAA !important;
+    background: #000060 !important;
+    color: #B7B7B7 !important;
+    font-family: 'Space Mono', monospace !important;
+    padding: 8px !important;
+}
+
+/* Make markdown syntax link static (remove fixed positioning) */
+.markdown-help, .syntax-help, .help-text, .syntax-link,
+a[href*="markdown"], a[href*="syntax"], 
+.fixed, .sticky, [style*="position: fixed"], [style*="position: sticky"] {
+    position: static !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    z-index: auto !important;
 }`,
 
         'claude': `/* Claude Dashboard Theme */
