@@ -29,22 +29,22 @@
 <h2>Presets</h2>
 
 <div class="preset-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px;">
-    <button type="button" onclick="applyPreset('default', event)" style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; text-align: left;">
+    <button type="button" class="preset-button" onclick="applyPreset('default', event)" style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; text-align: left;">
         <strong>Default</strong><br>
         <small style="color: #666;">Clean and minimal</small>
     </button>
     
-    <button type="button" onclick="applyPreset('msdos', event)" style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; text-align: left;">
+    <button type="button" class="preset-button" onclick="applyPreset('msdos', event)" style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; text-align: left;">
         <strong>MS-DOS</strong><br>
         <small style="color: #666;">Retro terminal style</small>
     </button>
     
-    <button type="button" onclick="applyPreset('claude', event)" style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; text-align: left;">
+    <button type="button" class="preset-button" onclick="applyPreset('claude', event)" style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; text-align: left;">
         <strong>Claude</strong><br>
         <small style="color: #666;">Modern and thoughtful</small>
     </button>
     
-    <button type="button" onclick="applyPreset('darkClaude', event)" style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; text-align: left;">
+    <button type="button" class="preset-button" onclick="applyPreset('darkClaude', event)" style="padding: 15px; border: 2px solid #ddd; border-radius: 8px; background: white; cursor: pointer; text-align: left;">
         <strong>Dark Claude</strong><br>
         <small style="color: #666;">Dark and edgy</small>
     </button>
@@ -1111,18 +1111,45 @@ details summary {
         (footerTextarea) || 
         (landingTextarea && landingPresets[preset] !== undefined) ||
         (discoverTextarea && discoverPresets[preset] !== undefined)) {
-        // Show confirmation
+        
+        // Clear any existing active states first
+        document.querySelectorAll('.preset-button').forEach(btn => {
+            btn.classList.remove('preset-active');
+            btn.style.borderColor = '#ddd';
+            btn.style.backgroundColor = 'white';
+            // Restore original text if it was changed
+            if (btn.dataset.originalText) {
+                btn.innerHTML = btn.dataset.originalText;
+                delete btn.dataset.originalText;
+            }
+        });
+        
+        // Clear any existing timeouts
+        if (window.presetTimeout) {
+            clearTimeout(window.presetTimeout);
+            delete window.presetTimeout;
+        }
+        
+        // Mark the clicked button as active
         const button = event.target;
-        const originalText = button.innerHTML;
+        if (!button.dataset.originalText) {
+            button.dataset.originalText = button.innerHTML;
+        }
+        
+        button.classList.add('preset-active');
         button.innerHTML = '<strong>Applied!</strong><br><small style="color: #666;">Dashboard, footer, landing & discovery updated</small>';
         button.style.borderColor = '#4ade80';
         button.style.backgroundColor = '#f0fdf4';
         
-        setTimeout(() => {
-            button.innerHTML = originalText;
-            button.style.borderColor = '#ddd';
-            button.style.backgroundColor = 'white';
-        }, 2000);
+        // Set timeout to clear the message after 3 seconds
+        window.presetTimeout = setTimeout(() => {
+            if (button.dataset.originalText) {
+                button.innerHTML = button.dataset.originalText;
+                delete button.dataset.originalText;
+            }
+            button.style.borderColor = '#4ade80'; // Keep green border to show it's active
+            button.style.backgroundColor = '#f0fdf4'; // Keep light green background
+        }, 3000);
     }
 }
 
