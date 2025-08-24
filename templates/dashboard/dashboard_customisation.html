@@ -1112,17 +1112,20 @@ details summary {
         (landingTextarea && landingPresets[preset] !== undefined) ||
         (discoverTextarea && discoverPresets[preset] !== undefined)) {
         
-        // Clear any existing active states first
-        document.querySelectorAll('.preset-button').forEach(btn => {
-            btn.classList.remove('preset-active');
-            btn.style.borderColor = '#ddd';
-            btn.style.backgroundColor = 'white';
-            // Restore original text if it was changed
-            if (btn.dataset.originalText) {
-                btn.innerHTML = btn.dataset.originalText;
-                delete btn.dataset.originalText;
-            }
-        });
+        // Initialize global state
+        if (!window.currentActivePreset) {
+            window.currentActivePreset = null;
+        }
+        
+        const button = event.target;
+        
+        // If clicking the same preset that's already active, do nothing
+        if (window.currentActivePreset === preset) {
+            return;
+        }
+        
+        // Update the current active preset
+        window.currentActivePreset = preset;
         
         // Clear any existing timeouts
         if (window.presetTimeout) {
@@ -1130,27 +1133,47 @@ details summary {
             delete window.presetTimeout;
         }
         
-        // Mark the clicked button as active
-        const button = event.target;
-        if (!button.dataset.originalText) {
-            button.dataset.originalText = button.innerHTML;
-        }
+        // Reset all preset buttons and show applied message
+        updatePresetDisplay(preset, true);
         
-        button.classList.add('preset-active');
-        button.innerHTML = '<strong>Applied!</strong><br><small style="color: #666;">Dashboard, footer, landing & discovery updated</small>';
-        button.style.borderColor = '#4ade80';
-        button.style.backgroundColor = '#f0fdf4';
-        
-        // Set timeout to clear the message after 3 seconds
+        // After 3 seconds, hide the "Applied!" message but keep the green styling
         window.presetTimeout = setTimeout(() => {
-            if (button.dataset.originalText) {
-                button.innerHTML = button.dataset.originalText;
-                delete button.dataset.originalText;
+            if (window.currentActivePreset === preset) {
+                updatePresetDisplay(preset, false);
             }
-            button.style.borderColor = '#4ade80'; // Keep green border to show it's active
-            button.style.backgroundColor = '#f0fdf4'; // Keep light green background
         }, 3000);
     }
+}
+
+function updatePresetDisplay(activePreset, showAppliedMessage) {
+    const presets = ['default', 'msdos', 'claude', 'darkClaude'];
+    const titles = ['Default', 'MS-DOS', 'Claude', 'Dark Claude'];
+    const descriptions = ['Clean and minimal', 'Retro terminal style', 'Modern and thoughtful', 'Dark and edgy'];
+    
+    const allButtons = document.querySelectorAll('.preset-button');
+    
+    allButtons.forEach((btn, index) => {
+        const isActive = activePreset && presets[index] === activePreset;
+        
+        // Reset styling
+        btn.classList.remove('preset-active');
+        btn.style.borderColor = '#ddd';
+        btn.style.backgroundColor = 'white';
+        
+        if (isActive) {
+            btn.classList.add('preset-active');
+            btn.style.borderColor = '#4ade80';
+            btn.style.backgroundColor = '#f0fdf4';
+            
+            if (showAppliedMessage) {
+                btn.innerHTML = '<strong>Applied!</strong><br><small style="color: #666;">Dashboard, footer, landing & discovery updated</small>';
+            } else {
+                btn.innerHTML = `<strong>${titles[index]}</strong><br><small style="color: #666;">${descriptions[index]}</small>`;
+            }
+        } else {
+            btn.innerHTML = `<strong>${titles[index]}</strong><br><small style="color: #666;">${descriptions[index]}</small>`;
+        }
+    });
 }
 
 function initDarkClaudeEffects() {
