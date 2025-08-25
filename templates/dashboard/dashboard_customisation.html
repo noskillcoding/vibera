@@ -747,6 +747,27 @@ nav a:hover {
     box-shadow: 0 4px 8px rgba(8, 145, 178, 0.3) !important;
 }
 
+/* Make dashboard and discover buttons match nav buttons exactly */
+a[href="/dashboard/"], a[href="/discover/"] {
+    background: var(--claude-teal) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 10px 16px !important;
+    font-family: "Inter", sans-serif !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+    display: inline-block !important;
+}
+
+a[href="/dashboard/"]:hover, a[href="/discover/"]:hover {
+    background: var(--claude-blue) !important;
+    color: white !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 8px rgba(8, 145, 178, 0.3) !important;
+}
+
 p {
     color: var(--claude-deep) !important;
     margin: 16px 0 !important;
