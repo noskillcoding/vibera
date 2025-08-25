@@ -127,6 +127,26 @@ h1 .bear-sync, .bear {
     color: #000000 !important;
 }
 
+/* Style preset button text to match publish/view button colors */
+.preset-button strong {
+    color: white !important;
+}
+
+.preset-button small {
+    color: white !important;
+    opacity: 0.8;
+}
+
+.preset-button {
+    background: var(--claude-teal) !important;
+    border-color: var(--claude-blue) !important;
+    color: white !important;
+}
+
+.preset-button:hover {
+    background: var(--claude-blue) !important;
+}
+
 a {
     color: #B7B7B7 !important;
 }
@@ -349,6 +369,27 @@ button:hover, input[type="submit"]:hover {
     transform: translateY(-1px) !important;
 }
 
+/* Style preset button text to match publish/view button colors */
+.preset-button {
+    background: var(--claude-teal) !important;
+    border-color: var(--claude-blue) !important;
+    color: white !important;
+}
+
+.preset-button:hover {
+    background: var(--claude-blue) !important;
+}
+
+.preset-button strong {
+    color: white !important;
+}
+
+.preset-button small {
+    color: white !important;
+    opacity: 0.8;
+}
+
+
 input, textarea, select {
     border: 2px solid #e2e8f0 !important;
     border-radius: 8px !important;
@@ -567,7 +608,7 @@ input:focus, textarea:focus, select:focus {
             'email': { title: '📧 Newsletter Tips', tip: 'Send regular updates to keep subscribers engaged and grow your audience' },
             'nav': { title: '🧭 Navigation Tips', tip: 'Keep navigation simple and intuitive - visitors should find content easily' },
             'home': { title: '🏠 Homepage Tips', tip: 'Make a strong first impression with clear value proposition and easy navigation' },
-            'dashboard': { title: '📋 Workflow Tips', tip: 'Use the dashboard efficiently by bookmarking frequently used sections' }
+            'dashboard': { title: '🤖 Pro Tip', tip: 'Add a robots.txt file to guide search engines and crawlers through your project portfolio' }
         };
         
         const actions = {
@@ -790,6 +831,15 @@ h1 {
 
 .header-bears:hover .bear-sync::before {
     color: var(--claude-teal) !important;
+}
+
+/* Ensure no underline on header links */
+.header-bears, .header-bears:hover {
+    text-decoration: none !important;
+}
+header a, header a:hover, .header-bears a, .header-bears a:hover,
+h1 a, h1 a:hover, .title a, .title a:hover {
+    text-decoration: none !important;
 }
 
 h2 {
