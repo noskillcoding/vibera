@@ -115,3 +115,6 @@ sync_data.sh
 
 # Claude Code configuration
 CLAUDE.md
+
+# JetBrains IDEs
+.idea/
