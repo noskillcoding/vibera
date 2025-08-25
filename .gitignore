@@ -112,3 +112,6 @@ blogs/sandbox.py
 fixture.json
 sync_data.sh
 *.mdc
+
+# Claude Code configuration
+CLAUDE.md
