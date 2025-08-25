@@ -329,6 +329,32 @@ input:focus, textarea:focus, select:focus {
     border: 2px solid #e2e8f0 !important;
     border-radius: 12px !important;
     padding: 24px !important;
+}
+
+/* Nuclear option - override ALL backgrounds then restore specific ones */
+* {
+    background-color: transparent !important;
+}
+
+/* Restore specific backgrounds that should be visible */
+body {
+    background: linear-gradient(135deg, var(--claude-soft) 0%, var(--claude-light) 100%) !important;
+}
+
+button, input[type="submit"] {
+    background: var(--claude-teal) !important;
+}
+
+button:hover, input[type="submit"]:hover {
+    background: var(--claude-blue) !important;
+}
+
+input, textarea, select {
+    background: white !important;
+}
+
+.post-form {
+    background: var(--claude-soft) !important;
 }`,
 
         'darkClaude': `/* Dark Claude Dashboard Theme - Chaotic and Hostile */
