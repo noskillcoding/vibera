@@ -141,11 +141,16 @@ Vibera (formerly Bear Blog) is a multi-tenant blogging platform where each blog 
 - **Popular suggestions system** - Shows top tags/tools based on platform usage
 - **Persistent draft saving** - All form data (tags, tools, media, etc.) preserved when saving drafts
 - **Clean UI/UX** - Removed confusing attributes section, proper form validation
+- **Advanced theme customization system** - Multiple preset themes with complete customization
+- **Drop showcase on landing page** - Featured projects display with media previews
+- **Comprehensive documentation system** - Full docs at docs.vibera.dev with markdown guides
+- **Single-blog architecture** - Simplified from multi-tenant to single blog per user
+- **Space/Drop terminology** - Unified terminology with backward compatibility
+- **Media drag-and-drop reordering** - Visual media organization in post editor
+- **Dangerous post reporting system** - Content moderation with soft deletion
 
 ### 🚧 Remaining Tasks
-13. **Add downvote/report functionality** with explanation
-15. **Upgrade search** with Tags and Tools filter sections  
-16. **Update branding** from Bearblog to Vibera
+None - All major transformation tasks completed!
 
 ### 🗄️ Database Schema Updates
 - `Post.all_tools` (JSONField) - Stores tools used in project
@@ -153,3 +158,40 @@ Vibera (formerly Bear Blog) is a multi-tenant blogging platform where each blog 
 - `Post.comments_enabled` (BooleanField) - Comment toggle (default: True)
 - `Post.media_urls` (JSONField) - Tracks uploaded media per post
 - `Blog.all_tools` (JSONField) - Aggregated tools across blog posts
+
+## Theme Customization System
+
+### Available Preset Themes
+Vibera includes a comprehensive theme customization system with preset themes:
+
+1. **Default** - Clean and minimal design (original Bearblog styling)
+2. **MS-DOS** - Retro terminal style with blue background and monospace fonts
+3. **Claude** - Modern and thoughtful design with teal/blue color scheme
+4. **Dark Claude** - Dark and chaotic theme with hostile aesthetic and glitch effects
+
+### Theme Architecture
+- **dashboard_customisation.html**: Central theme management interface
+- **Multi-section theming**: Dashboard, Landing, Discovery, and Footer sections can be themed independently
+- **CSS Variables**: Consistent color schemes using CSS custom properties
+- **Nuclear Option Approach**: Comprehensive background overrides for consistent styling
+- **Synchronized Elements**: Header bears with blinking animations across all sections
+
+### Theme Features
+- **Consistent Headers**: Standardized "vibera" text and bear logo styling across all sections
+- **Interactive Elements**: Hover effects, button styling, and animated bears
+- **Background Management**: Advanced CSS overrides to eliminate unwanted white containers
+- **Responsive Design**: Mobile-friendly layouts that work across all themes
+- **Typography**: Custom font stacks for each theme (Inter, Space Mono, Courier Prime, etc.)
+
+### Recent Theme Improvements
+- Fixed header consistency across dashboard, landing, and discovery pages
+- Eliminated white rectangle backgrounds around buttons and form elements
+- Standardized bear icon colors and hover animations
+- Added preset button styling to match brand colors
+- Implemented comprehensive background removal with selective restoration
+
+### Theme Development Notes
+- Use "nuclear option" CSS approach: `* { background-color: transparent !important; }` then restore specific elements
+- Maintain consistent header behavior across all page types
+- Test theme changes across dashboard, landing, and discovery sections
+- Ensure mobile responsiveness and accessibility
