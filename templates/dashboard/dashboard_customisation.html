@@ -257,6 +257,13 @@ body {
     color: var(--claude-teal) !important;
     font-weight: 600 !important;
     font-size: 1.5rem !important;
+    text-decoration: none !important;
+}
+
+/* Ensure no underline on header links */
+header a, header a:hover, .header-bears a, .header-bears a:hover,
+h1 a, h1 a:hover, .title a, .title a:hover {
+    text-decoration: none !important;
 }
 
 /* Fix bear logo styling */
@@ -265,7 +272,7 @@ body {
 }
 
 .header-bears:hover .bear-sync::before {
-    color: var(--claude-blue) !important;
+    color: var(--claude-teal) !important;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -728,7 +735,7 @@ h1 {
 }
 
 .header-bears:hover .bear-sync::before {
-    color: var(--claude-blue) !important;
+    color: var(--claude-teal) !important;
 }
 
 h2 {
@@ -1077,6 +1084,7 @@ header a, header a h1, .title, .title h1 {
     font-weight: 600 !important;
     font-size: 1.5rem !important;
     font-family: "Inter", sans-serif !important;
+    text-decoration: none !important;
 }
 
 /* Fix bear logo styling - force teal color like landing page */
