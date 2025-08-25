@@ -460,6 +460,49 @@ body {
     line-height: 1.4 !important;
     font-size: 0.95rem !important;
 }
+/* Fix header styling to match landing page - Dark Claude */
+.header-bears, .header-bears:hover {
+    color: var(--warning-yellow) !important;
+    font-weight: 700 !important;
+    font-size: 1.5rem !important;
+    text-shadow: 3px 3px 0px var(--blood-red) !important;
+    text-decoration: none !important;
+}
+/* Fix bear logo styling for Dark Claude theme */
+.bear-sync::before {
+    color: var(--warning-yellow) !important;
+    background: transparent !important;
+    text-shadow: 1px 1px 0px var(--void-black) !important;
+}
+.header-bears:hover .bear-sync::before {
+    color: var(--glitch-pink) !important;
+    text-shadow: 0 0 10px var(--cyber-orange) !important;
+}
+/* Nuclear option - override ALL white backgrounds for Dark Claude */
+* {
+    background-color: transparent !important;
+}
+/* Restore only the specific elements that should have backgrounds */
+body {
+    background-color: var(--void-black) !important;
+}
+/* Fix form containers that create white rectangles around buttons */
+form {
+    background: transparent !important;
+}
+/* Fix specific white containers visible in screenshots */
+.container, .page-container, .dashboard-container,
+.content-wrapper, .main-wrapper, .form-wrapper,
+fieldset, .fieldset, .field-wrapper,
+.button-container, .action-buttons,
+main, .main-content, .content, article, section {
+    background: transparent !important;
+    border: none !important;
+}
+/* Fix any divs that might be creating white boxes */
+div.bg-white, .bg-white, .white-bg {
+    background: transparent !important;
+}
 
 h1, h2, h3, h4, h5, h6 {
     font-family: "Impact", "Arial Black", sans-serif !important;
@@ -1317,6 +1360,24 @@ body {
     color: var(--toxic-green) !important;
     font-family: "JetBrains Mono", monospace !important;
     animation: subtle-flicker 4s infinite !important;
+}
+/* Fix header styling to match landing page - Dark Claude */
+.header-bears, .header-bears:hover {
+    color: var(--warning-yellow) !important;
+    font-weight: 700 !important;
+    font-size: 1.5rem !important;
+    text-shadow: 3px 3px 0px var(--blood-red) !important;
+    text-decoration: none !important;
+}
+/* Fix bear logo styling for Dark Claude theme */
+.bear-sync::before {
+    color: var(--warning-yellow) !important;
+    background: transparent !important;
+    text-shadow: 1px 1px 0px var(--void-black) !important;
+}
+.header-bears:hover .bear-sync::before {
+    color: var(--glitch-pink) !important;
+    text-shadow: 0 0 10px var(--cyber-orange) !important;
 }
 @keyframes subtle-flicker {
     0%, 98%, 100% { opacity: 1; }
