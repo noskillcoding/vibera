@@ -93,12 +93,38 @@ body {
     font-size: 0.9em !important;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3 {
     color: #000000 !important;
     background: #00AAAA !important;
     padding: 0.4em 0.6em !important;
     font-family: 'Space Mono', monospace !important;
     font-weight: 500 !important;
+    margin-bottom: 1rem !important;
+}
+
+/* Fix bear styling for MS-DOS theme */
+.bear-sync::before {
+    color: #000000 !important;
+    background: transparent !important;
+}
+
+.header-bears:hover .bear-sync::before {
+    color: #000000 !important;
+}
+
+/* Override header h1 to prevent background/padding changes on hover like discovery */
+.header-bears h1, .header-bears:hover h1, 
+header h1, header:hover h1,
+h1.header-bears, h1.header-bears:hover {
+    background: #00AAAA !important;
+    padding: 0.4em 0.6em !important;
+    color: #000000 !important;
+}
+
+/* Make bear icons black like vibera text */
+.bear-sync, span.bear-sync, .header-bears .bear-sync,
+h1 .bear-sync, .bear {
+    color: #000000 !important;
 }
 
 a {
@@ -626,7 +652,7 @@ body {
     font-size: 0.9em !important;
 }
 
-h1, h2, h3, h4 {
+h1, h2, h3 {
     color: #000000 !important;
     background: #00AAAA !important;
     padding: 0.4em 0.6em !important;
@@ -1050,6 +1076,31 @@ h1, h2, h3 {
     font-family: 'Space Mono', monospace !important;
     font-weight: 500 !important;
     margin-bottom: 1rem !important;
+}
+
+/* Fix bear styling for MS-DOS theme */
+.bear-sync::before {
+    color: #000000 !important;
+    background: transparent !important;
+}
+
+.header-bears:hover .bear-sync::before {
+    color: #000000 !important;
+}
+
+/* Override header h1 to prevent background/padding changes on hover like discovery */
+.header-bears h1, .header-bears:hover h1, 
+header h1, header:hover h1,
+h1.header-bears, h1.header-bears:hover {
+    background: #00AAAA !important;
+    padding: 0.4em 0.6em !important;
+    color: #000000 !important;
+}
+
+/* Make bear icons black like vibera text */
+.bear-sync, span.bear-sync, .header-bears .bear-sync,
+h1 .bear-sync, .bear {
+    color: #000000 !important;
 }
 
 nav a {
