@@ -78,6 +78,14 @@ function applyPreset(preset, event) {
         'msdos': `/* MS-DOS Dashboard Theme */
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital@0;1&display=swap');
 
+:root {
+    --heading-color: #000000;
+}
+
+.bear-sync {
+    color: #000000 !important;
+}
+
 body {
     background-color: #000084 !important;
     color: #B7B7B7 !important;
@@ -607,6 +615,10 @@ input:focus, textarea:focus, select:focus {
         'msdos': `/* MS-DOS Landing Page Theme */
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital@0;1&display=swap');
 
+.bear-sync {
+    color: #000000 !important;
+}
+
 body {
     background-color: #000084 !important;
     color: #B7B7B7 !important;
@@ -623,15 +635,6 @@ h1, h2, h3, h4 {
     margin-bottom: 1rem !important;
 }
 
-/* Fix bear styling for MS-DOS theme */
-.bear-sync::before {
-    color: #B7B7B7 !important;
-    background: transparent !important;
-}
-
-.header-bears:hover .bear-sync::before {
-    color: #B7B7B7 !important;
-}
 
 h1 {
     font-size: 1.5em !important;
@@ -693,6 +696,31 @@ a:hover {
     color: #B7B7B7 !important;
     background: #00AAAA !important;
     padding: 2px 4px !important;
+}
+
+/* Fix bear styling for MS-DOS theme */
+.bear-sync::before {
+    color: #000000 !important;
+    background: transparent !important;
+}
+
+.header-bears:hover .bear-sync::before {
+    color: #000000 !important;
+}
+
+/* Override header h1 to prevent background/padding changes on hover like discovery */
+.header-bears h1, .header-bears:hover h1, 
+header h1, header:hover h1,
+h1.header-bears, h1.header-bears:hover {
+    background: #00AAAA !important;
+    padding: 0.4em 0.6em !important;
+    color: #000000 !important;
+}
+
+/* Make bear icons black like vibera text */
+.bear-sync, span.bear-sync, .header-bears .bear-sync,
+h1 .bear-sync, .bear {
+    color: #000000 !important;
 }`,
 
         'claude': `/* Claude Landing Page Theme */
@@ -1004,6 +1032,11 @@ a:hover {
         
         'msdos': `/* MS-DOS Discovery Feed Theme */
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital@0;1&display=swap');
+
+.bear-sync {
+    color: #000000 !important;
+}
+
 body {
     background-color: #000084 !important;
     color: #B7B7B7 !important;
@@ -1018,6 +1051,7 @@ h1, h2, h3 {
     font-weight: 500 !important;
     margin-bottom: 1rem !important;
 }
+
 nav a {
     color: #B7B7B7 !important;
     background: #000060 !important;
